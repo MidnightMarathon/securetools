@@ -1,1 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Free QR Code Generator – SecureTools</title>
+  <meta name="description" content="Generate unlimited QR codes with no watermarks, no branding, and no sign-ups. 100% free and privacy-first — works instantly on any device." />
+  <link rel="canonical" href="https://securetools.com/QR-Code-generator/" />
 
+  <!-- Open Graph for Discord, Facebook -->
+  <meta property="og:title" content="SecureTools – Free, Privacy-First QR Generator" />
+  <meta property="og:description" content="Create QR codes instantly with no watermarks, no signups, and no tracking. Free and secure." />
+  <meta property="og:image" content="https://raw.githubusercontent.com/MidnightMarathon/qrsite/main/preview.png" />
+  <meta property="og:url" content="https://securetools.com/QR-Code-generator/" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SecureTools – Free QR Code Generator" />
+  <meta name="twitter:description" content="Create QR codes instantly with no watermarks, no signups, and no tracking." />
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/MidnightMarathon/qrsite/main/preview.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <link rel="manifest" href="/assets/site.webmanifest" />
+
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SecureTools QR Generator",
+    "url": "https://securetools.com/QR-Code-generator/",
+    "applicationCategory": "WebApplication",
+    "description": "Free QR Code Generator — create QR codes instantly with no watermark or signup.",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <nav>
+    <a href="/" aria-label="SecureTools Home" class="active">SecureTools Home</a>
+    <a href="/about.html" aria-label="Learn more about SecureTools">Learn more about SecureTools</a>
+  </nav>
+
+  <main>
+    <h1>Free QR Code Generator – SecureTools</h1>
+    <p>Create QR codes instantly. No watermark. No signup required.</p>
+
+    <section class="qr-tile">
+      <div class="input-group">
+        <input id="qr-input" type="text" placeholder="https://example.com" aria-label="Enter the URL to generate QR code" />
+        <button id="generate-btn" aria-label="Generate QR Code">Generate QR</button>
+      </div>
+
+      <div id="qr-wrapper" style="display:none;" aria-live="polite">
+        <div id="qr-code" aria-label="Generated QR code"></div>
+      </div>
+
+      <div id="download-controls" style="display:none;">
+        <label for="format-select">Download format:</label>
+        <select id="format-select" aria-label="Select QR code download format">
+          <option value="png">PNG</option>
+          <option value="svg">SVG</option>
+          <option value="jpeg">JPEG</option>
+        </select>
+        <a id="download-link" href="#" aria-label="Download QR code">Download</a>
+      </div>
+
+      <p id="error-msg" class="error-message" style="display:none;" role="alert"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>SecureTools</strong> is a free and privacy-first QR code generator.</p>
+    <p>We do not store your data, use cookies, or track you.</p>
+    <p>All generation happens in your browser.</p>
+    <p>
+      Built with ❤️ using <a href="https://github.com/kozakdenys/qr-code-styling" target="_blank" rel="noopener noreferrer">qr-code-styling</a> (MIT License).
+    </p>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
