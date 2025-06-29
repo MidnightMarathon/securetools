@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SecureTools – Password Generator & Strength Checker</title>
-<meta name="description" content="Generate strong, random passwords and check password strength securely in your browser with SecureTools. No tracking, no signup." />
+<title>SecureTools – Password Generator</title>
+<meta name="description" content="Generate strong, random passwords securely in your browser with SecureTools. No tracking, no signup." />
 <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
 
 <style>
@@ -16,31 +16,45 @@
     animation: gradientFlow 15s ease infinite;
     color: #1d1d1f;
     margin: 0;
-    padding: 2rem 1rem;
+    padding: 2rem 1rem 3rem;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     align-items: center;
   }
   @keyframes gradientFlow {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Home Pill */
+  #home-pill {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    background: #fff;
+    color: #2d9cdb;
+    font-weight: 600;
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    z-index: 1000;
+  }
+  #home-pill:hover {
+    background-color: #d0e6fb;
   }
 
   main {
-    max-width: 520px;
+    max-width: 480px;
     width: 100%;
     background: white;
-    padding: 2rem 2rem 3rem;
+    padding: 2rem 2.5rem;
     border-radius: 20px;
     box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+    box-sizing: border-box;
   }
 
   h1 {
@@ -52,27 +66,48 @@
 
   label {
     display: block;
-    margin: 1rem 0 0.3rem;
+    margin: 1rem 0 0.4rem;
     font-weight: 600;
   }
 
   input[type=range] {
     width: 100%;
+    margin-top: 0.2rem;
   }
 
   .options {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
+    margin-top: 1rem;
   }
 
   .options label {
     flex: 1 1 45%;
     font-weight: normal;
+    user-select: none;
   }
 
-  textarea, input[type=text] {
-    margin-top: 1rem;
+  button {
+    margin-top: 2rem;
+    width: 100%;
+    padding: 0.85rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #2d9cdb;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #1b6ea8;
+  }
+
+  #password {
+    margin-top: 1.5rem;
     width: 100%;
     padding: 1rem;
     font-size: 1.25rem;
@@ -81,35 +116,26 @@
     border-radius: 10px;
     user-select: all;
     background-color: #f9f9f9;
-    word-break: break-all;
-    resize: vertical;
+    word-break: break-word;
+    min-height: 4rem;
+    resize: none;
   }
 
-  #generate-msg, #copy-msg, #custom-copy-msg {
-    margin-top: 0.5rem;
+  #copy-msg {
+    margin-top: 0.75rem;
     color: #2d9cdb;
     font-weight: 600;
     text-align: center;
     display: none;
   }
-
-  #strength-indicator, #custom-strength-indicator {
-    margin-top: 0.25rem;
-    font-weight: 700;
-    font-size: 1rem;
-  }
-
-  #strength-explainer, #custom-strength-explainer {
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: 1rem;
-    font-style: italic;
-  }
 </style>
 </head>
 <body>
+
+<a id="home-pill" href="/">← SecureTools Home</a>
+
 <main>
-  <h1>Password Generator & Strength Checker</h1>
+  <h1>Password Generator</h1>
 
   <label for="length">Length: <span id="length-val">16</span></label>
   <input type="range" id="length" min="8" max="32" value="16" />
@@ -121,60 +147,28 @@
     <label><input type="checkbox" id="symbols" /> Include Symbols (!@#$...)</label>
   </div>
 
+  <button id="generate">Generate Password</button>
+
   <textarea id="password" rows="3" readonly aria-label="Generated password"></textarea>
   <div id="copy-msg" role="alert">Copied to clipboard!</div>
-  <div id="strength-indicator"></div>
-  <div id="strength-explainer"></div>
-
-  <hr style="margin: 3rem 0;" />
-
-  <label for="custom-password">Or check your own password strength:</label>
-  <input type="text" id="custom-password" placeholder="Enter a password to check" aria-label="Password strength checker input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-  <div id="custom-strength-indicator"></div>
-  <div id="custom-strength-explainer"></div>
-  <div id="custom-copy-msg" role="alert">Copied to clipboard!</div>
 </main>
 
 <script>
   const lengthInput = document.getElementById('length');
   const lengthVal = document.getElementById('length-val');
+  const generateBtn = document.getElementById('generate');
   const passwordOutput = document.getElementById('password');
   const copyMsg = document.getElementById('copy-msg');
-  const strengthIndicator = document.getElementById('strength-indicator');
-  const strengthExplainer = document.getElementById('strength-explainer');
-
-  const customPasswordInput = document.getElementById('custom-password');
-  const customStrengthIndicator = document.getElementById('custom-strength-indicator');
-  const customStrengthExplainer = document.getElementById('custom-strength-explainer');
-  const customCopyMsg = document.getElementById('custom-copy-msg');
 
   lengthInput.addEventListener('input', () => {
     lengthVal.textContent = lengthInput.value;
-    generateAndEvaluate();
+    generatePasswordAndUpdate();
   });
 
+  // Also regenerate password immediately if checkboxes change
   ['uppercase', 'lowercase', 'numbers', 'symbols'].forEach(id => {
-    document.getElementById(id).addEventListener('change', generateAndEvaluate);
-  });
-
-  passwordOutput.addEventListener('click', () => {
-    passwordOutput.select();
-    navigator.clipboard.writeText(passwordOutput.value).then(() => {
-      copyMsg.style.display = 'block';
-      setTimeout(() => (copyMsg.style.display = 'none'), 2000);
-    });
-  });
-
-  customPasswordInput.addEventListener('input', () => {
-    evaluatePasswordStrength(customPasswordInput.value, 'custom-strength-indicator', 'custom-strength-explainer');
-  });
-
-  customPasswordInput.addEventListener('click', () => {
-    if (!customPasswordInput.value) return;
-    customPasswordInput.select();
-    navigator.clipboard.writeText(customPasswordInput.value).then(() => {
-      customCopyMsg.style.display = 'block';
-      setTimeout(() => (customCopyMsg.style.display = 'none'), 2000);
+    document.getElementById(id).addEventListener('change', () => {
+      generatePasswordAndUpdate();
     });
   });
 
@@ -192,91 +186,19 @@
 
     if (!charset) return '';
 
+    let password = '';
     const cryptoObj = window.crypto || window.msCrypto;
     const randomValues = new Uint32Array(length);
     cryptoObj.getRandomValues(randomValues);
 
-    let password = '';
     for (let i = 0; i < length; i++) {
       password += charset.charAt(randomValues[i] % charset.length);
     }
+
     return password;
   }
 
-  function formatTime(seconds) {
-    if (seconds < 1) return "< 1 second";
-    const units = [
-      ["second", 60],
-      ["minute", 60],
-      ["hour", 24],
-      ["day", 365],
-      ["year", 100],
-      ["century", 10]
-    ];
-
-    let val = seconds;
-    let unit = "seconds";
-
-    for (let [name, factor] of units) {
-      if (val < factor) break;
-      val /= factor;
-      unit = name;
-    }
-
-    return `${val.toFixed(2)} ${unit}${val >= 2 ? "s" : ""}`;
-  }
-
-  function evaluatePasswordStrength(pwd, targetId, explainerId) {
-    const guessesPerSecond = 1e11; // 100 billion guesses/sec (modern GPU)
-
-    // Calculate charset size:
-    let charsetSize = 0;
-    if (/[a-z]/.test(pwd)) charsetSize += 26;
-    if (/[A-Z]/.test(pwd)) charsetSize += 26;
-    if (/[0-9]/.test(pwd)) charsetSize += 10;
-    if (/[^A-Za-z0-9]/.test(pwd)) charsetSize += 32; // Approx for symbols
-
-    if (!pwd || charsetSize === 0) {
-      document.getElementById(targetId).textContent = '';
-      document.getElementById(explainerId).textContent = '';
-      return;
-    }
-
-    // Calculate entropy in bits: length * log2(charsetSize)
-    const entropy = pwd.length * Math.log2(charsetSize);
-
-    // Estimated time to crack (seconds)
-    const totalCombinations = Math.pow(2, entropy);
-    const timeInSeconds = totalCombinations / guessesPerSecond;
-
-    // Map entropy to strength categories
-    let strengthText = '';
-    let color = '';
-    if (entropy < 28) {
-      strengthText = 'Very Weak';
-      color = '#e74c3c';
-    } else if (entropy < 36) {
-      strengthText = 'Weak';
-      color = '#e67e22';
-    } else if (entropy < 60) {
-      strengthText = 'Moderate';
-      color = '#f1c40f';
-    } else if (entropy < 128) {
-      strengthText = 'Strong';
-      color = '#2ecc71';
-    } else {
-      strengthText = 'Very Strong';
-      color = '#27ae60';
-    }
-
-    document.getElementById(targetId).textContent =
-      `Strength: ${strengthText} — Entropy: ${entropy.toFixed(1)} bits — Estimated crack time: ${formatTime(timeInSeconds)}`;
-    document.getElementById(targetId).style.color = color;
-    document.getElementById(explainerId).textContent =
-      `Entropy is a measure of password unpredictability. Estimated cracking assumes brute-force attack at ~100 billion guesses/sec (modern GPU).`;
-  }
-
-  function generateAndEvaluate() {
+  function generatePasswordAndUpdate() {
     const options = {
       uppercase: document.getElementById('uppercase').checked,
       lowercase: document.getElementById('lowercase').checked,
@@ -284,14 +206,24 @@
       symbols: document.getElementById('symbols').checked,
     };
     const length = parseInt(lengthInput.value, 10);
+
     const pwd = generatePassword(length, options);
     passwordOutput.value = pwd;
     copyMsg.style.display = 'none';
-    evaluatePasswordStrength(pwd, 'strength-indicator', 'strength-explainer');
   }
 
-  // Generate initial password and evaluate strength on load
-  generateAndEvaluate();
+  generateBtn.addEventListener('click', generatePasswordAndUpdate);
+
+  passwordOutput.addEventListener('click', () => {
+    passwordOutput.select();
+    navigator.clipboard.writeText(passwordOutput.value).then(() => {
+      copyMsg.style.display = 'block';
+      setTimeout(() => (copyMsg.style.display = 'none'), 2000);
+    });
+  });
+
+  // Generate initial password on load
+  generatePasswordAndUpdate();
 </script>
 </body>
 </html>
