@@ -1,165 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SecureTools – Free Privacy-First Web Tools</title>
-  <meta name="description" content="SecureTools offers free, privacy-first web tools including QR code generator, password generator, UUID generator, and more." />
-  <link rel="canonical" href="https://securetools.com/" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SecureTools – Free Privacy-First Web Tools</title>
+<meta name="description" content="SecureTools offers free, privacy-first web tools including QR code generator, password generator, UUID generator, and more." />
+<link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="SecureTools – Free Privacy-First Web Tools" />
-  <meta property="og:description" content="Generate QR codes, passwords, UUIDs and more with SecureTools. No tracking, no signups." />
-  <meta property="og:url" content="https://securetools.com/" />
-  <meta property="og:type" content="website" />
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
+    background-size: 300% 300%;
+    animation: gradientFlow 15s ease infinite;
+    color: #1d1d1f;
+    margin: 0;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+  }
+  @keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="SecureTools – Free Privacy-First Web Tools" />
-  <meta name="twitter:description" content="Generate QR codes, passwords, UUIDs and more with SecureTools. No tracking, no signups." />
+  nav {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+  }
 
-  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
-  <link rel="stylesheet" href="/assets/styles.css" />
+  nav a {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background-color: #fff;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+  }
 
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-      background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
-      background-size: 300% 300%;
-      animation: gradientFlow 15s ease infinite;
-      color: #1d1d1f;
-      margin: 0;
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      align-items: center;
-    }
-    @keyframes gradientFlow {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
+  nav a.active,
+  nav a:hover {
+    background-color: #d0d0d5;
+    color: #2d9cdb;
+    border-color: rgba(0, 0, 0, 0.15);
+  }
 
-    nav {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      display: flex;
-      gap: 0.5rem;
-      z-index: 10;
-    }
+  main {
+    max-width: 960px;
+    margin-top: 5rem;
+    width: 100%;
+    padding: 0 1rem;
+  }
 
-    nav a {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background-color: #fff;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      color: #333;
-      text-decoration: none;
-      font-weight: 600;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s ease;
-    }
+  h1 {
+    font-weight: 700;
+    font-size: 2.25rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
 
-    nav a.active,
-    nav a:hover {
-      background-color: #d0d0d5;
-      color: #2d9cdb;
-      border-color: rgba(0, 0, 0, 0.15);
-    }
+  p.description {
+    font-size: 1.15rem;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 3rem auto;
+    color: #444;
+  }
 
-    main {
-      max-width: 960px;
-      margin-top: 5rem;
-      width: 100%;
-      padding: 0 1rem;
-    }
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+  }
 
-    h1 {
-      font-weight: 700;
-      font-size: 2.25rem;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
+  .tool-tile {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
-    p.description {
-      font-size: 1.15rem;
-      text-align: center;
-      max-width: 600px;
-      margin: 0 auto 3rem auto;
-      color: #444;
-    }
+  .tool-tile:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
 
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 2rem;
-    }
+  .tool-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: #2d9cdb;
+  }
 
-    .tool-tile {
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-      padding: 2rem 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+  .tool-name {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #1d1d1f;
+  }
 
-    .tool-tile:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
+  .tool-desc {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.4;
+  }
 
-    .tool-icon {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
-      color: #2d9cdb;
-    }
+  footer {
+    margin-top: auto;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #555;
+  }
 
-    .tool-name {
-      font-weight: 700;
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
-      color: #1d1d1f;
-    }
-
-    .tool-desc {
-      font-size: 1rem;
-      color: #666;
-      line-height: 1.4;
-    }
-
-    footer {
-      margin-top: auto;
-      padding: 1.5rem 1rem;
-      text-align: center;
-      font-size: 0.875rem;
-      color: #555;
-    }
-
-    a.tool-link {
-      color: inherit;
-      text-decoration: none;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-  </style>
+  a.tool-link {
+    color: inherit;
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+</style>
 </head>
 <body>
   <nav>
@@ -174,7 +154,7 @@
     </p>
 
     <section class="tools-grid">
-      <a href="/QR-Code-generator/" class="tool-link" aria-label="QR Code Generator">
+      <a href="/qr-code-generator/index.html" class="tool-link" aria-label="QR Code Generator">
         <article class="tool-tile" role="button" tabindex="0">
           <div class="tool-icon">🔳</div>
           <h2 class="tool-name">QR Code Generator</h2>
@@ -182,7 +162,7 @@
         </article>
       </a>
 
-      <a href="/password-generator/" class="tool-link" aria-label="Password Generator">
+      <a href="/password-generator/index.html" class="tool-link" aria-label="Password Generator">
         <article class="tool-tile" role="button" tabindex="0">
           <div class="tool-icon">🔑</div>
           <h2 class="tool-name">Password Generator</h2>
@@ -190,7 +170,7 @@
         </article>
       </a>
 
-      <a href="/uuid-generator/" class="tool-link" aria-label="UUID Generator">
+      <a href="/uuid-generator/index.html" class="tool-link" aria-label="UUID Generator">
         <article class="tool-tile" role="button" tabindex="0">
           <div class="tool-icon">🆔</div>
           <h2 class="tool-name">UUID Generator</h2>
