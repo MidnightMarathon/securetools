@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SecureTools – Password Generator</title>
+  <title>SecureTools – Password Generator & Checker</title>
   <meta name="description" content="Generate strong, random passwords securely in your browser with SecureTools. No tracking, no signup." />
   <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js" defer></script>
@@ -37,6 +37,7 @@
       text-decoration: none;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       user-select: none;
+      z-index: 10;
     }
 
     main {
@@ -117,6 +118,17 @@
     input[type=range] {
       width: 100%;
     }
+
+    #check-container {
+      margin-top: 3rem;
+      border-top: 1px solid #ccc;
+      padding-top: 2rem;
+    }
+
+    #check-label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -142,16 +154,30 @@
   <div class="bar-label">Entropy Strength</div>
   <div class="bar"><div id="entropy-fill" class="fill"></div></div>
   <div class="description" id="entropy-desc">
-    Entropy measures the randomness and complexity of your password. Higher entropy means a stronger password.<br>
+    Entropy measures the randomness and complexity of your password.<br>
     Estimated crack time assumes 10 billion guesses per second.
   </div>
 
   <div class="bar-label" style="margin-top: 1.25rem;">zxcvbn Pattern Strength</div>
   <div class="bar"><div id="zxcvbn-fill" class="fill"></div></div>
   <div class="description" id="zxcvbn-desc">
-    The <code>zxcvbn</code> score detects common patterns and weaknesses like dictionary words or repeats.<br>
+    The <code>zxcvbn</code> score detects common patterns and weaknesses like dictionary words or repeated sequences.<br>
     Score ranges from 0 (very weak) to 4 (very strong).
   </div>
+
+  <section id="check-container" aria-label="Check your own password">
+    <div id="check-label">Check Your Own Password</div>
+    <textarea id="own-password" placeholder="Type or paste your password here"></textarea>
+    <button id="check-btn">Check Password</button>
+
+    <div class="bar-label">Entropy Strength</div>
+    <div class="bar"><div id="entropy-fill-own" class="fill"></div></div>
+    <div class="description" id="entropy-desc-own"></div>
+
+    <div class="bar-label" style="margin-top: 1.25rem;">zxcvbn Pattern Strength</div>
+    <div class="bar"><div id="zxcvbn-fill-own" class="fill"></div></div>
+    <div class="description" id="zxcvbn-desc-own"></div>
+  </section>
 </main>
 
 <script>
@@ -189,7 +215,7 @@
     return { entropy, crackSeconds };
   }
 
-  // Format seconds into readable units (largest unit only)
+  // Format seconds into readable units (largest unit only), with commas on years
   function formatCrackTime(seconds) {
     if (seconds < 1) return 'less than 1 second';
     const units = [
@@ -202,13 +228,23 @@
     for (const u of units) {
       const amount = Math.floor(seconds / u.sec);
       if (amount > 0) {
-        return `${amount} ${u.label}`;
+        if (u.label === 'years') return amount.toLocaleString() + ' ' + u.label;
+        return amount + ' ' + u.label;
       }
     }
     return 'less than 1 second';
   }
 
-  function updateUI() {
+  // Map entropy bits to strength label + color for easier reading
+  function entropyStrength(entropy) {
+    if (entropy >= 80) return { label: 'Very Strong', color: '#0275d8' };
+    if (entropy >= 60) return { label: 'Strong', color: '#5cb85c' };
+    if (entropy >= 40) return { label: 'Moderate', color: '#f9a825' };
+    if (entropy >= 20) return { label: 'Weak', color: '#f0ad4e' };
+    return { label: 'Very Weak', color: '#d9534f' };
+  }
+
+  function updateGenerated() {
     const opts = {
       uppercase: document.getElementById('uppercase').checked,
       lowercase: document.getElementById('lowercase').checked,
@@ -221,38 +257,46 @@
     const password = generatePassword(length, opts);
     document.getElementById('password').value = password;
 
-    // Entropy bar update
-    const { entropy, crackSeconds } = calculateEntropy(password);
-    // Cap entropy for bar width (say max 100 bits)
-    const entropyPct = Math.min(100, entropy);
-    const entropyFill = document.getElementById('entropy-fill');
-    entropyFill.style.width = entropyPct + '%';
-    entropyFill.style.backgroundColor = entropy > 80 ? '#0275d8' : entropy > 60 ? '#5cb85c' : entropy > 40 ? '#f9a825' : entropy > 20 ? '#f0ad4e' : '#d9534f';
-    document.getElementById('entropy-desc').innerHTML =
-      `Entropy: <strong>${entropy.toFixed(1)}</strong> bits — Estimated crack time: <strong>${formatCrackTime(crackSeconds)}</strong>`;
+    updateStrength(password, 'entropy-fill', 'entropy-desc', 'zxcvbn-fill', 'zxcvbn-desc');
+  }
 
-    // zxcvbn bar update
+  function updateStrength(password, entropyFillId, entropyDescId, zxcvbnFillId, zxcvbnDescId) {
+    const { entropy, crackSeconds } = calculateEntropy(password);
+    const { label, color } = entropyStrength(entropy);
+
+    const entropyFill = document.getElementById(entropyFillId);
+    const entropyDesc = document.getElementById(entropyDescId);
+    entropyFill.style.width = Math.min(100, entropy) + '%';
+    entropyFill.style.backgroundColor = color;
+    entropyDesc.innerHTML = `Entropy: <strong>${entropy.toFixed(1)}</strong> bits — Strength: <strong>${label}</strong><br>Estimated crack time: <strong>${formatCrackTime(crackSeconds)}</strong>`;
+
     if (typeof zxcvbn === 'function') {
       const result = zxcvbn(password);
       const score = result.score; // 0-4
       const colors = ['#d9534f', '#f0ad4e', '#f9a825', '#5cb85c', '#0275d8'];
       const labels = ['Very Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'];
 
-      const zxcvbnFill = document.getElementById('zxcvbn-fill');
+      const zxcvbnFill = document.getElementById(zxcvbnFillId);
+      const zxcvbnDesc = document.getElementById(zxcvbnDescId);
       zxcvbnFill.style.width = `${(score + 1) * 20}%`;
       zxcvbnFill.style.backgroundColor = colors[score];
-      document.getElementById('zxcvbn-desc').innerHTML =
-        `zxcvbn Score: <strong>${labels[score]}</strong> — Detects common patterns and weaknesses.`;
+      zxcvbnDesc.innerHTML = `zxcvbn Score: <strong>${labels[score]}</strong> — Detects common patterns and weaknesses.`;
     }
   }
 
-  document.getElementById('generate').addEventListener('click', updateUI);
+  document.getElementById('generate').addEventListener('click', updateGenerated);
   ['length', 'uppercase', 'lowercase', 'numbers', 'symbols'].forEach(id => {
-    document.getElementById(id).addEventListener('input', updateUI);
+    document.getElementById(id).addEventListener('input', updateGenerated);
   });
 
-  // Initial run
-  updateUI();
+  document.getElementById('check-btn').addEventListener('click', () => {
+    const ownPwd = document.getElementById('own-password').value.trim();
+    if (!ownPwd) return alert('Please enter a password to check.');
+    updateStrength(ownPwd, 'entropy-fill-own', 'entropy-desc-own', 'zxcvbn-fill-own', 'zxcvbn-desc-own');
+  });
+
+  // Initialize generated password on load
+  updateGenerated();
 </script>
 </body>
 </html>
