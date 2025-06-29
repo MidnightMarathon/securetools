@@ -129,6 +129,14 @@
       font-weight: 600;
       margin-bottom: 0.5rem;
     }
+
+    ul {
+      margin: 0.25rem 0 0 1rem;
+      padding: 0;
+      list-style-type: disc;
+      font-size: 0.9rem;
+      color: #444;
+    }
   </style>
 </head>
 <body>
@@ -155,7 +163,7 @@
   <div class="bar"><div id="entropy-fill" class="fill"></div></div>
   <div class="description" id="entropy-desc">
     Entropy measures the randomness and complexity of your password.<br>
-    Estimated crack time assumes 10 billion guesses per second.
+    Estimated crack time assuming different attacker resources:
   </div>
 
   <div class="bar-label" style="margin-top: 1.25rem;">zxcvbn Pattern Strength</div>
@@ -186,7 +194,6 @@
   const numbers = '0123456789';
   const symbols = '!@#$%^&*()-_=+[]{}|;:,.<>?';
 
-  // Generate password with selected charset and length
   function generatePassword(length, opts) {
     let charset = '';
     if (opts.uppercase) charset += upper;
@@ -202,7 +209,6 @@
     return Array.from(values).map(v => charset[v % charset.length]).join('');
   }
 
-  // Calculate entropy bits and estimate crack time in seconds
   function calculateEntropy(password) {
     let charsetSize = 0;
     if (/[A-Z]/.test(password)) charsetSize += upper.length;
@@ -211,11 +217,9 @@
     if (/[^A-Za-z0-9]/.test(password)) charsetSize += symbols.length;
 
     const entropy = password.length * Math.log2(charsetSize || 1);
-    const crackSeconds = Math.pow(2, entropy) / 1e10; // 10 billion guesses/sec attacker
-    return { entropy, crackSeconds };
+    return { entropy };
   }
 
-  // Format seconds into readable units (largest unit only), with commas on years
   function formatCrackTime(seconds) {
     if (seconds < 1) return 'less than 1 second';
     const units = [
@@ -235,7 +239,6 @@
     return 'less than 1 second';
   }
 
-  // Map entropy bits to strength label + color for easier reading
   function entropyStrength(entropy) {
     if (entropy >= 80) return { label: 'Very Strong', color: '#0275d8' };
     if (entropy >= 60) return { label: 'Strong', color: '#5cb85c' };
@@ -244,35 +247,36 @@
     return { label: 'Very Weak', color: '#d9534f' };
   }
 
-  function updateGenerated() {
-    const opts = {
-      uppercase: document.getElementById('uppercase').checked,
-      lowercase: document.getElementById('lowercase').checked,
-      numbers: document.getElementById('numbers').checked,
-      symbols: document.getElementById('symbols').checked,
-    };
-    const length = parseInt(document.getElementById('length').value, 10);
-    document.getElementById('length-val').textContent = length;
-
-    const password = generatePassword(length, opts);
-    document.getElementById('password').value = password;
-
-    updateStrength(password, 'entropy-fill', 'entropy-desc', 'zxcvbn-fill', 'zxcvbn-desc');
-  }
-
   function updateStrength(password, entropyFillId, entropyDescId, zxcvbnFillId, zxcvbnDescId) {
-    const { entropy, crackSeconds } = calculateEntropy(password);
+    const { entropy } = calculateEntropy(password);
     const { label, color } = entropyStrength(entropy);
 
     const entropyFill = document.getElementById(entropyFillId);
     const entropyDesc = document.getElementById(entropyDescId);
     entropyFill.style.width = Math.min(100, entropy) + '%';
     entropyFill.style.backgroundColor = color;
-    entropyDesc.innerHTML = `Entropy: <strong>${entropy.toFixed(1)}</strong> bits — Strength: <strong>${label}</strong><br>Estimated crack time: <strong>${formatCrackTime(crackSeconds)}</strong>`;
+
+    const attackers = [
+      { name: 'Novice (CPU)', guessesPerSec: 1e3 },
+      { name: 'Advanced (RTX 3090)', guessesPerSec: 1e10 },
+      { name: 'Small Government', guessesPerSec: 1e14 },
+      { name: 'Large Government', guessesPerSec: 1e18 },
+    ];
+
+    let timesHtml = attackers.map(attacker => {
+      const crackSeconds = Math.pow(2, entropy) / attacker.guessesPerSec;
+      return `<li><strong>${attacker.name}</strong>: ${formatCrackTime(crackSeconds)}</li>`;
+    }).join('');
+
+    entropyDesc.innerHTML = `
+      Entropy: <strong>${entropy.toFixed(1)}</strong> bits — Strength: <strong>${label}</strong><br>
+      Estimated crack time against different attackers:
+      <ul>${timesHtml}</ul>
+    `;
 
     if (typeof zxcvbn === 'function') {
       const result = zxcvbn(password);
-      const score = result.score; // 0-4
+      const score = result.score;
       const colors = ['#d9534f', '#f0ad4e', '#f9a825', '#5cb85c', '#0275d8'];
       const labels = ['Very Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'];
 
@@ -295,7 +299,22 @@
     updateStrength(ownPwd, 'entropy-fill-own', 'entropy-desc-own', 'zxcvbn-fill-own', 'zxcvbn-desc-own');
   });
 
-  // Initialize generated password on load
+  function updateGenerated() {
+    const opts = {
+      uppercase: document.getElementById('uppercase').checked,
+      lowercase: document.getElementById('lowercase').checked,
+      numbers: document.getElementById('numbers').checked,
+      symbols: document.getElementById('symbols').checked,
+    };
+    const length = parseInt(document.getElementById('length').value, 10);
+    document.getElementById('length-val').textContent = length;
+
+    const password = generatePassword(length, opts);
+    document.getElementById('password').value = password;
+
+    updateStrength(password, 'entropy-fill', 'entropy-desc', 'zxcvbn-fill', 'zxcvbn-desc');
+  }
+
   updateGenerated();
 </script>
 </body>
