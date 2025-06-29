@@ -71,23 +71,8 @@
     font-weight: normal;
   }
 
-  button {
-    margin-top: 1.5rem;
-    width: 100%;
-    padding: 0.8rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: white;
-    background-color: #2d9cdb;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  button:hover {
-    background-color: #1b6ea8;
-  }
+  /* Removed the generate button styling since button is optional now */
+  /* You can comment out or delete the button element below in HTML if you want */
 
   #password {
     margin-top: 1rem;
@@ -125,7 +110,8 @@
     <label><input type="checkbox" id="symbols" /> Include Symbols (!@#$...)</label>
   </div>
 
-  <button id="generate">Generate Password</button>
+  <!-- You can remove this button if you want, it's no longer needed -->
+  <button id="generate" style="display:none;">Generate Password</button>
 
   <textarea id="password" rows="3" readonly aria-label="Generated password"></textarea>
   <div id="copy-msg" role="alert">Copied to clipboard!</div>
@@ -134,13 +120,12 @@
 <script>
   const lengthInput = document.getElementById('length');
   const lengthVal = document.getElementById('length-val');
-  const generateBtn = document.getElementById('generate');
   const passwordOutput = document.getElementById('password');
   const copyMsg = document.getElementById('copy-msg');
 
-  lengthInput.addEventListener('input', () => {
+  function updateLengthDisplay() {
     lengthVal.textContent = lengthInput.value;
-  });
+  }
 
   function generatePassword(length, options) {
     const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -168,7 +153,9 @@
     return password;
   }
 
-  generateBtn.addEventListener('click', () => {
+  function updatePassword() {
+    updateLengthDisplay();
+
     const options = {
       uppercase: document.getElementById('uppercase').checked,
       lowercase: document.getElementById('lowercase').checked,
@@ -180,6 +167,12 @@
     const pwd = generatePassword(length, options);
     passwordOutput.value = pwd;
     copyMsg.style.display = 'none';
+  }
+
+  lengthInput.addEventListener('input', updatePassword);
+
+  ['uppercase', 'lowercase', 'numbers', 'symbols'].forEach(id => {
+    document.getElementById(id).addEventListener('change', updatePassword);
   });
 
   passwordOutput.addEventListener('click', () => {
@@ -190,9 +183,8 @@
     });
   });
 
-  // Generate an initial password on load
-  generateBtn.click();
+  // Initial password on page load
+  updatePassword();
 </script>
 </body>
 </html>
-
