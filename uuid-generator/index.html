@@ -227,41 +227,53 @@
   }
 
   function evaluatePasswordStrength(pwd, targetId, explainerId) {
-    const guessesPerSecond = 1e11; // 100 billion guesses/sec (e.g., RTX 4090)
+    const guessesPerSecond = 1e11; // 100 billion guesses/sec (modern GPU)
 
+    // Calculate charset size:
     let charsetSize = 0;
     if (/[a-z]/.test(pwd)) charsetSize += 26;
     if (/[A-Z]/.test(pwd)) charsetSize += 26;
     if (/[0-9]/.test(pwd)) charsetSize += 10;
     if (/[^A-Za-z0-9]/.test(pwd)) charsetSize += 32; // Approx for symbols
 
-    if (pwd.length === 0 || charsetSize === 0) {
+    if (!pwd || charsetSize === 0) {
       document.getElementById(targetId).textContent = '';
       document.getElementById(explainerId).textContent = '';
       return;
     }
 
-    const totalCombos = Math.pow(charsetSize, pwd.length);
-    const timeInSeconds = totalCombos / guessesPerSecond;
+    // Calculate entropy in bits: length * log2(charsetSize)
+    const entropy = pwd.length * Math.log2(charsetSize);
 
-    let score = 0;
-    if (pwd.length >= 8) score++;
-    if (/[A-Z]/.test(pwd)) score++;
-    if (/[a-z]/.test(pwd)) score++;
-    if (/[0-9]/.test(pwd)) score++;
-    if (/[^A-Za-z0-9]/.test(pwd)) score++;
+    // Estimated time to crack (seconds)
+    const totalCombinations = Math.pow(2, entropy);
+    const timeInSeconds = totalCombinations / guessesPerSecond;
 
-    const strengthText = ["Very Weak", "Weak", "Moderate", "Strong", "Very Strong"];
-    const colors = ["#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#27ae60"];
-    const index = Math.max(0, Math.min(score - 1, strengthText.length - 1));
-
-    const crackTime = formatTime(timeInSeconds);
+    // Map entropy to strength categories
+    let strengthText = '';
+    let color = '';
+    if (entropy < 28) {
+      strengthText = 'Very Weak';
+      color = '#e74c3c';
+    } else if (entropy < 36) {
+      strengthText = 'Weak';
+      color = '#e67e22';
+    } else if (entropy < 60) {
+      strengthText = 'Moderate';
+      color = '#f1c40f';
+    } else if (entropy < 128) {
+      strengthText = 'Strong';
+      color = '#2ecc71';
+    } else {
+      strengthText = 'Very Strong';
+      color = '#27ae60';
+    }
 
     document.getElementById(targetId).textContent =
-      `Strength: ${strengthText[index]} – Estimated crack time: ${crackTime}`;
-    document.getElementById(targetId).style.color = colors[index];
+      `Strength: ${strengthText} — Entropy: ${entropy.toFixed(1)} bits — Estimated crack time: ${formatTime(timeInSeconds)}`;
+    document.getElementById(targetId).style.color = color;
     document.getElementById(explainerId).textContent =
-      `Assumes brute-force guessing at ~100 billion guesses per second (modern GPU).`;
+      `Entropy is a measure of password unpredictability. Estimated cracking assumes brute-force attack at ~100 billion guesses/sec (modern GPU).`;
   }
 
   function generateAndEvaluate() {
