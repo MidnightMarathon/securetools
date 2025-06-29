@@ -1,217 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SecureTools – Password Generator</title>
-<meta name="description" content="Generate strong, random passwords securely in your browser with SecureTools. No tracking, no signup." />
-<link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SecureTools – Password Generator</title>
+  <meta name="description" content="Generate strong, random passwords securely in your browser with SecureTools. No tracking, no signup." />
+  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js" defer></script>
 
-<style>
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    background: linear-gradient(135deg, #f093fb, #8fd3f4, #b388eb);
-    background-size: 300% 300%;
-    animation: gradientFlow 15s ease infinite;
-    color: #1d1d1f;
-    margin: 0;
-    padding: 2rem 1rem 3rem;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    align-items: center;
-  }
-  @keyframes gradientFlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      background: linear-gradient(135deg, #f093fb, #8fd3f4, #b388eb);
+      background-size: 300% 300%;
+      animation: gradientFlow 15s ease infinite;
+      color: #1d1d1f;
+      margin: 0;
+      padding: 2rem 1rem 3rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+    }
 
-  /* Home Pill */
-  #home-pill {
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    background: #fff;
-    color: #2d9cdb;
-    font-weight: 600;
-    border-radius: 9999px;
-    padding: 0.5rem 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-    z-index: 1000;
-  }
-  #home-pill:hover {
-    background-color: #d0e6fb;
-  }
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-  main {
-    max-width: 480px;
-    width: 100%;
-    background: white;
-    padding: 2rem 2.5rem;
-    border-radius: 20px;
-    box-shadow: 0 15px 25px rgba(0,0,0,0.1);
-    box-sizing: border-box;
-  }
+    #home-pill {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      background: #fff;
+      color: #2d9cdb;
+      font-weight: 600;
+      border-radius: 9999px;
+      padding: 0.5rem 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+      z-index: 1000;
+    }
+    #home-pill:hover {
+      background-color: #d0e6fb;
+    }
 
-  h1 {
-    font-weight: 700;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
+    main {
+      max-width: 480px;
+      width: 100%;
+      background: white;
+      padding: 2rem 2rem 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+    }
 
-  label {
-    display: block;
-    margin: 1rem 0 0.4rem;
-    font-weight: 600;
-  }
+    h1 {
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 1.25rem;
+      text-align: center;
+    }
 
-  input[type=range] {
-    width: 100%;
-    margin-top: 0.2rem;
-  }
+    label {
+      display: block;
+      margin: 1rem 0 0.4rem;
+      font-weight: 600;
+    }
 
-  .options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
+    input[type=range] {
+      width: 100%;
+    }
 
-  .options label {
-    flex: 1 1 45%;
-    font-weight: normal;
-    user-select: none;
-  }
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
 
-  button {
-    margin-top: 2rem;
-    width: 100%;
-    padding: 0.85rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: white;
-    background-color: #2d9cdb;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
+    .options label {
+      flex: 1 1 45%;
+      font-weight: normal;
+    }
 
-  button:hover {
-    background-color: #1b6ea8;
-  }
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.85rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      background-color: #2d9cdb;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
 
-  textarea, #password {
-    margin-top: 1.5rem;
-    width: 100%;
-    padding: 1rem;
-    font-size: 1.25rem;
-    font-family: monospace;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    user-select: all;
-    background-color: #f9f9f9;
-    word-break: break-word;
-    min-height: 4rem;
-    resize: none;
-  }
+    button:hover {
+      background-color: #1b6ea8;
+    }
 
-  #copy-msg {
-    margin-top: 0.75rem;
-    color: #2d9cdb;
-    font-weight: 600;
-    text-align: center;
-    display: none;
-  }
+    textarea, #password {
+      margin-top: 1.2rem;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.25rem;
+      font-family: monospace;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      user-select: all;
+      background-color: #f9f9f9;
+      resize: none;
+      min-height: 4rem;
+    }
 
-  #strength {
-    margin-top: 1.5rem;
-    font-weight: 600;
-    text-align: center;
-    color: #333;
-  }
+    #copy-msg {
+      margin-top: 0.5rem;
+      color: #2d9cdb;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+    }
 
-  #strength-bar {
-    height: 12px;
-    width: 100%;
-    border-radius: 8px;
-    background: #ddd;
-    margin-top: 0.5rem;
-    overflow: hidden;
-  }
+    #strength {
+      margin-top: 1rem;
+      font-weight: 600;
+      text-align: center;
+    }
 
-  #strength-fill {
-    height: 100%;
-    width: 0%;
-    background: #2d9cdb;
-    transition: width 0.3s ease;
-  }
+    #strength-bar {
+      height: 12px;
+      width: 100%;
+      border-radius: 8px;
+      background: #ddd;
+      margin-top: 0.4rem;
+      overflow: hidden;
+    }
 
-  #explanation {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: #444;
-    line-height: 1.4;
-  }
+    #strength-fill {
+      height: 100%;
+      width: 0%;
+      background: #2d9cdb;
+      transition: width 0.3s ease;
+    }
 
-  /* Own password checker section */
-  #own-password-section {
-    margin-top: 3rem;
-    padding-top: 1.5rem;
-    border-top: 2px solid #eee;
-  }
-
-  #own-password-section label {
-    margin-bottom: 0.3rem;
-    font-weight: 600;
-  }
-
-  #own-password {
-    margin-top: 0.3rem;
-    width: 100%;
-    padding: 0.8rem;
-    font-size: 1.1rem;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    box-sizing: border-box;
-  }
-
-  #own-strength {
-    margin-top: 1rem;
-    font-weight: 600;
-    text-align: center;
-    color: #333;
-  }
-
-  #own-strength-bar {
-    height: 12px;
-    width: 100%;
-    border-radius: 8px;
-    background: #ddd;
-    margin-top: 0.5rem;
-    overflow: hidden;
-  }
-
-  #own-strength-fill {
-    height: 100%;
-    width: 0%;
-    background: #2d9cdb;
-    transition: width 0.3s ease;
-  }
-
-  #own-explanation {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: #444;
-    line-height: 1.4;
-  }
-
-</style>
+    #explanation {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: #444;
+      line-height: 1.4;
+    }
+  </style>
 </head>
 <body>
 
@@ -224,99 +166,41 @@
   <input type="range" id="length" min="8" max="32" value="16" />
 
   <div class="options">
-    <label><input type="checkbox" id="uppercase" checked /> Include Uppercase (A-Z)</label>
-    <label><input type="checkbox" id="lowercase" checked /> Include Lowercase (a-z)</label>
-    <label><input type="checkbox" id="numbers" checked /> Include Numbers (0-9)</label>
-    <label><input type="checkbox" id="symbols" /> Include Symbols (!@#$...)</label>
+    <label><input type="checkbox" id="uppercase" checked /> Uppercase (A-Z)</label>
+    <label><input type="checkbox" id="lowercase" checked /> Lowercase (a-z)</label>
+    <label><input type="checkbox" id="numbers" checked /> Numbers (0-9)</label>
+    <label><input type="checkbox" id="symbols" /> Symbols (!@#$...)</label>
   </div>
 
   <button id="generate">Generate Password</button>
 
-  <textarea id="password" rows="3" readonly aria-label="Generated password"></textarea>
-  <div id="copy-msg" role="alert">Copied to clipboard!</div>
+  <textarea id="password" readonly></textarea>
+  <div id="copy-msg">Copied to clipboard!</div>
 
   <div id="strength">
     Strength: <span id="strength-text">—</span>
     <div id="strength-bar"><div id="strength-fill"></div></div>
   </div>
 
-  <div id="explanation" aria-live="polite">
-    Move the slider and toggle options above to generate a secure password.<br />
-    Strength estimates are based on password entropy and approximate cracking time assuming a powerful GPU attacker.
+  <div id="explanation">
+    This strength score is powered by <code>zxcvbn</code>, estimating time to crack using real-world attack patterns and a powerful GPU.
   </div>
-
-  <section id="own-password-section">
-    <h2>Or check your own password strength</h2>
-    <label for="own-password">Enter password to check:</label>
-    <input type="password" id="own-password" aria-describedby="own-explanation" />
-
-    <div id="own-strength">
-      Strength: <span id="own-strength-text">—</span>
-      <div id="own-strength-bar"><div id="own-strength-fill"></div></div>
-    </div>
-
-    <div id="own-explanation" aria-live="polite">
-      Paste any password above to see an entropy-based strength estimate and how long it might take to crack.
-    </div>
-  </section>
 </main>
 
 <script>
-  // Constants for character sets
   const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const lower = 'abcdefghijklmnopqrstuvwxyz';
   const numbers = '0123456789';
   const symbols = '!@#$%^&*()-_=+[]{}|;:,.<>?';
 
-  // Map strength levels for UI
-  function getStrengthLevel(entropyBits, crackTimeSeconds) {
-    // Rough categories based on entropy and cracking time
-    // Entropy thresholds (bits)
-    if (entropyBits < 28) return {label: 'Very Weak', color: '#d9534f'};   // < 28 bits ~ seconds-minutes cracking
-    if (entropyBits < 36) return {label: 'Weak', color: '#f0ad4e'};        // 28-36 bits ~ minutes-hours
-    if (entropyBits < 60) return {label: 'Moderate', color: '#f9a825'};    // 36-60 bits ~ hours-days
-    if (entropyBits < 80) return {label: 'Strong', color: '#5cb85c'};      // 60-80 bits ~ years
-    return {label: 'Very Strong', color: '#0275d8'};                       // 80+ bits ~ centuries or more
-  }
+  const lengthInput = document.getElementById('length');
+  const lengthVal = document.getElementById('length-val');
+  const generateBtn = document.getElementById('generate');
+  const passwordOutput = document.getElementById('password');
+  const strengthText = document.getElementById('strength-text');
+  const strengthFill = document.getElementById('strength-fill');
+  const copyMsg = document.getElementById('copy-msg');
 
-  // Calculate entropy (bits)
-  // entropy = length * log2(charset size)
-  function calculateEntropy(length, charsetSize) {
-    return length * Math.log2(charsetSize);
-  }
-
-  // Estimate cracking time in seconds
-  // Assume attacker can do ~10 billion guesses/second (a strong GPU rig)
-  // time = 2^(entropy) / guesses per second
-  function estimateCrackTime(entropyBits) {
-    const guessesPerSecond = 1e10; // 10 billion guesses/sec
-    return Math.pow(2, entropyBits) / guessesPerSecond;
-  }
-
-  // Format seconds into human-readable string
-  function formatCrackTime(seconds) {
-    if (seconds < 1) return 'less than 1 second';
-    const units = [
-      { label: 'years', seconds: 31536000 },
-      { label: 'days', seconds: 86400 },
-      { label: 'hours', seconds: 3600 },
-      { label: 'minutes', seconds: 60 },
-      { label: 'seconds', seconds: 1 },
-    ];
-    let remaining = seconds;
-    let result = [];
-    for (const unit of units) {
-      const count = Math.floor(remaining / unit.seconds);
-      if (count > 0) {
-        result.push(`${count} ${unit.label}`);
-        remaining -= count * unit.seconds;
-      }
-      if (result.length >= 2) break; // show max 2 units
-    }
-    return result.join(', ');
-  }
-
-  // Generate password using crypto secure random
   function generatePassword(length, options) {
     let charset = '';
     if (options.uppercase) charset += upper;
@@ -326,106 +210,68 @@
 
     if (!charset) return '';
 
-    let password = '';
     const cryptoObj = window.crypto || window.msCrypto;
-    const randomValues = new Uint32Array(length);
-    cryptoObj.getRandomValues(randomValues);
+    const values = new Uint32Array(length);
+    cryptoObj.getRandomValues(values);
 
-    for (let i = 0; i < length; i++) {
-      password += charset.charAt(randomValues[i] % charset.length);
-    }
-    return password;
+    return Array.from(values).map(v => charset[v % charset.length]).join('');
   }
 
-  // Calculate strength and update UI
-  function updateStrength(password, outputTextId, fillBarId, explanationId) {
-    if (!password) {
-      document.getElementById(outputTextId).textContent = '—';
-      document.getElementById(fillBarId).style.width = '0%';
-      document.getElementById(explanationId).textContent = '';
-      return;
-    }
+  function updateStrength(password) {
+    if (!password || typeof zxcvbn !== 'function') return;
 
-    // Determine charset size used in the password
-    let charsetSize = 0;
-    if (/[A-Z]/.test(password)) charsetSize += upper.length;
-    if (/[a-z]/.test(password)) charsetSize += lower.length;
-    if (/\d/.test(password)) charsetSize += numbers.length;
-    if (/[^A-Za-z0-9]/.test(password)) charsetSize += symbols.length;
+    const result = zxcvbn(password);
+    const score = result.score; // 0–4
+    const crackTime = result.crack_times_display.offline_fast_hashing_1e10_per_second;
 
-    const entropy = calculateEntropy(password.length, charsetSize);
-    const crackTime = estimateCrackTime(entropy);
-    const strength = getStrengthLevel(entropy, crackTime);
+    const labels = ['Very Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'];
+    const colors = ['#d9534f', '#f0ad4e', '#f9a825', '#5cb85c', '#0275d8'];
 
-    // Update text and bar
-    document.getElementById(outputTextId).textContent = strength.label;
-    document.getElementById(fillBarId).style.width = Math.min(100, (entropy / 100) * 100) + '%';
-    document.getElementById(fillBarId).style.backgroundColor = strength.color;
+    strengthText.textContent = labels[score];
+    strengthFill.style.width = `${(score + 1) * 20}%`;
+    strengthFill.style.backgroundColor = colors[score];
 
-    // Explanation text
-    document.getElementById(explanationId).innerHTML = `
-      Password length: <strong>${password.length}</strong><br />
-      Entropy (estimated bits of randomness): <strong>${entropy.toFixed(1)}</strong> bits<br />
-      Estimated time to crack (GPU attack at 10B guesses/sec): <strong>${formatCrackTime(crackTime)}</strong>
+    document.getElementById('explanation').innerHTML = `
+      Estimated crack time: <strong>${crackTime}</strong> <br />
+      Based on common patterns and GPU attacks.
     `;
   }
 
-  // Elements
-  const lengthInput = document.getElementById('length');
-  const lengthVal = document.getElementById('length-val');
-  const generateBtn = document.getElementById('generate');
-  const passwordOutput = document.getElementById('password');
-  const copyMsg = document.getElementById('copy-msg');
-
-  // Own password checker elements
-  const ownPasswordInput = document.getElementById('own-password');
-
-  // Generate and update password + strength
-  function generatePasswordAndUpdate() {
+  function generateAndShowPassword() {
     const options = {
       uppercase: document.getElementById('uppercase').checked,
       lowercase: document.getElementById('lowercase').checked,
       numbers: document.getElementById('numbers').checked,
-      symbols: document.getElementById('symbols').checked,
+      symbols: document.getElementById('symbols').checked
     };
-    const length = parseInt(lengthInput.value, 10);
 
+    const length = parseInt(lengthInput.value, 10);
     const pwd = generatePassword(length, options);
     passwordOutput.value = pwd;
     copyMsg.style.display = 'none';
-
-    updateStrength(pwd, 'strength-text', 'strength-fill', 'explanation');
+    updateStrength(pwd);
   }
 
-  // Event listeners for live update
+  generateBtn.addEventListener('click', generateAndShowPassword);
   lengthInput.addEventListener('input', () => {
     lengthVal.textContent = lengthInput.value;
-    generatePasswordAndUpdate();
+    generateAndShowPassword();
   });
 
   ['uppercase', 'lowercase', 'numbers', 'symbols'].forEach(id => {
-    document.getElementById(id).addEventListener('change', generatePasswordAndUpdate);
+    document.getElementById(id).addEventListener('change', generateAndShowPassword);
   });
 
-  generateBtn.addEventListener('click', generatePasswordAndUpdate);
-
-  // Copy password to clipboard on click
   passwordOutput.addEventListener('click', () => {
     passwordOutput.select();
     navigator.clipboard.writeText(passwordOutput.value).then(() => {
       copyMsg.style.display = 'block';
-      setTimeout(() => (copyMsg.style.display = 'none'), 2000);
+      setTimeout(() => copyMsg.style.display = 'none', 2000);
     });
   });
 
-  // Own password checker live
-  ownPasswordInput.addEventListener('input', () => {
-    updateStrength(ownPasswordInput.value, 'own-strength-text', 'own-strength-fill', 'own-explanation');
-  });
-
-  // Initialize with generated password and strength on load
-  generatePasswordAndUpdate();
-
+  // Initial
+  generateAndShowPassword();
 </script>
 </body>
 </html>
