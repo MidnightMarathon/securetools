@@ -1,1 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SecureTools – Password Generator</title>
+<meta name="description" content="Generate strong, random passwords securely in your browser with SecureTools. No tracking, no signup." />
+<link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    background: linear-gradient(135deg, #f093fb, #8fd3f4, #b388eb);
+    background-size: 300% 300%;
+    animation: gradientFlow 15s ease infinite;
+    color: #1d1d1f;
+    margin: 0;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+  }
+  @keyframes gradientFlow {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  main {
+    max-width: 480px;
+    width: 100%;
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+  }
+
+  h1 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  label {
+    display: block;
+    margin: 1rem 0 0.3rem;
+    font-weight: 600;
+  }
+
+  input[type=range] {
+    width: 100%;
+  }
+
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .options label {
+    flex: 1 1 45%;
+    font-weight: normal;
+  }
+
+  button {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #2d9cdb;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #1b6ea8;
+  }
+
+  #password {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.25rem;
+    font-family: monospace;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    user-select: all;
+    background-color: #f9f9f9;
+    word-break: break-all;
+  }
+
+  #copy-msg {
+    margin-top: 0.5rem;
+    color: #2d9cdb;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Password Generator</h1>
+
+  <label for="length">Length: <span id="length-val">16</span></label>
+  <input type="range" id="length" min="8" max="32" value="16" />
+
+  <div class="options">
+    <label><input type="checkbox" id="uppercase" checked /> Include Uppercase (A-Z)</label>
+    <label><input type="checkbox" id="lowercase" checked /> Include Lowercase (a-z)</label>
+    <label><input type="checkbox" id="numbers" checked /> Include Numbers (0-9)</label>
+    <label><input type="checkbox" id="symbols" /> Include Symbols (!@#$...)</label>
+  </div>
+
+  <button id="generate">Generate Password</button>
+
+  <textarea id="password" rows="3" readonly aria-label="Generated password"></textarea>
+  <div id="copy-msg" role="alert">Copied to clipboard!</div>
+</main>
+
+<script>
+  const lengthInput = document.getElementById('length');
+  const lengthVal = document.getElementById('length-val');
+  const generateBtn = document.getElementById('generate');
+  const passwordOutput = document.getElementById('password');
+  const copyMsg = document.getElementById('copy-msg');
+
+  lengthInput.addEventListener('input', () => {
+    lengthVal.textContent = lengthInput.value;
+  });
+
+  function generatePassword(length, options) {
+    const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lower = 'abcdefghijklmnopqrstuvwxyz';
+    const numbers = '0123456789';
+    const symbols = '!@#$%^&*()-_=+[]{}|;:,.<>?';
+
+    let charset = '';
+    if (options.uppercase) charset += upper;
+    if (options.lowercase) charset += lower;
+    if (options.numbers) charset += numbers;
+    if (options.symbols) charset += symbols;
+
+    if (!charset) return '';
+
+    let password = '';
+    const cryptoObj = window.crypto || window.msCrypto;
+    const randomValues = new Uint32Array(length);
+    cryptoObj.getRandomValues(randomValues);
+
+    for (let i = 0; i < length; i++) {
+      password += charset.charAt(randomValues[i] % charset.length);
+    }
+
+    return password;
+  }
+
+  generateBtn.addEventListener('click', () => {
+    const options = {
+      uppercase: document.getElementById('uppercase').checked,
+      lowercase: document.getElementById('lowercase').checked,
+      numbers: document.getElementById('numbers').checked,
+      symbols: document.getElementById('symbols').checked,
+    };
+    const length = parseInt(lengthInput.value, 10);
+
+    const pwd = generatePassword(length, options);
+    passwordOutput.value = pwd;
+    copyMsg.style.display = 'none';
+  });
+
+  passwordOutput.addEventListener('click', () => {
+    passwordOutput.select();
+    navigator.clipboard.writeText(passwordOutput.value).then(() => {
+      copyMsg.style.display = 'block';
+      setTimeout(() => (copyMsg.style.display = 'none'), 2000);
+    });
+  });
+
+  // Generate an initial password on load
+  generateBtn.click();
+</script>
+</body>
+</html>
 
