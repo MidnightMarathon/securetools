@@ -6,7 +6,7 @@
   <title>SecureTools – Password Generator</title>
   <meta name="description" content="Generate strong, random passwords securely in your browser with SecureTools. No tracking, no signup." />
   <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
 
   <style>
     body {
@@ -43,12 +43,13 @@
       transition: background-color 0.2s ease;
       z-index: 1000;
     }
+
     #home-pill:hover {
       background-color: #d0e6fb;
     }
 
     main {
-      max-width: 480px;
+      max-width: 580px;
       width: 100%;
       background: white;
       padding: 2rem 2rem 2.5rem;
@@ -103,7 +104,7 @@
       background-color: #1b6ea8;
     }
 
-    textarea, #password {
+    textarea, input[type=password], #password {
       margin-top: 1.2rem;
       width: 100%;
       padding: 1rem;
@@ -125,13 +126,13 @@
       display: none;
     }
 
-    #strength {
+    #strength, #own-strength {
       margin-top: 1rem;
       font-weight: 600;
       text-align: center;
     }
 
-    #strength-bar {
+    .strength-bar {
       height: 12px;
       width: 100%;
       border-radius: 8px;
@@ -140,18 +141,24 @@
       overflow: hidden;
     }
 
-    #strength-fill {
+    .strength-fill {
       height: 100%;
       width: 0%;
       background: #2d9cdb;
       transition: width 0.3s ease;
     }
 
-    #explanation {
+    #explanation, #own-explanation {
       margin-top: 0.75rem;
       font-size: 0.9rem;
       color: #444;
       line-height: 1.4;
+    }
+
+    section {
+      margin-top: 3rem;
+      border-top: 2px solid #eee;
+      padding-top: 2rem;
     }
   </style>
 </head>
@@ -166,9 +173,9 @@
   <input type="range" id="length" min="8" max="32" value="16" />
 
   <div class="options">
-    <label><input type="checkbox" id="uppercase" checked /> Uppercase (A-Z)</label>
-    <label><input type="checkbox" id="lowercase" checked /> Lowercase (a-z)</label>
-    <label><input type="checkbox" id="numbers" checked /> Numbers (0-9)</label>
+    <label><input type="checkbox" id="uppercase" checked /> Uppercase (A–Z)</label>
+    <label><input type="checkbox" id="lowercase" checked /> Lowercase (a–z)</label>
+    <label><input type="checkbox" id="numbers" checked /> Numbers (0–9)</label>
     <label><input type="checkbox" id="symbols" /> Symbols (!@#$...)</label>
   </div>
 
@@ -179,12 +186,27 @@
 
   <div id="strength">
     Strength: <span id="strength-text">—</span>
-    <div id="strength-bar"><div id="strength-fill"></div></div>
+    <div class="strength-bar"><div id="strength-fill" class="strength-fill"></div></div>
   </div>
 
   <div id="explanation">
     This strength score is powered by <code>zxcvbn</code>, estimating time to crack using real-world attack patterns and a powerful GPU.
   </div>
+
+  <section>
+    <h2>Or check your own password</h2>
+    <label for="own-password">Paste your password below:</label>
+    <input type="password" id="own-password" />
+
+    <div id="own-strength">
+      Strength: <span id="own-strength-text">—</span>
+      <div class="strength-bar"><div id="own-strength-fill" class="strength-fill"></div></div>
+    </div>
+
+    <div id="own-explanation">
+      We never store or transmit your password. All checking happens in your browser.
+    </div>
+  </section>
 </main>
 
 <script>
@@ -200,6 +222,12 @@
   const strengthText = document.getElementById('strength-text');
   const strengthFill = document.getElementById('strength-fill');
   const copyMsg = document.getElementById('copy-msg');
+  const ownPasswordInput = document.getElementById('own-password');
+  const ownStrengthText = document.getElementById('own-strength-text');
+  const ownStrengthFill = document.getElementById('own-strength-fill');
+
+  const labels = ['Very Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'];
+  const colors = ['#d9534f', '#f0ad4e', '#f9a825', '#5cb85c', '#0275d8'];
 
   function generatePassword(length, options) {
     let charset = '';
@@ -217,24 +245,20 @@
     return Array.from(values).map(v => charset[v % charset.length]).join('');
   }
 
-  function updateStrength(password) {
+  function updateStrengthDisplay(password, textEl, fillEl, explanationEl) {
     if (!password || typeof zxcvbn !== 'function') return;
 
     const result = zxcvbn(password);
-    const score = result.score; // 0–4
+    const score = result.score;
     const crackTime = result.crack_times_display.offline_fast_hashing_1e10_per_second;
 
-    const labels = ['Very Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'];
-    const colors = ['#d9534f', '#f0ad4e', '#f9a825', '#5cb85c', '#0275d8'];
+    textEl.textContent = labels[score];
+    fillEl.style.width = `${(score + 1) * 20}%`;
+    fillEl.style.backgroundColor = colors[score];
 
-    strengthText.textContent = labels[score];
-    strengthFill.style.width = `${(score + 1) * 20}%`;
-    strengthFill.style.backgroundColor = colors[score];
-
-    document.getElementById('explanation').innerHTML = `
-      Estimated crack time: <strong>${crackTime}</strong> <br />
-      Based on common patterns and GPU attacks.
-    `;
+    if (explanationEl) {
+      explanationEl.innerHTML = `Estimated crack time: <strong>${crackTime}</strong>`;
+    }
   }
 
   function generateAndShowPassword() {
@@ -249,7 +273,7 @@
     const pwd = generatePassword(length, options);
     passwordOutput.value = pwd;
     copyMsg.style.display = 'none';
-    updateStrength(pwd);
+    updateStrengthDisplay(pwd, strengthText, strengthFill, document.getElementById('explanation'));
   }
 
   generateBtn.addEventListener('click', generateAndShowPassword);
@@ -270,8 +294,13 @@
     });
   });
 
-  // Initial
-  generateAndShowPassword();
+  ownPasswordInput.addEventListener('input', () => {
+    const val = ownPasswordInput.value;
+    updateStrengthDisplay(val, ownStrengthText, ownStrengthFill, document.getElementById('own-explanation'));
+  });
+
+  generateAndShowPassword(); // Initial load
 </script>
+
 </body>
 </html>
