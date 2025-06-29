@@ -28,6 +28,25 @@
     100% { background-position: 0% 50%; }
   }
 
+  /* Home Pill */
+  #home-pill {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    background: #fff;
+    color: #2d9cdb;
+    font-weight: 600;
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    z-index: 100;
+  }
+  #home-pill:hover {
+    background-color: #d0e6fb;
+  }
+
   main {
     max-width: 560px;
     width: 100%;
@@ -44,7 +63,15 @@
     text-align: center;
   }
 
-  p.description {
+  h2 {
+    margin-top: 2rem;
+    font-weight: 700;
+    color: #2d9cdb;
+    border-bottom: 2px solid #2d9cdb;
+    padding-bottom: 0.3rem;
+  }
+
+  p.description, p.note {
     margin-bottom: 1.5rem;
     color: #444;
     font-size: 1rem;
@@ -119,48 +146,57 @@
 </style>
 </head>
 <body>
+
+<a id="home-pill" href="/">← Home</a>
+
 <main>
   <h1>UUID Generator</h1>
   <p class="description">
     Generate universally unique identifiers (UUIDs) using <strong>UUID v4</strong> (random) or <strong>UUID v1</strong> (timestamp + MAC address).
   </p>
 
-  <button id="generate-v4">Generate UUID v4 (Random)</button>
+  <!-- UUID v4 Section -->
+  <section id="uuid-v4">
+    <h2>UUID v4 (Random)</h2>
+    <p class="note">Fully random UUID that requires no personal information. Most commonly used and privacy-friendly.</p>
+    <button id="generate-v4">Generate UUID v4</button>
+  </section>
 
-  <label for="mac-input">Enter your MAC address to generate UUID v1:</label>
-  <input type="text" id="mac-input" placeholder="00:1A:2B:3C:4D:5E or 001A2B3C4D5E" aria-describedby="mac-format-note" />
-  <small id="mac-format-note" class="note">
-    Format: 12 hex digits, with or without colons. No data is stored or sent; generation happens locally.
-  </small>
-  <button id="generate-v1" disabled>Generate UUID v1 (Timestamp + MAC)</button>
+  <!-- UUID v1 Section -->
+  <section id="uuid-v1">
+    <h2>UUID v1 (Timestamp + MAC)</h2>
+    <p class="note">
+      Requires your MAC address to generate a time-based UUID. Your MAC address <strong>never leaves your browser</strong> — this happens fully client-side.
+    </p>
+    <label for="mac-input">Enter your MAC address:</label>
+    <input type="text" id="mac-input" placeholder="00:1A:2B:3C:4D:5E or 001A2B3C4D5E" aria-describedby="mac-format-note" />
+    <small id="mac-format-note" class="note">
+      Format: 12 hex digits, with or without colons.
+    </small>
+    <button id="generate-v1" disabled>Generate UUID v1</button>
+  </section>
 
   <textarea id="uuid-output" readonly aria-label="Generated UUID" rows="2"></textarea>
   <div id="copy-msg" role="alert">Copied to clipboard!</div>
 
-  <p class="note" style="margin-top: 2rem;">
+  <p class="note" style="margin-top: 3rem;">
     <strong>Why choose UUID v1 or v4?</strong><br />
-    <em>UUID v1</em> uses the current timestamp and your MAC address to create a unique ID, which can be useful for ordered or time-based IDs. However, it requires you to input your MAC address manually due to browser privacy restrictions.<br />
-    <em>UUID v4</em> is fully random and does not require any personal info — it is the most common and privacy-friendly choice.<br />
-  </p>
-
-  <p class="note">
-    <strong>Privacy & Security Notice:</strong> Your MAC address and generated UUIDs never leave your browser. No data is collected, stored, or transmitted by this site.
+    <em>UUID v1</em> uses timestamp + your MAC address to create ordered unique IDs.<br />
+    <em>UUID v4</em> is fully random and more privacy-preserving.<br />
+    This tool generates UUIDs <strong>locally in your browser</strong>, so no data is sent or stored.
   </p>
 </main>
 
 <script>
-  // Validate MAC address input (allow 6 pairs of hex digits with optional colons)
   function isValidMAC(mac) {
     const regex = /^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$|^[0-9a-fA-F]{12}$/;
     return regex.test(mac.trim());
   }
 
-  // Normalize MAC address (remove colons and uppercase)
   function normalizeMAC(mac) {
     return mac.replace(/:/g, '').toUpperCase();
   }
 
-  // Generate UUID v4
   function generateUUIDv4() {
     const bytes = new Uint8Array(16);
     crypto.getRandomValues(bytes);
@@ -179,32 +215,26 @@
     );
   }
 
-  // Generate UUID v1 given a MAC address (string of 12 hex digits)
   function generateUUIDv1(mac) {
     if (mac.length !== 12) return null;
 
-    // Convert MAC string to byte array
     const node = [];
     for (let i = 0; i < 12; i += 2) {
       node.push(parseInt(mac.substr(i, 2), 16));
     }
 
-    // Get current timestamp in 100-nanosecond intervals since UUID epoch (Oct 15, 1582)
     const UUID_EPOCH_START = Date.UTC(1582, 9, 15);
     const now = Date.now();
     const timeSinceEpoch = BigInt((now - UUID_EPOCH_START)) * 10000n + 0n;
 
-    // Timestamp low, mid, high parts
     const timeLow = Number(timeSinceEpoch & 0xFFFFFFFFn);
     const timeMid = Number((timeSinceEpoch >> 32n) & 0xFFFFn);
     const timeHi = Number((timeSinceEpoch >> 48n) & 0x0FFFn);
 
-    // Clock sequence - random 14 bits
     const clockSeq = crypto.getRandomValues(new Uint8Array(2));
-    const clockSeqHigh = (clockSeq[0] & 0x3F) | 0x80; // Variant bits 10xx
+    const clockSeqHigh = (clockSeq[0] & 0x3F) | 0x80;
     const clockSeqLow = clockSeq[1];
 
-    // Compose bytes array
     const bytes = new Uint8Array(16);
 
     bytes[0] = timeLow & 0xFF;
@@ -215,7 +245,7 @@
     bytes[4] = timeMid & 0xFF;
     bytes[5] = (timeMid >> 8) & 0xFF;
 
-    bytes[6] = (timeHi & 0x0F) | 0x10; // version 1 (0001)
+    bytes[6] = (timeHi & 0x0F) | 0x10;
     bytes[7] = (timeHi >> 4) & 0xFF;
 
     bytes[8] = clockSeqHigh;
@@ -223,7 +253,6 @@
 
     bytes.set(node, 10);
 
-    // Format bytes to hex string
     const hex = [...bytes].map(b => b.toString(16).padStart(2, '0'));
 
     return (
@@ -280,5 +309,6 @@
   // Generate initial v4 UUID on load
   generateV4Btn.click();
 </script>
+
 </body>
 </html>
