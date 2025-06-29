@@ -1,135 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SecureTools – UUID Generator</title>
-  <meta name="description" content="Generate UUID v4 securely in your browser with SecureTools. No tracking, no signup, and no private data used." />
-  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SecureTools – Password Generator & Strength Checker</title>
+<meta name="description" content="Generate strong, random passwords and check password strength securely in your browser with SecureTools. No tracking, no signup." />
+<link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
 
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-      background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
-      background-size: 300% 300%;
-      animation: gradientFlow 15s ease infinite;
-      color: #1d1d1f;
-      margin: 0;
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      align-items: center;
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    background: linear-gradient(135deg, #f093fb, #8fd3f4, #b388eb);
+    background-size: 300% 300%;
+    animation: gradientFlow 15s ease infinite;
+    color: #1d1d1f;
+    margin: 0;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+  }
+  @keyframes gradientFlow {
+    0% {
+      background-position: 0% 50%;
     }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
 
-    @keyframes gradientFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+  main {
+    max-width: 520px;
+    width: 100%;
+    background: white;
+    padding: 2rem 2rem 3rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+  }
 
-    main {
-      max-width: 480px;
-      width: 100%;
-      background: white;
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 15px 25px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+  h1 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
 
-    h1 {
-      font-weight: 700;
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
+  label {
+    display: block;
+    margin: 1rem 0 0.3rem;
+    font-weight: 600;
+  }
 
-    button {
-      margin-top: 1rem;
-      width: 100%;
-      padding: 0.8rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: white;
-      background-color: #2d9cdb;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
+  input[type=range] {
+    width: 100%;
+  }
 
-    button:hover {
-      background-color: #1b6ea8;
-    }
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
 
-    textarea {
-      margin-top: 1rem;
-      width: 100%;
-      padding: 1rem;
-      font-size: 1.25rem;
-      font-family: monospace;
-      border: 2px solid #ddd;
-      border-radius: 10px;
-      user-select: all;
-      background-color: #f9f9f9;
-      resize: none;
-      word-break: break-word;
-    }
+  .options label {
+    flex: 1 1 45%;
+    font-weight: normal;
+  }
 
-    #copy-msg {
-      margin-top: 0.5rem;
-      color: #2d9cdb;
-      font-weight: 600;
-      display: none;
-    }
-  </style>
+  textarea, input[type=text] {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.25rem;
+    font-family: monospace;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    user-select: all;
+    background-color: #f9f9f9;
+    word-break: break-all;
+    resize: vertical;
+  }
+
+  #generate-msg, #copy-msg, #custom-copy-msg {
+    margin-top: 0.5rem;
+    color: #2d9cdb;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+  }
+
+  #strength-indicator, #custom-strength-indicator {
+    margin-top: 0.25rem;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  #strength-explainer, #custom-strength-explainer {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+</style>
 </head>
 <body>
-  <main>
-    <h1>UUID Generator (v4)</h1>
-    <button id="generate">Generate UUID</button>
-    <textarea id="uuid-output" rows="2" readonly aria-label="Generated UUID"></textarea>
-    <div id="copy-msg" role="alert">Copied to clipboard!</div>
-  </main>
+<main>
+  <h1>Password Generator & Strength Checker</h1>
 
-  <script>
-    function generateUUIDv4() {
-      const bytes = new Uint8Array(16);
-      crypto.getRandomValues(bytes);
-      bytes[6] = (bytes[6] & 0x0f) | 0x40;
-      bytes[8] = (bytes[8] & 0x3f) | 0x80;
-      const hex = [...bytes].map(b => b.toString(16).padStart(2, '0'));
-      return (
-        hex.slice(0,4).join('') + '-' +
-        hex.slice(4,6).join('') + '-' +
-        hex.slice(6,8).join('') + '-' +
-        hex.slice(8,10).join('') + '-' +
-        hex.slice(10,16).join('')
-      );
-    }
+  <label for="length">Length: <span id="length-val">16</span></label>
+  <input type="range" id="length" min="8" max="32" value="16" />
 
-    const generateBtn = document.getElementById('generate');
-    const uuidOutput = document.getElementById('uuid-output');
-    const copyMsg = document.getElementById('copy-msg');
+  <div class="options">
+    <label><input type="checkbox" id="uppercase" checked /> Include Uppercase (A-Z)</label>
+    <label><input type="checkbox" id="lowercase" checked /> Include Lowercase (a-z)</label>
+    <label><input type="checkbox" id="numbers" checked /> Include Numbers (0-9)</label>
+    <label><input type="checkbox" id="symbols" /> Include Symbols (!@#$...)</label>
+  </div>
 
-    function displayUUID() {
-      uuidOutput.value = generateUUIDv4();
-      copyMsg.style.display = 'none';
-    }
+  <textarea id="password" rows="3" readonly aria-label="Generated password"></textarea>
+  <div id="copy-msg" role="alert">Copied to clipboard!</div>
+  <div id="strength-indicator"></div>
+  <div id="strength-explainer"></div>
 
-    generateBtn.addEventListener('click', displayUUID);
+  <hr style="margin: 3rem 0;" />
 
-    uuidOutput.addEventListener('click', () => {
-      uuidOutput.select();
-      navigator.clipboard.writeText(uuidOutput.value).then(() => {
-        copyMsg.style.display = 'block';
-        setTimeout(() => copyMsg.style.display = 'none', 2000);
-      });
+  <label for="custom-password">Or check your own password strength:</label>
+  <input type="text" id="custom-password" placeholder="Enter a password to check" aria-label="Password strength checker input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+  <div id="custom-strength-indicator"></div>
+  <div id="custom-strength-explainer"></div>
+  <div id="custom-copy-msg" role="alert">Copied to clipboard!</div>
+</main>
+
+<script>
+  const lengthInput = document.getElementById('length');
+  const lengthVal = document.getElementById('length-val');
+  const passwordOutput = document.getElementById('password');
+  const copyMsg = document.getElementById('copy-msg');
+  const strengthIndicator = document.getElementById('strength-indicator');
+  const strengthExplainer = document.getElementById('strength-explainer');
+
+  const customPasswordInput = document.getElementById('custom-password');
+  const customStrengthIndicator = document.getElementById('custom-strength-indicator');
+  const customStrengthExplainer = document.getElementById('custom-strength-explainer');
+  const customCopyMsg = document.getElementById('custom-copy-msg');
+
+  lengthInput.addEventListener('input', () => {
+    lengthVal.textContent = lengthInput.value;
+    generateAndEvaluate();
+  });
+
+  ['uppercase', 'lowercase', 'numbers', 'symbols'].forEach(id => {
+    document.getElementById(id).addEventListener('change', generateAndEvaluate);
+  });
+
+  passwordOutput.addEventListener('click', () => {
+    passwordOutput.select();
+    navigator.clipboard.writeText(passwordOutput.value).then(() => {
+      copyMsg.style.display = 'block';
+      setTimeout(() => (copyMsg.style.display = 'none'), 2000);
     });
+  });
 
-    // Auto-generate one on load
-    displayUUID();
-  </script>
+  customPasswordInput.addEventListener('input', () => {
+    evaluatePasswordStrength(customPasswordInput.value, 'custom-strength-indicator', 'custom-strength-explainer');
+  });
+
+  customPasswordInput.addEventListener('click', () => {
+    if (!customPasswordInput.value) return;
+    customPasswordInput.select();
+    navigator.clipboard.writeText(customPasswordInput.value).then(() => {
+      customCopyMsg.style.display = 'block';
+      setTimeout(() => (customCopyMsg.style.display = 'none'), 2000);
+    });
+  });
+
+  function generatePassword(length, options) {
+    const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lower = 'abcdefghijklmnopqrstuvwxyz';
+    const numbers = '0123456789';
+    const symbols = '!@#$%^&*()-_=+[]{}|;:,.<>?';
+
+    let charset = '';
+    if (options.uppercase) charset += upper;
+    if (options.lowercase) charset += lower;
+    if (options.numbers) charset += numbers;
+    if (options.symbols) charset += symbols;
+
+    if (!charset) return '';
+
+    const cryptoObj = window.crypto || window.msCrypto;
+    const randomValues = new Uint32Array(length);
+    cryptoObj.getRandomValues(randomValues);
+
+    let password = '';
+    for (let i = 0; i < length; i++) {
+      password += charset.charAt(randomValues[i] % charset.length);
+    }
+    return password;
+  }
+
+  function formatTime(seconds) {
+    if (seconds < 1) return "< 1 second";
+    const units = [
+      ["second", 60],
+      ["minute", 60],
+      ["hour", 24],
+      ["day", 365],
+      ["year", 100],
+      ["century", 10]
+    ];
+
+    let val = seconds;
+    let unit = "seconds";
+
+    for (let [name, factor] of units) {
+      if (val < factor) break;
+      val /= factor;
+      unit = name;
+    }
+
+    return `${val.toFixed(2)} ${unit}${val >= 2 ? "s" : ""}`;
+  }
+
+  function evaluatePasswordStrength(pwd, targetId, explainerId) {
+    const guessesPerSecond = 1e11; // 100 billion guesses/sec (e.g., RTX 4090)
+
+    let charsetSize = 0;
+    if (/[a-z]/.test(pwd)) charsetSize += 26;
+    if (/[A-Z]/.test(pwd)) charsetSize += 26;
+    if (/[0-9]/.test(pwd)) charsetSize += 10;
+    if (/[^A-Za-z0-9]/.test(pwd)) charsetSize += 32; // Approx for symbols
+
+    if (pwd.length === 0 || charsetSize === 0) {
+      document.getElementById(targetId).textContent = '';
+      document.getElementById(explainerId).textContent = '';
+      return;
+    }
+
+    const totalCombos = Math.pow(charsetSize, pwd.length);
+    const timeInSeconds = totalCombos / guessesPerSecond;
+
+    let score = 0;
+    if (pwd.length >= 8) score++;
+    if (/[A-Z]/.test(pwd)) score++;
+    if (/[a-z]/.test(pwd)) score++;
+    if (/[0-9]/.test(pwd)) score++;
+    if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+    const strengthText = ["Very Weak", "Weak", "Moderate", "Strong", "Very Strong"];
+    const colors = ["#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#27ae60"];
+    const index = Math.max(0, Math.min(score - 1, strengthText.length - 1));
+
+    const crackTime = formatTime(timeInSeconds);
+
+    document.getElementById(targetId).textContent =
+      `Strength: ${strengthText[index]} – Estimated crack time: ${crackTime}`;
+    document.getElementById(targetId).style.color = colors[index];
+    document.getElementById(explainerId).textContent =
+      `Assumes brute-force guessing at ~100 billion guesses per second (modern GPU).`;
+  }
+
+  function generateAndEvaluate() {
+    const options = {
+      uppercase: document.getElementById('uppercase').checked,
+      lowercase: document.getElementById('lowercase').checked,
+      numbers: document.getElementById('numbers').checked,
+      symbols: document.getElementById('symbols').checked,
+    };
+    const length = parseInt(lengthInput.value, 10);
+    const pwd = generatePassword(length, options);
+    passwordOutput.value = pwd;
+    copyMsg.style.display = 'none';
+    evaluatePasswordStrength(pwd, 'strength-indicator', 'strength-explainer');
+  }
+
+  // Generate initial password and evaluate strength on load
+  generateAndEvaluate();
+</script>
 </body>
 </html>
