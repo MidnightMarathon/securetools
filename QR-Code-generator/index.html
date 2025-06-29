@@ -3,207 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SecureTools – Free Privacy-First Web Tools</title>
-  <meta name="description" content="SecureTools offers free, privacy-first web tools including QR code generator, password generator, UUID generator, and more." />
-  <link rel="canonical" href="https://securetools.com/" />
+  <title>Free QR Code Generator – SecureTools</title>
+  <meta name="description" content="Generate unlimited QR codes with no watermarks, no branding, and no sign-ups. 100% free and privacy-first — works instantly on any device." />
+  <link rel="canonical" href="https://securetools.com/QR-Code-generator/" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="SecureTools – Free Privacy-First Web Tools" />
-  <meta property="og:description" content="Generate QR codes, passwords, UUIDs and more with SecureTools. No tracking, no signups." />
-  <meta property="og:url" content="https://securetools.com/" />
+  <!-- Open Graph for Discord, Facebook -->
+  <meta property="og:title" content="SecureTools – Free, Privacy-First QR Generator" />
+  <meta property="og:description" content="Create QR codes instantly with no watermarks, no signups, and no tracking. Free and secure." />
+  <meta property="og:image" content="https://raw.githubusercontent.com/MidnightMarathon/qrsite/main/preview.png" />
+  <meta property="og:url" content="https://securetools.com/QR-Code-generator/" />
   <meta property="og:type" content="website" />
 
   <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="SecureTools – Free Privacy-First Web Tools" />
-  <meta name="twitter:description" content="Generate QR codes, passwords, UUIDs and more with SecureTools. No tracking, no signups." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SecureTools – Free QR Code Generator" />
+  <meta name="twitter:description" content="Create QR codes instantly with no watermarks, no signups, and no tracking." />
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/MidnightMarathon/qrsite/main/preview.png" />
 
+  <!-- Favicon -->
   <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <link rel="manifest" href="/assets/site.webmanifest" />
+
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SecureTools QR Generator",
+    "url": "https://securetools.com/QR-Code-generator/",
+    "applicationCategory": "WebApplication",
+    "description": "Free QR Code Generator — create QR codes instantly with no watermark or signup.",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <!-- Main stylesheet -->
   <link rel="stylesheet" href="/assets/styles.css" />
-
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-      background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
-      background-size: 300% 300%;
-      animation: gradientFlow 15s ease infinite;
-      color: #1d1d1f;
-      margin: 0;
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      align-items: center;
-    }
-    @keyframes gradientFlow {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-
-    nav {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      display: flex;
-      gap: 0.5rem;
-      z-index: 10;
-    }
-
-    nav a {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background-color: #fff;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      color: #333;
-      text-decoration: none;
-      font-weight: 600;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s ease;
-    }
-
-    nav a.active,
-    nav a:hover {
-      background-color: #d0d0d5;
-      color: #2d9cdb;
-      border-color: rgba(0, 0, 0, 0.15);
-    }
-
-    main {
-      max-width: 960px;
-      margin-top: 5rem;
-      width: 100%;
-      padding: 0 1rem;
-    }
-
-    h1 {
-      font-weight: 700;
-      font-size: 2.25rem;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
-    p.description {
-      font-size: 1.15rem;
-      text-align: center;
-      max-width: 600px;
-      margin: 0 auto 3rem auto;
-      color: #444;
-    }
-
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 2rem;
-    }
-
-    .tool-tile {
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-      padding: 2rem 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .tool-tile:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    .tool-icon {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
-      color: #2d9cdb;
-    }
-
-    .tool-name {
-      font-weight: 700;
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
-      color: #1d1d1f;
-    }
-
-    .tool-desc {
-      font-size: 1rem;
-      color: #666;
-      line-height: 1.4;
-    }
-
-    footer {
-      margin-top: auto;
-      padding: 1.5rem 1rem;
-      text-align: center;
-      font-size: 0.875rem;
-      color: #555;
-    }
-
-    a.tool-link {
-      color: inherit;
-      text-decoration: none;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-  </style>
 </head>
 <body>
   <nav>
-    <a href="/" aria-label="SecureTools Home" class="active">Home</a>
-    <a href="/about.html" aria-label="About SecureTools">About</a>
+    <a href="/" aria-label="SecureTools Home" class="active">SecureTools Home</a>
+    <a href="/about.html" aria-label="Learn more about SecureTools">Learn more about SecureTools</a>
   </nav>
 
   <main>
-    <h1>Welcome to SecureTools</h1>
-    <p class="description">
-      Your privacy-first source for free online tools — no signups, no tracking.
-    </p>
+    <h1>Free QR Code Generator – SecureTools</h1>
+    <p>Create QR codes instantly. No watermark. No signup required.</p>
 
-    <section class="tools-grid">
-      <a href="/QR-Code-generator/" class="tool-link" aria-label="QR Code Generator">
-        <article class="tool-tile" role="button" tabindex="0">
-          <div class="tool-icon">🔳</div>
-          <h2 class="tool-name">QR Code Generator</h2>
-          <p class="tool-desc">Create custom QR codes instantly, no watermark, no signup.</p>
-        </article>
-      </a>
+    <section class="qr-tile">
+      <div class="input-group">
+        <input id="qr-input" type="text" placeholder="https://example.com" aria-label="Enter the URL to generate QR code" />
+        <button id="generate-btn" aria-label="Generate QR Code">Generate QR</button>
+      </div>
 
-      <a href="/password-generator/" class="tool-link" aria-label="Password Generator">
-        <article class="tool-tile" role="button" tabindex="0">
-          <div class="tool-icon">🔑</div>
-          <h2 class="tool-name">Password Generator</h2>
-          <p class="tool-desc">Generate strong, random passwords securely in your browser.</p>
-        </article>
-      </a>
+      <div id="qr-wrapper" style="display:none;" aria-live="polite">
+        <div id="qr-code" aria-label="Generated QR code"></div>
+      </div>
 
-      <a href="/uuid-generator/" class="tool-link" aria-label="UUID Generator">
-        <article class="tool-tile" role="button" tabindex="0">
-          <div class="tool-icon">🆔</div>
-          <h2 class="tool-name">UUID Generator</h2>
-          <p class="tool-desc">Generate universally unique identifiers (UUIDs) instantly.</p>
-        </article>
-      </a>
+      <div id="download-controls" style="display:none;">
+        <label for="format-select">Download format:</label>
+        <select id="format-select" aria-label="Select QR code download format">
+          <option value="png">PNG</option>
+          <option value="svg">SVG</option>
+          <option value="jpeg">JPEG</option>
+        </select>
+        <a id="download-link" href="#" aria-label="Download QR code">Download</a>
+      </div>
 
-      <!-- Add more tools here -->
+      <p id="error-msg" class="error-message" style="display:none;" role="alert"></p>
     </section>
   </main>
 
   <footer>
-    <p>© 2025 SecureTools. Privacy-focused and free.</p>
+    <p><strong>SecureTools</strong> is a free and privacy-first QR code generator.</p>
+    <p>We do not store your data, use cookies, or track you.</p>
+    <p>All generation happens in your browser.</p>
+    <p>
+      Built with ❤️ using <a href="https://github.com/kozakdenys/qr-code-styling" target="_blank" rel="noopener noreferrer">qr-code-styling</a> (MIT License).
+    </p>
   </footer>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
