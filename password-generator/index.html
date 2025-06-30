@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SecureTools – Password Generator with Themes</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       background: linear-gradient(135deg, #f093fb, #8fd3f4, #b388eb);
       background-size: 300% 300%;
       animation: gradientFlow 15s ease infinite;
@@ -17,9 +18,15 @@
       align-items: center;
     }
     @keyframes gradientFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
     }
     main {
       max-width: 600px;
@@ -27,7 +34,7 @@
       background: white;
       padding: 2rem;
       border-radius: 20px;
-      box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
     }
     h1 {
       text-align: center;
@@ -37,11 +44,14 @@
     .section {
       margin-bottom: 1.5rem;
     }
-    .options label, .options select {
+    .options label,
+    .options select {
       display: block;
       margin: 0.5rem 0;
     }
-    input[type=range], select, textarea {
+    input[type="range"],
+    select,
+    textarea {
       width: 100%;
       padding: 0.3rem;
       font-size: 1rem;
@@ -79,11 +89,26 @@
       width: 0;
       transition: width 0.3s ease;
     }
-    #entropy-fill.fill.very-weak, #zxcvbn-fill.fill.very-weak { background: #ff4d4d; }
-    #entropy-fill.fill.weak, #zxcvbn-fill.fill.weak { background: #ff944d; }
-    #entropy-fill.fill.fair, #zxcvbn-fill.fill.fair { background: #ffc107; }
-    #entropy-fill.fill.good, #zxcvbn-fill.fill.good { background: #4caf50; }
-    #entropy-fill.fill.strong, #zxcvbn-fill.fill.strong { background: #2196f3; }
+    #entropy-fill.fill.very-weak,
+    #zxcvbn-fill.fill.very-weak {
+      background: #ff4d4d;
+    }
+    #entropy-fill.fill.weak,
+    #zxcvbn-fill.fill.weak {
+      background: #ff944d;
+    }
+    #entropy-fill.fill.fair,
+    #zxcvbn-fill.fill.fair {
+      background: #ffc107;
+    }
+    #entropy-fill.fill.good,
+    #zxcvbn-fill.fill.good {
+      background: #4caf50;
+    }
+    #entropy-fill.fill.strong,
+    #zxcvbn-fill.fill.strong {
+      background: #2196f3;
+    }
     .description {
       font-size: 0.9rem;
       color: #444;
@@ -95,6 +120,11 @@
       width: 100%;
       height: 80px;
       margin-top: 0.5rem;
+      font-size: 1rem;
+      padding: 0.4rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: vertical;
     }
   </style>
 </head>
@@ -104,15 +134,20 @@
 
     <div class="section">
       <label>Password length: <span id="length-val">16</span></label>
-      <input id="length" type="range" min="8" max="64" value="16">
+      <input id="length" type="range" min="8" max="64" value="16" />
     </div>
 
     <div class="section">
-      <label><input type="checkbox" id="uppercase" checked> Uppercase</label><br>
-      <label><input type="checkbox" id="lowercase" checked> Lowercase</label><br>
-      <label><input type="checkbox" id="numbers" checked> Numbers</label><br>
-      <label><input type="checkbox" id="symbols"> Symbols</label><br>
-      <label><input type="checkbox" id="no-ambiguous"> Exclude ambiguous characters</label>
+      <label><input type="checkbox" id="uppercase" checked /> Uppercase</label
+      ><br />
+      <label><input type="checkbox" id="lowercase" checked /> Lowercase</label
+      ><br />
+      <label><input type="checkbox" id="numbers" checked /> Numbers</label><br />
+      <label><input type="checkbox" id="symbols" /> Symbols</label><br />
+      <label
+        ><input type="checkbox" id="no-ambiguous" /> Exclude ambiguous
+        characters</label
+      >
     </div>
 
     <div class="section">
@@ -136,12 +171,12 @@
 
       <div id="custom-theme-wrapper">
         <label for="custom-theme">Enter your custom words (comma-separated):</label>
-        <textarea id="custom-theme"></textarea>
+        <textarea id="custom-theme" placeholder="e.g. apple, banana, cherry"></textarea>
       </div>
     </div>
 
     <div class="section">
-      <input id="password" readonly>
+      <input id="password" readonly />
       <button onclick="copyPassword()">Copy</button>
     </div>
 
@@ -160,12 +195,21 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/zxcvbn"></script>
-  <script src="generator.js"></script>
+  <script src="password-generator.js"></script>
   <script>
-    const themeSelect = document.getElementById('theme-select');
-    const customWrapper = document.getElementById('custom-theme-wrapper');
-    themeSelect.addEventListener('change', () => {
-      customWrapper.style.display = themeSelect.value === 'custom' ? 'block' : 'none';
+    const themeSelect = document.getElementById("theme-select");
+    const customWrapper = document.getElementById("custom-theme-wrapper");
+    const customInput = document.getElementById("custom-theme");
+
+    themeSelect.addEventListener("change", () => {
+      customWrapper.style.display = themeSelect.value === "custom" ? "block" : "none";
+      updatePassword();
+    });
+
+    customInput.addEventListener("input", () => {
+      if (themeSelect.value === "custom") {
+        updatePassword();
+      }
     });
   </script>
 </body>
