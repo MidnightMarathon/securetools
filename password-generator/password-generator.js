@@ -8,13 +8,13 @@ const themes = {
     "star", "warp", "nova", "alien", "robot", "laser", "orbit", "quantum", "galaxy", "nebula",
     "plasma", "cyber", "android", "asteroid", "hyper", "droid", "void", "solar", "comet", "pulse",
     "ion", "mech", "clone", "portal", "engine", "space", "lunar", "eclipse", "gravity", "satellite",
-    "fusion", "rocket", "sensor", "cosmos", "astro", "turbo", "cyborg", "asteroid", "photon", "binary"
+    "fusion", "rocket", "sensor", "cosmos", "astro", "turbo", "cyborg", "photon", "binary"
   ],
   "movie": [
     "film", "scene", "take", "script", "reel", "actor", "director", "studio", "popcorn", "blockbuster",
     "cinema", "trailer", "drama", "comedy", "cinematics", "cast", "soundtrack", "producer", "screen", "credits",
     "camera", "dialogue", "shoot", "clip", "premiere", "ticket", "set", "frame", "action", "cut",
-    "producer", "editor", "screenplay", "audition", "cinematographer", "stunt", "voiceover", "genre", "plot", "scene"
+    "editor", "screenplay", "audition", "cinematographer", "stunt", "voiceover", "genre", "plot"
   ],
   "fantasy": [
     "dragon", "elf", "magic", "sword", "quest", "castle", "wizard", "spell", "troll", "knight",
@@ -26,7 +26,7 @@ const themes = {
     "ghost", "night", "fear", "dark", "blood", "skull", "creep", "haunt", "witch", "zombie",
     "curse", "shadow", "grave", "panic", "scream", "spook", "vampire", "monster", "evil", "demon",
     "claw", "terror", "crypt", "fog", "bat", "boo", "phantom", "chill", "nightmare", "gore",
-    "casket", "cobweb", "ghoul", "poltergeist", "web", "shiver", "hex", "mummy", "chains", "fog"
+    "casket", "cobweb", "ghoul", "poltergeist", "web", "shiver", "hex", "mummy", "chains"
   ],
   "cyberpunk": [
     "neon", "hack", "chrome", "matrix", "glitch", "byte", "code", "virus", "deck", "cyber",
@@ -37,8 +37,8 @@ const themes = {
   "adventure": [
     "trail", "map", "rope", "camp", "peak", "river", "climb", "trek", "explore", "cave",
     "quest", "summit", "path", "gear", "wild", "voyage", "route", "hike", "trailblaze", "journey",
-    "escape", "safari", "guide", "island", "trailhead", "campfire", "ridge", "basecamp", "expedition", "wilderness",
-    "navigator", "compass", "backpack", "pioneer", "cliff", "ocean", "desert", "valley", "canyon", "summit"
+    "escape", "safari", "guide", "island", "trailhead", "campfire", "ridge", "basecamp", "expedition",
+    "wilderness", "navigator", "compass", "backpack", "pioneer", "cliff", "ocean", "desert", "valley", "canyon"
   ],
   "nature": [
     "tree", "river", "mountain", "forest", "flower", "leaf", "breeze", "rain", "sun", "cloud",
@@ -53,17 +53,17 @@ const themes = {
   "food": [
     "spice", "sugar", "salt", "pepper", "basil", "chili", "curry", "mint", "honey", "olive",
     "berry", "lemon", "apple", "grape", "plum", "nut", "bean", "carrot", "garlic", "ginger",
-    "honey", "thyme", "roast", "butter", "cream", "sauce", "cake", "pie", "bread", "grain"
+    "thyme", "roast", "butter", "cream", "sauce", "cake", "pie", "bread", "grain"
   ],
   "music": [
     "note", "beat", "chord", "melody", "rhythm", "bass", "drum", "guitar", "piano", "vocal",
     "harmony", "tempo", "scale", "tune", "lyric", "sound", "band", "concert", "song", "voice",
-    "synth", "tempo", "bridge", "solo", "verse", "chorus", "instrument", "acoustic", "bass", "key"
+    "synth", "bridge", "solo", "verse", "chorus", "instrument", "acoustic", "key"
   ],
   "space": [
     "orbit", "cosmos", "galaxy", "star", "comet", "planet", "rocket", "asteroid", "meteor", "nebula",
-    "satellite", "lunar", "solar", "eclipse", "gravity", "blackhole", "supernova", "space", "voyager", "astronaut",
-    "telescope", "cosmic", "quasar", "constellation", "asteroid", "celestial", "orbit", "vacuum", "universe", "rocket"
+    "satellite", "lunar", "solar", "eclipse", "gravity", "blackhole", "supernova", "voyager", "astronaut",
+    "telescope", "cosmic", "quasar", "constellation", "celestial", "vacuum", "universe"
   ],
   "mythology": [
     "zeus", "hera", "poseidon", "athena", "apollo", "ares", "thor", "loki", "freya",
@@ -78,89 +78,48 @@ function randomInt(max) {
   return array[0] % max;
 }
 
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = randomInt(i + 1);
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
-function transformThemeWord(word, opts) {
-  if (opts.uppercase && !opts.lowercase) {
-    return word.toUpperCase();
-  } else if (!opts.uppercase && opts.lowercase) {
-    return word.toLowerCase();
-  } else if (opts.uppercase && opts.lowercase) {
-    return word.split('').map(c => Math.random() < 0.5 ? c.toUpperCase() : c.toLowerCase()).join('');
-  } else {
-    // Neither uppercase nor lowercase selected - exclude word
-    return '';
-  }
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function generatePassword(length, opts, themeWords) {
   let charset = '';
-  const requiredChars = [];
+  if (opts.uppercase) charset += upper;
+  if (opts.lowercase) charset += lower;
+  if (opts.numbers) charset += numbers;
+  if (opts.symbols) charset += symbols;
 
-  if (opts.uppercase) {
-    charset += upper;
-    requiredChars.push(upper.charAt(randomInt(upper.length)));
-  }
-  if (opts.lowercase) {
-    charset += lower;
-    requiredChars.push(lower.charAt(randomInt(lower.length)));
-  }
-  if (opts.numbers) {
-    charset += numbers;
-    requiredChars.push(numbers.charAt(randomInt(numbers.length)));
-  }
-  if (opts.symbols) {
-    charset += symbols;
-    requiredChars.push(symbols.charAt(randomInt(symbols.length)));
-  }
+  const useTheme = themeWords && themeWords.length > 0;
+  let password = '';
+  const usedWords = new Set();
 
-  if (!charset && (!themeWords || themeWords.length === 0)) return '';
+  while (password.length < length) {
+    if (useTheme && Math.random() < 0.6 && password.length < length - 4) {
+      // Pick a unique theme word
+      let word;
+      let tries = 0;
+      do {
+        word = themeWords[randomInt(themeWords.length)];
+        tries++;
+      } while (usedWords.has(word) && tries < 10);
+      usedWords.add(word);
 
-  let pw = '';
-
-  // Use theme words intact only if they fit fully
-  if (themeWords && themeWords.length > 0) {
-    while (pw.length < length) {
-      let w = themeWords[randomInt(themeWords.length)];
-      w = transformThemeWord(w, opts);
-      if (w.length === 0) {
-        // No casing selected, break to fallback
-        break;
-      }
-      if (pw.length + w.length <= length) {
-        pw += w;
+      // Randomize casing per letter
+      word = word.split('').map(c => Math.random() < 0.5 ? c.toUpperCase() : c).join('');
+      if (password.length + word.length <= length) {
+        password += word;
       } else {
-        // Word won’t fit fully, stop adding theme words
-        break;
+        // If word doesn't fit, fill with random chars instead
+        password += charset.charAt(randomInt(charset.length));
       }
+    } else if (charset.length > 0) {
+      password += charset.charAt(randomInt(charset.length));
+    } else {
+      break; // No charset and no theme words
     }
   }
 
-  // Fill remainder with charset chars
-  while (pw.length < length) {
-    pw += charset.charAt(randomInt(charset.length));
-  }
-
-  // Ensure required chars included
-  for (const ch of requiredChars) {
-    if (!pw.includes(ch)) {
-      pw += ch;
-    }
-  }
-
-  // Trim to exact length
-  pw = pw.slice(0, length);
-
-  // Shuffle password array to mix required chars and theme words
-  const pwArr = pw.split('');
-  shuffleArray(pwArr);
-  return pwArr.join('');
+  return password.slice(0, length);
 }
 
 function estimateEntropy(password, opts) {
@@ -171,25 +130,58 @@ function estimateEntropy(password, opts) {
   if (opts.symbols) charsetSize += symbols.length;
 
   if (opts.theme && opts.themeWords && opts.themeWords.length > 0) {
+    // Themed password entropy estimate (rough, since words lower entropy)
     return password.length * 3;
   }
 
   return password.length * Math.log2(charsetSize || 1);
 }
 
+// Converts seconds to a human-readable string (seconds, minutes, hours, days, years, centuries)
+function secondsToHuman(seconds) {
+  const units = [
+    ["seconds", 60],
+    ["minutes", 60],
+    ["hours", 24],
+    ["days", 365],
+    ["years", 100],
+    ["centuries", Infinity]
+  ];
+  let i = 0;
+  while (i < units.length && seconds >= units[i][1]) {
+    seconds /= units[i][1];
+    i++;
+  }
+  return seconds.toFixed(2) + " " + units[i][0];
+}
+
 function updateStrengthBars(password, opts) {
   const entropy = estimateEntropy(password, opts);
-  const entropyFill = Math.min(entropy / 100, 1) * 100;
+  const entropyFill = Math.min(entropy / 100, 1) * 100; // cap at 100 bits for bar
   const entropyFillBar = document.getElementById('entropy-fill');
   entropyFillBar.style.width = entropyFill + '%';
 
   const entropyDesc = document.getElementById('entropy-desc');
-  if (entropy < 28) entropyDesc.textContent = "Very Weak";
-  else if (entropy < 36) entropyDesc.textContent = "Weak";
-  else if (entropy < 60) entropyDesc.textContent = "Reasonable";
-  else if (entropy < 80) entropyDesc.textContent = "Strong";
-  else entropyDesc.textContent = "Very Strong";
+  // Attacker tiers in guesses per second
+  const attackerProfiles = {
+    "Casual": 1e3,
+    "Hobbyist": 1e6,
+    "Professional": 1e9,
+    "Nation-State": 1e12
+  };
 
+  let crackTimes = Object.entries(attackerProfiles).map(([level, rate]) => {
+    const seconds = Math.pow(2, entropy) / rate;
+    const display = secondsToHuman(seconds);
+    return `<strong>${level}</strong>: ${display}`;
+  });
+
+  entropyDesc.innerHTML = `
+    <div>${entropy < 28 ? "Very Weak" : entropy < 36 ? "Weak" : entropy < 60 ? "Reasonable" : entropy < 80 ? "Strong" : "Very Strong"}</div>
+    <div style="margin-top: 0.5rem; font-size: 0.9rem; line-height: 1.2;">${crackTimes.join('<br>')}</div>
+  `;
+
+  // zxcvbn
   const zx = zxcvbn(password);
   const zxFillBar = document.getElementById('zxcvbn-fill');
   zxFillBar.style.width = (zx.score + 1) * 20 + '%';
@@ -198,37 +190,34 @@ function updateStrengthBars(password, opts) {
   const zxMessages = [
     "Very Weak", "Weak", "Fair", "Good", "Strong"
   ];
-  zxDesc.textContent = zxMessages[zx.score];
-}
-
-function getOptionsFromUI() {
-  return {
-    uppercase: document.getElementById('uppercase').checked,
-    lowercase: document.getElementById('lowercase').checked,
-    numbers: document.getElementById('numbers').checked,
-    symbols: document.getElementById('symbols').checked,
-    length: parseInt(document.getElementById('length').value, 10),
-    theme: document.getElementById('theme-select').value,
-    themeWords: []
-  };
+  zxDesc.textContent = zxMessages[zx.score] || "";
 }
 
 function updatePassword() {
-  const opts = getOptionsFromUI();
-  if (opts.theme && themes[opts.theme]) {
-    opts.themeWords = themes[opts.theme];
+  const length = +document.getElementById('length').value;
+  const uppercase = document.getElementById('uppercase').checked;
+  const lowercase = document.getElementById('lowercase').checked;
+  const numbers = document.getElementById('numbers').checked;
+  const symbols = document.getElementById('symbols').checked;
+  const theme = document.getElementById('theme-select').value;
+
+  const opts = { uppercase, lowercase, numbers, symbols, theme };
+
+  let themeWords = null;
+  if (theme && themes[theme]) {
+    themeWords = themes[theme];
   }
+  opts.themeWords = themeWords;
 
-  const password = generatePassword(opts.length, opts, opts.themeWords);
-  const passwordField = document.getElementById('password');
-  passwordField.value = password;
+  const pw = generatePassword(length, opts, themeWords);
+  const pwBox = document.getElementById('password');
+  pwBox.value = pw;
 
-  updateStrengthBars(password, opts);
-
-  document.getElementById('length-val').textContent = opts.length;
+  updateStrengthBars(pw, opts);
+  document.getElementById('length-val').textContent = length;
 }
 
-// Set up event listeners
+// Event listeners
 document.getElementById('length').addEventListener('input', updatePassword);
 document.getElementById('uppercase').addEventListener('change', updatePassword);
 document.getElementById('lowercase').addEventListener('change', updatePassword);
@@ -236,5 +225,5 @@ document.getElementById('numbers').addEventListener('change', updatePassword);
 document.getElementById('symbols').addEventListener('change', updatePassword);
 document.getElementById('theme-select').addEventListener('change', updatePassword);
 
-// Generate initial password on load
-window.addEventListener('load', updatePassword);
+// Initialize on page load
+updatePassword();
