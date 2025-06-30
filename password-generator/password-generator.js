@@ -1,167 +1,124 @@
-const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const lower = 'abcdefghijklmnopqrstuvwxyz';
-const numbers = '0123456789';
-const symbols = '!@#$%^&*()-_=+[]{}|;:,.<>?';
-const ambiguous = '0O1lI';
-
-const attackerProfiles = {
-  "Single CPU (10⁵/sec)": 1e5,
-  "Hobbyist (10⁸/sec)": 1e8,
-  "Professional (10¹¹/sec)": 1e11,
-  "Nation-State (10¹⁴/sec)": 1e14
-};
-
-// These should match your HTML themes
-const themes = {
-  "sci-fi": ["star", "warp", "nova", "alien", "robot", "laser", "orbit", "quantum", "galaxy", "nebula"],
-  "movie": ["film", "scene", "take", "script", "reel", "actor", "studio", "popcorn", "cinema", "drama"],
-  "fantasy": ["dragon", "elf", "magic", "sword", "quest", "castle", "wizard", "knight", "phoenix", "realm"],
-  "horror": ["ghost", "night", "fear", "dark", "blood", "skull", "witch", "zombie", "panic", "scream"],
-  "cyberpunk": ["neon", "hack", "chrome", "glitch", "matrix", "byte", "code", "cyber", "proxy", "drone"],
-  "adventure": ["trail", "map", "camp", "peak", "climb", "trek", "summit", "cave", "voyage", "ridge"],
-  "nature": ["tree", "river", "mountain", "forest", "flower", "leaf", "rain", "sun", "cloud", "earth"],
-  "technology": ["circuit", "pixel", "code", "server", "cloud", "data", "stack", "drive", "kernel", "bit"],
-  "food": ["spice", "sugar", "salt", "pepper", "mint", "honey", "berry", "carrot", "garlic", "pie"],
-  "music": ["note", "beat", "melody", "rhythm", "bass", "guitar", "piano", "lyric", "song", "voice"],
-  "space": ["orbit", "cosmos", "galaxy", "star", "comet", "planet", "rocket", "lunar", "gravity", "eclipse"],
-  "mythology": ["zeus", "hera", "poseidon", "athena", "apollo", "thor", "loki", "odin", "hydra", "titan"]
-};
-
-function randomInt(max) {
-  const array = new Uint32Array(1);
-  window.crypto.getRandomValues(array);
-  return array[0] % max;
-}
-
-function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function generatePassword(length, opts, themeWords) {
-  let charset = '';
-  if (opts.uppercase) charset += upper;
-  if (opts.lowercase) charset += lower;
-  if (opts.numbers) charset += numbers;
-  if (opts.symbols) charset += symbols;
-
-  if (opts.noAmbiguous) {
-    charset = charset.split('').filter(c => !ambiguous.includes(c)).join('');
-  }
-
-  const useTheme = themeWords && themeWords.length > 0;
-  let password = '';
-  const usedWords = new Set();
-
-  while (password.length < length) {
-    if (useTheme && Math.random() < 0.6 && password.length < length - 4) {
-      let word;
-      let tries = 0;
-      do {
-        word = themeWords[randomInt(themeWords.length)];
-        tries++;
-      } while (usedWords.has(word) && tries < 10);
-      usedWords.add(word);
-
-      word = word.split('').map(c => Math.random() < 0.5 ? c.toUpperCase() : c).join('');
-      if (password.length + word.length <= length) {
-        password += word;
-      } else {
-        password += charset.charAt(randomInt(charset.length));
-      }
-    } else if (charset.length > 0) {
-      password += charset.charAt(randomInt(charset.length));
-    } else {
-      break;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Themed Password Generator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
     }
-  }
+    input[type="range"] { width: 100%; }
+    .section { margin-bottom: 1.5rem; }
+    .bar {
+      height: 10px;
+      width: 100%;
+      background: #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      width: 0;
+      transition: width 0.3s, background 0.3s;
+    }
+    #password {
+      width: 100%;
+      font-size: 1.2rem;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .attack-times {
+      font-size: 0.9rem;
+      color: #444;
+      margin-top: 0.5rem;
+    }
+    #custom-theme-wrapper {
+      display: none;
+    }
+    #custom-theme {
+      width: 100%;
+      height: 80px;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Themed Password Generator</h1>
 
-  return password.slice(0, length);
-}
+  <div class="section">
+    <label>Password length: <span id="length-val">16</span></label>
+    <input id="length" type="range" min="8" max="64" value="16">
+  </div>
 
-function estimateEntropy(password, opts) {
-  let charsetSize = 0;
-  if (opts.uppercase) charsetSize += 26;
-  if (opts.lowercase) charsetSize += 26;
-  if (opts.numbers) charsetSize += 10;
-  if (opts.symbols) charsetSize += symbols.length;
+  <div class="section">
+    <label><input type="checkbox" id="uppercase" checked> Uppercase</label><br>
+    <label><input type="checkbox" id="lowercase" checked> Lowercase</label><br>
+    <label><input type="checkbox" id="numbers" checked> Numbers</label><br>
+    <label><input type="checkbox" id="symbols"> Symbols</label><br>
+    <label><input type="checkbox" id="no-ambiguous"> Exclude ambiguous characters</label>
+  </div>
 
-  if (opts.noAmbiguous) charsetSize -= ambiguous.length;
+  <div class="section">
+    <label for="theme-select">Theme:</label>
+    <select id="theme-select">
+      <option value="">None</option>
+      <option value="sci-fi">Sci-Fi</option>
+      <option value="movie">Movie</option>
+      <option value="fantasy">Fantasy</option>
+      <option value="horror">Horror</option>
+      <option value="cyberpunk">Cyberpunk</option>
+      <option value="adventure">Adventure</option>
+      <option value="nature">Nature</option>
+      <option value="technology">Technology</option>
+      <option value="food">Food</option>
+      <option value="music">Music</option>
+      <option value="space">Space</option>
+      <option value="mythology">Mythology</option>
+      <option value="custom">Custom</option>
+    </select>
 
-  if (opts.theme && opts.themeWords?.length > 0) {
-    return password.length * 3;
-  }
+    <div id="custom-theme-wrapper">
+      <label for="custom-theme">Enter your custom words (comma-separated):</label>
+      <textarea id="custom-theme"></textarea>
+    </div>
+  </div>
 
-  return password.length * Math.log2(charsetSize || 1);
-}
+  <div class="section">
+    <input id="password" readonly>
+    <button onclick="copyPassword()">Copy</button>
+  </div>
 
-function secondsToHuman(seconds) {
-  const units = [
-    ["seconds", 60],
-    ["minutes", 60],
-    ["hours", 24],
-    ["days", 365],
-    ["years", 100],
-    ["centuries", Infinity]
-  ];
-  let i = 0;
-  while (i < units.length && seconds >= units[i][1]) {
-    seconds /= units[i][1];
-    i++;
-  }
-  return seconds.toFixed(2) + " " + units[i][0];
-}
+  <div class="section">
+    <div><strong>Estimated Entropy</strong></div>
+    <div class="bar"><div id="entropy-fill" class="fill"></div></div>
+    <div id="entropy-desc"></div>
+    <div id="attack-times" class="attack-times"></div>
+  </div>
 
-function updateStrengthBars(password, opts) {
-  const entropy = estimateEntropy(password, opts);
-  document.getElementById('entropy-fill').style.width = Math.min(entropy, 100) + '%';
+  <div class="section">
+    <div><strong>zxcvbn Score</strong></div>
+    <div class="bar"><div id="zxcvbn-fill" class="fill"></div></div>
+    <div id="zxcvbn-desc"></div>
+  </div>
 
-  let desc = `Entropy: ${entropy.toFixed(1)} bits<br>`;
-  for (const [label, rate] of Object.entries(attackerProfiles)) {
-    const seconds = Math.pow(2, entropy) / rate;
-    desc += `<strong>${label}:</strong> ${secondsToHuman(seconds)}<br>`;
-  }
-  document.getElementById('entropy-desc').innerHTML = desc;
-
-  const zx = zxcvbn(password);
-  document.getElementById('zxcvbn-fill').style.width = (zx.score + 1) * 20 + '%';
-  const messages = ["Very Weak", "Weak", "Fair", "Good", "Strong"];
-  document.getElementById('zxcvbn-desc').textContent = messages[zx.score] || "";
-}
-
-function updatePassword() {
-  const length = +document.getElementById('length').value;
-  const uppercase = document.getElementById('uppercase').checked;
-  const lowercase = document.getElementById('lowercase').checked;
-  const numbers = document.getElementById('numbers').checked;
-  const symbols = document.getElementById('symbols').checked;
-  const noAmbiguous = document.getElementById('no-ambiguous').checked;
-  const theme = document.getElementById('theme-select').value;
-
-  const opts = { uppercase, lowercase, numbers, symbols, noAmbiguous, theme };
-  let themeWords = theme && themes[theme] ? themes[theme] : null;
-  opts.themeWords = themeWords;
-
-  const password = generatePassword(length, opts, themeWords);
-  document.getElementById('password').value = password;
-
-  updateStrengthBars(password, opts);
-  document.getElementById('length-val').textContent = length;
-}
-
-function copyPassword() {
-  const pw = document.getElementById('password');
-  pw.select();
-  document.execCommand('copy');
-  alert('Password copied to clipboard!');
-}
-
-// Init listeners
-document.getElementById('length').addEventListener('input', updatePassword);
-document.getElementById('uppercase').addEventListener('change', updatePassword);
-document.getElementById('lowercase').addEventListener('change', updatePassword);
-document.getElementById('numbers').addEventListener('change', updatePassword);
-document.getElementById('symbols').addEventListener('change', updatePassword);
-document.getElementById('no-ambiguous').addEventListener('change', updatePassword);
-document.getElementById('theme-select').addEventListener('change', updatePassword);
-
-updatePassword();
+  <script src="https://cdn.jsdelivr.net/npm/zxcvbn"></script>
+  <script src="generator.js"></script>
+  <script>
+    const themeSelect = document.getElementById('theme-select');
+    const customWrapper = document.getElementById('custom-theme-wrapper');
+    themeSelect.addEventListener('change', () => {
+      customWrapper.style.display = themeSelect.value === 'custom' ? 'block' : 'none';
+    });
+  </script>
+</body>
+</html>
