@@ -11,7 +11,6 @@ const attackerProfiles = {
   "Nation-State (10¹⁴/sec)": 1e14
 };
 
-// These should match your HTML themes
 const themes = {
   "sci-fi": ["star", "warp", "nova", "alien", "robot", "laser", "orbit", "quantum", "galaxy", "nebula"],
   "movie": ["film", "scene", "take", "script", "reel", "actor", "studio", "popcorn", "cinema", "drama"],
@@ -37,7 +36,23 @@ function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+// Return a random char from a given charset
+function randomChar(charset) {
+  return charset.charAt(randomInt(charset.length));
+}
+
+// Shuffle an array in place (Fisher-Yates)
+function shuffle(array) {
+  for (let i = array.length -1; i > 0; i--) {
+    const j = randomInt(i + 1);
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// Generate password ensuring all selected char sets appear at least once
 function generatePassword(length, opts, themeWords) {
+  // Build charset based on options
   let charset = '';
   if (opts.uppercase) charset += upper;
   if (opts.lowercase) charset += lower;
@@ -48,12 +63,17 @@ function generatePassword(length, opts, themeWords) {
     charset = charset.split('').filter(c => !ambiguous.includes(c)).join('');
   }
 
+  if (!charset.length) return ''; // No character set selected
+
   const useTheme = themeWords && themeWords.length > 0;
-  let passwordParts = [];
 
   if (useTheme) {
+    // Build with theme words + random chars to fill length
+
     const usedWords = new Set();
-    // Add theme words while they fit
+    let passwordParts = [];
+
+    // Add theme words until can't fit
     while (passwordParts.join('').length < length) {
       let word;
       let tries = 0;
@@ -63,7 +83,7 @@ function generatePassword(length, opts, themeWords) {
       } while (usedWords.has(word) && tries < 10);
       usedWords.add(word);
 
-      // Randomly capitalize letters
+      // Random capitalize letters
       word = word.split('').map(c => Math.random() < 0.5 ? c.toUpperCase() : c).join('');
 
       if (passwordParts.join('').length + word.length <= length) {
@@ -73,23 +93,39 @@ function generatePassword(length, opts, themeWords) {
       }
     }
 
-    // Insert random chars between, front, or end until length reached
+    // Insert random chars between, front or end to fill length
     let currentLength = passwordParts.join('').length;
     while (currentLength < length) {
-      const randomChar = charset.charAt(randomInt(charset.length));
-      const insertPos = randomInt(passwordParts.length + 1);
-      passwordParts.splice(insertPos, 0, randomChar);
+      const randChar = randomChar(charset);
+      const pos = randomInt(passwordParts.length + 1);
+      passwordParts.splice(pos, 0, randChar);
       currentLength++;
     }
 
+    // Join and return trimmed to length
     return passwordParts.join('').slice(0, length);
+
   } else {
-    // No theme words, just random chars
-    let password = '';
-    while (password.length < length) {
-      password += charset.charAt(randomInt(charset.length));
+    // Without theme words, enforce at least one of each selected category
+
+    const requiredSets = [];
+    if (opts.uppercase) requiredSets.push(upper);
+    if (opts.lowercase) requiredSets.push(lower);
+    if (opts.numbers) requiredSets.push(numbers);
+    if (opts.symbols) requiredSets.push(symbols);
+
+    // Start password with one char from each required set
+    let passwordChars = requiredSets.map(set => randomChar(opts.noAmbiguous ? set.split('').filter(c => !ambiguous.includes(c)).join('') : set));
+
+    // Fill remaining length with random chars from full charset
+    while (passwordChars.length < length) {
+      passwordChars.push(randomChar(charset));
     }
-    return password.slice(0, length);
+
+    // Shuffle to mix required chars
+    passwordChars = shuffle(passwordChars);
+
+    return passwordChars.join('');
   }
 }
 
@@ -127,6 +163,14 @@ function secondsToHuman(seconds) {
   return seconds.toFixed(2) + " " + units[i][0];
 }
 
+function getEntropyClass(entropy) {
+  if (entropy < 28) return 'very-weak';
+  if (entropy < 36) return 'weak';
+  if (entropy < 60) return 'fair';
+  if (entropy < 128) return 'good';
+  return 'strong';
+}
+
 function updateStrengthBars(password, opts) {
   const entropy = estimateEntropy(password, opts);
   const entropyFill = document.getElementById('entropy-fill');
@@ -140,20 +184,19 @@ function updateStrengthBars(password, opts) {
   }
   document.getElementById('entropy-desc').innerHTML = desc;
 
-  const zx = zxcvbn(password);
-  const zxcvbnFill = document.getElementById('zxcvbn-fill');
-  zxcvbnFill.style.width = (zx.score + 1) * 20 + '%';
-  zxcvbnFill.className = 'fill ' + getEntropyClass(zx.score * 25); // approximate
-  const messages = ["Very Weak", "Weak", "Fair", "Good", "Strong"];
-  document.getElementById('zxcvbn-desc').textContent = messages[zx.score] || "";
-}
-
-function getEntropyClass(entropy) {
-  if (entropy < 28) return 'very-weak';
-  if (entropy < 36) return 'weak';
-  if (entropy < 60) return 'fair';
-  if (entropy < 128) return 'good';
-  return 'strong';
+  // Use zxcvbn if available
+  if (typeof zxcvbn === 'function') {
+    const zx = zxcvbn(password);
+    const zxcvbnFill = document.getElementById('zxcvbn-fill');
+    zxcvbnFill.style.width = (zx.score + 1) * 20 + '%';
+    zxcvbnFill.className = 'fill ' + getEntropyClass(zx.score * 25); // approximate
+    const messages = ["Very Weak", "Weak", "Fair", "Good", "Strong"];
+    document.getElementById('zxcvbn-desc').textContent = messages[zx.score] || "";
+  } else {
+    // fallback if zxcvbn missing
+    document.getElementById('zxcvbn-fill').style.width = '0%';
+    document.getElementById('zxcvbn-desc').textContent = '';
+  }
 }
 
 function updatePassword() {
@@ -162,7 +205,6 @@ function updatePassword() {
     length = 4;
     document.getElementById('length').value = 4;
   }
-
   document.getElementById('length-val').textContent = length;
 
   const uppercase = document.getElementById('uppercase').checked;
@@ -175,7 +217,6 @@ function updatePassword() {
   const opts = { uppercase, lowercase, numbers, symbols, noAmbiguous, theme };
   let themeWords = theme && themes[theme] ? themes[theme] : null;
 
-  // For custom theme words, override if any
   if (theme === 'custom') {
     const customText = document.getElementById('custom-theme').value;
     if (customText.trim()) {
@@ -187,6 +228,11 @@ function updatePassword() {
 
   opts.themeWords = themeWords;
 
+  // If no char types are selected, force lowercase to true to avoid empty charset
+  if (!uppercase && !lowercase && !numbers && !symbols) {
+    opts.lowercase = true;
+  }
+
   const password = generatePassword(length, opts, themeWords);
   document.getElementById('password').value = password;
 
@@ -196,12 +242,12 @@ function updatePassword() {
 function copyPassword() {
   const pw = document.getElementById('password');
   pw.select();
-  pw.setSelectionRange(0, 99999); // for mobile
+  pw.setSelectionRange(0, 99999); // For mobile devices
   document.execCommand('copy');
   alert('Password copied to clipboard!');
 }
 
-// Init listeners
+// Event listeners
 document.getElementById('length').addEventListener('input', updatePassword);
 document.getElementById('uppercase').addEventListener('change', updatePassword);
 document.getElementById('lowercase').addEventListener('change', updatePassword);
@@ -211,5 +257,5 @@ document.getElementById('no-ambiguous').addEventListener('change', updatePasswor
 document.getElementById('theme-select').addEventListener('change', updatePassword);
 document.getElementById('custom-theme').addEventListener('input', updatePassword);
 
-// Initial call
+// Initial generate
 updatePassword();
