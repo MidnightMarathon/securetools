@@ -120,11 +120,6 @@
       width: 100%;
       height: 80px;
       margin-top: 0.5rem;
-      font-size: 1rem;
-      padding: 0.4rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      resize: vertical;
     }
   </style>
 </head>
@@ -134,20 +129,24 @@
 
     <div class="section">
       <label>Password length: <span id="length-val">16</span></label>
-      <input id="length" type="range" min="8" max="64" value="16" />
+      <input
+        id="length"
+        type="range"
+        min="4"
+        max="64"
+        value="16"
+        step="1"
+        aria-label="Password length"
+      />
     </div>
 
     <div class="section">
       <label><input type="checkbox" id="uppercase" checked /> Uppercase</label
       ><br />
-      <label><input type="checkbox" id="lowercase" checked /> Lowercase</label
-      ><br />
+      <label><input type="checkbox" id="lowercase" checked /> Lowercase</label><br />
       <label><input type="checkbox" id="numbers" checked /> Numbers</label><br />
       <label><input type="checkbox" id="symbols" /> Symbols</label><br />
-      <label
-        ><input type="checkbox" id="no-ambiguous" /> Exclude ambiguous
-        characters</label
-      >
+      <label><input type="checkbox" id="no-ambiguous" /> Exclude ambiguous characters</label>
     </div>
 
     <div class="section">
@@ -171,45 +170,41 @@
 
       <div id="custom-theme-wrapper">
         <label for="custom-theme">Enter your custom words (comma-separated):</label>
-        <textarea id="custom-theme" placeholder="e.g. apple, banana, cherry"></textarea>
+        <textarea id="custom-theme"></textarea>
       </div>
     </div>
 
     <div class="section">
-      <input id="password" readonly />
+      <input id="password" readonly aria-label="Generated password" />
       <button onclick="copyPassword()">Copy</button>
     </div>
 
     <div class="section">
       <div class="bar-label">Estimated Entropy</div>
-      <div class="bar"><div id="entropy-fill" class="fill"></div></div>
+      <div class="bar">
+        <div id="entropy-fill" class="fill"></div>
+      </div>
       <div id="entropy-desc" class="description"></div>
       <div id="attack-times" class="description"></div>
     </div>
 
     <div class="section">
       <div class="bar-label">zxcvbn Score</div>
-      <div class="bar"><div id="zxcvbn-fill" class="fill"></div></div>
+      <div class="bar">
+        <div id="zxcvbn-fill" class="fill"></div>
+      </div>
       <div id="zxcvbn-desc" class="description"></div>
     </div>
   </main>
 
+  <!-- Load zxcvbn FIRST -->
   <script src="https://cdn.jsdelivr.net/npm/zxcvbn"></script>
   <script src="password-generator.js"></script>
   <script>
     const themeSelect = document.getElementById("theme-select");
     const customWrapper = document.getElementById("custom-theme-wrapper");
-    const customInput = document.getElementById("custom-theme");
-
     themeSelect.addEventListener("change", () => {
       customWrapper.style.display = themeSelect.value === "custom" ? "block" : "none";
-      updatePassword();
-    });
-
-    customInput.addEventListener("input", () => {
-      if (themeSelect.value === "custom") {
-        updatePassword();
-      }
     });
   </script>
 </body>
