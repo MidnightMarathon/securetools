@@ -213,3 +213,25 @@ a#download-link:hover {
   background: #219150;
 }
 
+/* Password strength bar styles */
+
+.bar {
+  width: 100%;
+  height: 14px;
+  background: #ddd;
+  border-radius: 7px;
+  overflow: hidden;
+  margin-top: 0.4rem;
+}
+
+.fill {
+  height: 100%;
+  width: 0%;
+  background: #2d9cdb;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.bar-label {
+  margin-top: 1.5rem;
+  font-weight: 600;
+}
