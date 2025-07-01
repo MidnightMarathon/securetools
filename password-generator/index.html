@@ -4,98 +4,64 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SecureTools – Password Generator</title>
-  <meta name="description" content="Generate strong, random passwords securely in your browser with SecureTools. No tracking, no signup." />
-  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
   <link rel="stylesheet" href="/assets/styles.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js" defer></script>
-  <script src="/password-generator/password-generator.js" defer></script>
 </head>
 <body>
   <nav>
     <a href="/" class="active">Home</a>
+    <a href="/password-generator/index.html">Password Generator</a>
+    <!-- add more nav links here -->
   </nav>
 
   <main>
     <h1>Password Generator</h1>
-
-    <label for="length">Length: <span id="length-val">16</span></label>
-    <input type="range" id="length" min="8" max="64" value="16" />
+    <div class="input-group">
+      <label for="password">Generated Password</label>
+      <input type="text" id="password" readonly aria-live="polite" />
+    </div>
 
     <div class="options-container">
       <div class="options">
-        <label><input type="checkbox" id="uppercase" checked /> Uppercase (A-Z)</label>
-        <label><input type="checkbox" id="lowercase" checked /> Lowercase (a-z)</label>
-        <label><input type="checkbox" id="numbers" checked /> Numbers (0-9)</label>
-        <label><input type="checkbox" id="symbols" /> Symbols (!@#$...)</label>
+        <div class="input-group">
+          <label for="length">Length: <span id="length-value">16</span></label>
+          <input type="range" id="length" min="8" max="64" value="16" />
+        </div>
+
+        <fieldset>
+          <legend>Include Characters</legend>
+          <label><input type="checkbox" id="uppercase" checked /> Uppercase (A-Z)</label><br />
+          <label><input type="checkbox" id="lowercase" checked /> Lowercase (a-z)</label><br />
+          <label><input type="checkbox" id="numbers" checked /> Numbers (0-9)</label><br />
+          <label><input type="checkbox" id="symbols" /> Symbols (!@#$%)</label>
+        </fieldset>
+
+        <div class="input-group">
+          <label for="theme-select">Theme</label>
+          <select id="theme-select" aria-label="Select password theme">
+            <option value="default">Default</option>
+            <option value="easy-to-read">Easy to Read</option>
+            <option value="pin">PIN Only</option>
+            <!-- add more themes if you want -->
+          </select>
+        </div>
       </div>
-      <button id="reroll" aria-label="Generate a new password">Reroll</button>
+
+      <div class="options">
+        <button id="reroll" aria-label="Generate new password">Reroll 🔄</button>
+      </div>
     </div>
 
-    <label for="theme-select">Theme (optional):</label>
-    <select id="theme-select" aria-label="Select password theme">
-      <option value="">None</option>
-      <option value="sci-fi">Sci-Fi</option>
-      <option value="movie">Movie</option>
-      <option value="fantasy">Fantasy</option>
-      <option value="horror">Horror</option>
-      <option value="cyberpunk">Cyberpunk</option>
-      <option value="adventure">Adventure</option>
-      <option value="nature">Nature</option>
-      <option value="technology">Technology</option>
-      <option value="food">Food</option>
-      <option value="music">Music</option>
-      <option value="space">Space</option>
-      <option value="mythology">Mythology</option>
-    </select>
-
-    <textarea id="password" readonly aria-label="Generated password"></textarea>
-
-    <div class="bar-label">Entropy Strength</div>
-    <div class="bar"><div id="entropy-fill" class="fill"></div></div>
-    <div class="description" id="entropy-desc">Strong</div>
-
-    <div class="description">
-      <strong>What is entropy?</strong><br>
-      Entropy estimates how unpredictable your password is, based on character variety and length. Higher entropy means greater resistance to brute-force attacks.<br><br>
-
-      <strong>Estimated Crack Times:</strong><br>
-      • 🧑 Single CPU (1B guesses/sec): <span id="crack-time-cpu" aria-live="polite"></span><br>
-      • 🎮 Gaming GPU (e.g. RTX 3090): <span id="crack-time-gpu" aria-live="polite"></span><br>
-      • 🤖 Hacker Group (100 GPUs): <span id="crack-time-group" aria-live="polite"></span><br>
-      • 🏛️ Nation-State Supercomputer: <span id="crack-time-state" aria-live="polite"></span>
+    <div id="strength-bars">
+      <div class="bar-label">Strength</div>
+      <div class="bar"><div class="fill" id="strength-fill"></div></div>
+      <div class="description" id="strength-desc">Use more characters and character types for a stronger password.</div>
     </div>
 
-    <div class="bar-label" style="margin-top: 1.25rem;">zxcvbn Pattern Strength</div>
-    <div class="bar"><div id="zxcvbn-fill" class="fill"></div></div>
-    <div class="description" id="zxcvbn-desc">
-      The <code>zxcvbn</code> score detects common patterns and weaknesses like dictionary words or repeats.<br>
-      Score ranges from 0 (very weak) to 4 (very strong).
-    </div>
-    <div class="description" style="margin-top: 0.25rem;">
-      <strong>About zxcvbn:</strong><br>
-      Developed by Dropbox, <code>zxcvbn</code> is an advanced password strength estimator that goes beyond simple character counts by analyzing common password patterns, keyboard sequences, and dictionary matches to provide a more accurate and user-friendly strength score.<br>
-      Learn more: <a href="https://github.com/dropbox/zxcvbn" target="_blank" rel="noopener noreferrer">github.com/dropbox/zxcvbn</a>
-    </div>
+    <button id="generate-btn">Generate Password</button>
 
-    <!-- Test your own password section -->
-    <h2 style="margin-top:2rem;">Test Your Own Password</h2>
-    <p style="font-size: 0.9rem; color: #555;">
-      Enter your own password below to check its strength. <strong>Why is it safe?</strong> All password analysis runs entirely <em>in your browser</em>. 
-      Your password <em>never leaves your device</em>, and we do not store or send it anywhere. The code is open source and auditable. Your privacy is respected.
-    </p>
-
-    <input 
-      type="password" 
-      id="test-password-input" 
-      placeholder="Enter your password to test" 
-      aria-label="Input your own password to test strength" 
-    />
-
-    <div class="bar-label" style="margin-top: 1rem;">Test Password Strength</div>
-    <div class="bar"><div id="test-zxcvbn-fill" class="fill"></div></div>
-    <div class="description" id="test-zxcvbn-desc" style="margin-bottom: 1rem;">
-      Enter a password above to see how strong it is.
-    </div>
+    <div id="error-msg" role="alert" aria-live="assertive"></div>
   </main>
+
+  <script src="./password-generator.js"></script>
 </body>
 </html>
