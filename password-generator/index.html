@@ -35,7 +35,7 @@
       box-shadow: 0 15px 25px rgba(0,0,0,0.1);
     }
 
-    h1 {
+    h1, h2 {
       text-align: center;
       font-size: 2rem;
       margin-bottom: 1.25rem;
@@ -118,13 +118,14 @@
       line-height: 1.4;
     }
 
-    input[type=range], select {
+    input[type=range], select, input[type=password] {
       width: 100%;
       margin-top: 0.5rem;
-      padding: 0.3rem;
+      padding: 0.3rem 0.5rem;
       font-size: 1rem;
       border-radius: 6px;
       border: 1px solid #ccc;
+      box-sizing: border-box;
     }
   </style>
 </head>
@@ -189,6 +190,27 @@
       <strong>About zxcvbn:</strong><br>
       Developed by Dropbox, <code>zxcvbn</code> is an advanced password strength estimator that goes beyond simple character counts by analyzing common password patterns, keyboard sequences, and dictionary matches to provide a more accurate and user-friendly strength score.<br>
       Learn more: <a href="https://github.com/dropbox/zxcvbn" target="_blank" rel="noopener noreferrer">github.com/dropbox/zxcvbn</a>
+    </div>
+
+    <!-- Test your own password section -->
+    <h2 style="margin-top:2rem;">Test Your Own Password</h2>
+    <p style="font-size: 0.9rem; color: #555;">
+      Enter your own password below to check its strength. <strong>Why is it safe?</strong> All password analysis runs entirely <em>in your browser</em>. 
+      Your password <em>never leaves your device</em>, and we do not store or send it anywhere. The code is open source and auditable. Your privacy is respected.
+    </p>
+
+    <input 
+      type="password" 
+      id="test-password-input" 
+      placeholder="Enter your password to test" 
+      style="width:100%; padding: 0.75rem; font-size: 1.1rem; border-radius: 8px; border: 2px solid #ccc;" 
+      aria-label="Input your own password to test strength" 
+    />
+
+    <div class="bar-label" style="margin-top: 1rem;">Test Password Strength</div>
+    <div class="bar"><div id="test-zxcvbn-fill" class="fill"></div></div>
+    <div class="description" id="test-zxcvbn-desc" style="margin-bottom: 1rem;">
+      Enter a password above to see how strong it is.
     </div>
   </main>
 
@@ -294,188 +316,196 @@
         map = symbolMap;
       } else if (opts.numbers) {
         map = numberMap;
-      } else {
-        return word;
       }
 
-      let result = '';
-      for (const char of word) {
-        const lowerChar = char.toLowerCase();
-        if (map[lowerChar] && Math.random() < 0.4) {
-          result += map[lowerChar];
-        } else {
-          result += char;
+      return word.split('').map(ch => {
+        const lower = ch.toLowerCase();
+        if (map[lower]) {
+          // 50% chance to substitute
+          if (Math.random() > 0.5) {
+            return map[lower];
+          }
         }
-      }
-      return result;
+        return ch;
+      }).join('');
     }
 
-    function processThemeWord(word, opts) {
-      if (!opts.uppercase && !opts.lowercase) {
-        return null;
+    function generatePassword(opts) {
+      if (opts.theme && opts.theme in themes) {
+        const themeWords = themes[opts.theme];
+        let words = [];
+        while (words.length < Math.ceil(opts.length / 6)) {
+          const w = themeWords[randomInt(themeWords.length)];
+          words.push(w);
+        }
+        // Combine words and truncate or pad
+        let password = words.join('');
+        // Apply case styles & substitutions
+        password = applyRandomCaseStyle(password);
+        password = substituteChars(password, opts);
+        // If still shorter than length, append random chars
+        while (password.length < opts.length) {
+          let charPool = '';
+          if (opts.uppercase) charPool += upper;
+          if (opts.lowercase) charPool += lower;
+          if (opts.numbers) charPool += numbers;
+          if (opts.symbols) charPool += symbols;
+          if (!charPool) charPool = lower + upper + numbers + symbols;
+          password += charPool.charAt(randomInt(charPool.length));
+        }
+        return password.slice(0, opts.length);
       }
-      if (opts.uppercase && !opts.lowercase) {
-        word = word.toUpperCase();
-      } else if (!opts.uppercase && opts.lowercase) {
-        word = word.toLowerCase();
-      } else if (opts.uppercase && opts.lowercase) {
-        word = applyRandomCaseStyle(word);
-      }
 
-      word = substituteChars(word, opts);
-
-      return word;
-    }
-
-    function insertSymbolsNumbers(pw, opts, length) {
-      const symbolsArr = opts.symbols ? Object.values(symbolMap).flatMap(s => s.split('')) : [];
-      const numbersArr = opts.numbers ? Object.values(numberMap) : [];
-      const extras = [...symbolsArr, ...numbersArr];
-
-      let result = pw;
-
-      while (result.length < length && extras.length > 0) {
-        const pos = Math.floor(Math.random() * (result.length + 1));
-        const charToInsert = extras[randomInt(extras.length)];
-        result = result.slice(0, pos) + charToInsert + result.slice(pos);
-      }
-      return result.slice(0, length);
-    }
-
-    function generatePassword() {
-      const length = +document.getElementById('length').value;
-      const uppercase = document.getElementById('uppercase').checked;
-      const lowercase = document.getElementById('lowercase').checked;
-      const numbers = document.getElementById('numbers').checked;
-      const symbols = document.getElementById('symbols').checked;
-      const theme = document.getElementById('theme-select').value;
-
-      if (!uppercase && !lowercase && !numbers && !symbols && !theme) {
-        return '';
-      }
+      let charPool = '';
+      if (opts.uppercase) charPool += upper;
+      if (opts.lowercase) charPool += lower;
+      if (opts.numbers) charPool += numbers;
+      if (opts.symbols) charPool += symbols;
+      if (!charPool) charPool = lower + upper + numbers + symbols;
 
       let password = '';
+      for (let i = 0; i < opts.length; i++) {
+        password += charPool.charAt(randomInt(charPool.length));
+      }
+      return password;
+    }
 
-      if (theme && themes[theme]) {
-        const themeWords = themes[theme];
-        while (password.length < length) {
-          let word = themeWords[randomInt(themeWords.length)];
-          word = processThemeWord(word, { uppercase, lowercase, numbers, symbols });
-          if (word) password += word;
+    function calcEntropy(length, poolSize) {
+      if (poolSize === 0) return 0;
+      return Math.round(Math.log2(poolSize) * length);
+    }
+
+    function formatSeconds(seconds) {
+      if (seconds === 0 || !isFinite(seconds)) return '∞ (very strong)';
+      const units = [
+        { label: 'years', seconds: 60 * 60 * 24 * 365 },
+        { label: 'days', seconds: 60 * 60 * 24 },
+        { label: 'hours', seconds: 60 * 60 },
+        { label: 'minutes', seconds: 60 },
+        { label: 'seconds', seconds: 1 }
+      ];
+      for (const unit of units) {
+        if (seconds >= unit.seconds) {
+          const val = seconds / unit.seconds;
+          return `${val.toFixed(1)} ${unit.label}`;
         }
-        password = insertSymbolsNumbers(password, { numbers, symbols }, length);
-      } else {
-        // fallback: random chars from enabled char sets
-        let charset = '';
-        if (uppercase) charset += upper;
-        if (lowercase) charset += lower;
-        if (numbers) charset += numbers;
-        if (symbols) charset += symbols;
-
-        for (let i = 0; i < length; i++) {
-          password += charset[randomInt(charset.length)];
-        }
       }
-
-      return password.slice(0, length);
+      return `${seconds.toFixed(1)} seconds`;
     }
 
-    function calculateEntropy(pw, opts) {
-      let pool = 0;
-      if (opts.uppercase) pool += 26;
-      if (opts.lowercase) pool += 26;
-      if (opts.numbers) pool += 10;
-      if (opts.symbols) pool += symbols.length;
-      if (opts.theme) pool += 30; // rough approx for themed words variety
+    const lengthSlider = document.getElementById('length');
+    const lengthVal = document.getElementById('length-val');
+    const uppercaseCheckbox = document.getElementById('uppercase');
+    const lowercaseCheckbox = document.getElementById('lowercase');
+    const numbersCheckbox = document.getElementById('numbers');
+    const symbolsCheckbox = document.getElementById('symbols');
+    const themeSelect = document.getElementById('theme-select');
+    const passwordArea = document.getElementById('password');
+    const rerollBtn = document.getElementById('reroll');
 
-      if (pool === 0) return 0;
+    const entropyFill = document.getElementById('entropy-fill');
+    const entropyDesc = document.getElementById('entropy-desc');
+    const crackCpu = document.getElementById('crack-time-cpu');
+    const crackGpu = document.getElementById('crack-time-gpu');
+    const crackGroup = document.getElementById('crack-time-group');
+    const crackState = document.getElementById('crack-time-state');
 
-      return Math.log2(Math.pow(pool, pw.length));
-    }
+    const zxcvbnFill = document.getElementById('zxcvbn-fill');
+    const zxcvbnDesc = document.getElementById('zxcvbn-desc');
 
-    function formatCrackTime(seconds) {
-      const minute = 60;
-      const hour = minute * 60;
-      const day = hour * 24;
-      const year = day * 365;
-      if (seconds < 1) return '< 1 second';
-      if (seconds < minute) return `${Math.floor(seconds)} seconds`;
-      if (seconds < hour) return `${Math.floor(seconds / minute)} minutes`;
-      if (seconds < day) return `${Math.floor(seconds / hour)} hours`;
-      if (seconds < year) return `${Math.floor(seconds / day)} days`;
-      if (seconds < year * 1000) return `${Math.floor(seconds / year)} years`;
-      return '∞ (practically unbreakable)';
-    }
+    const testInput = document.getElementById('test-password-input');
+    const testFill = document.getElementById('test-zxcvbn-fill');
+    const testDesc = document.getElementById('test-zxcvbn-desc');
 
-    function updateStrengthBars(pw, opts) {
-      const entropy = calculateEntropy(pw, opts);
-
-      const entropyPercent = Math.min(100, (entropy / 128) * 100);
-      const entropyFill = document.getElementById('entropy-fill');
-      entropyFill.style.width = entropyPercent + '%';
-
-      // Color gradient from red (low) to yellow to green (high)
-      if (entropyPercent < 30) {
-        entropyFill.style.backgroundColor = '#e74c3c'; // red
-      } else if (entropyPercent < 70) {
-        entropyFill.style.backgroundColor = '#f1c40f'; // yellow
-      } else {
-        entropyFill.style.backgroundColor = '#2ecc71'; // green
-      }
-
-      let strengthText = 'Weak';
-      if (entropyPercent >= 70) strengthText = 'Strong';
-      else if (entropyPercent >= 30) strengthText = 'Moderate';
-      document.getElementById('entropy-desc').textContent = strengthText;
-
-      // Crack times
-      // guesses per second estimates
-      const guesses = Math.pow(2, entropy);
-      document.getElementById('crack-time-cpu').textContent = formatCrackTime(guesses / 1e9);
-      document.getElementById('crack-time-gpu').textContent = formatCrackTime(guesses / 1e12);
-      document.getElementById('crack-time-group').textContent = formatCrackTime(guesses / 1e14);
-      document.getElementById('crack-time-state').textContent = formatCrackTime(guesses / 1e17);
-
-      // zxcvbn scoring
-      if (typeof zxcvbn === 'function') {
-        const zx = zxcvbn(pw || '');
-        const score = zx.score || 0;
-        const zfill = document.getElementById('zxcvbn-fill');
-        const zPercent = (score / 4) * 100;
-        zfill.style.width = zPercent + '%';
-
-        // Color scale from red to green
-        const colors = ['#e74c3c', '#f39c12', '#f1c40f', '#27ae60', '#2ecc71'];
-        zfill.style.backgroundColor = colors[score];
-      }
-    }
-
-    function update() {
-      const pw = generatePassword();
+    function updatePassword() {
       const opts = {
-        uppercase: document.getElementById('uppercase').checked,
-        lowercase: document.getElementById('lowercase').checked,
-        numbers: document.getElementById('numbers').checked,
-        symbols: document.getElementById('symbols').checked,
-        theme: document.getElementById('theme-select').value,
+        length: parseInt(lengthSlider.value),
+        uppercase: uppercaseCheckbox.checked,
+        lowercase: lowercaseCheckbox.checked,
+        numbers: numbersCheckbox.checked,
+        symbols: symbolsCheckbox.checked,
+        theme: themeSelect.value || null
       };
 
-      document.getElementById('password').value = pw;
-      updateStrengthBars(pw, opts);
+      const pwd = generatePassword(opts);
+      passwordArea.value = pwd;
+
+      // Calculate pool size
+      let poolSize = 0;
+      if (opts.uppercase) poolSize += upper.length;
+      if (opts.lowercase) poolSize += lower.length;
+      if (opts.numbers) poolSize += numbers.length;
+      if (opts.symbols) poolSize += symbols.length;
+      if (poolSize === 0) poolSize = upper.length + lower.length + numbers.length + symbols.length;
+
+      const entropy = calcEntropy(opts.length, poolSize);
+      entropyFill.style.width = Math.min(entropy / 128 * 100, 100) + '%';
+
+      let entropyColor = '#27ae60'; // green
+      if (entropy < 40) entropyColor = '#e74c3c'; // red
+      else if (entropy < 80) entropyColor = '#f1c40f'; // yellow
+      entropyFill.style.backgroundColor = entropyColor;
+
+      if (entropy < 40) entropyDesc.textContent = 'Weak';
+      else if (entropy < 80) entropyDesc.textContent = 'Moderate';
+      else entropyDesc.textContent = 'Strong';
+
+      // Crack time estimates (guesses per second)
+      const guesses = Math.pow(2, entropy);
+      crackCpu.textContent = formatSeconds(guesses / 1e9);
+      crackGpu.textContent = formatSeconds(guesses / 1e11);
+      crackGroup.textContent = formatSeconds(guesses / 1e13);
+      crackState.textContent = formatSeconds(guesses / 1e14);
+
+      // zxcvbn score & feedback
+      if (typeof zxcvbn === 'function') {
+        const zx = zxcvbn(pwd);
+        const score = zx.score || 0;
+        const zPercent = (score / 4) * 100;
+        zxcvbnFill.style.width = zPercent + '%';
+
+        const colors = ['#e74c3c', '#f39c12', '#f1c40f', '#27ae60', '#2ecc71'];
+        zxcvbnFill.style.backgroundColor = colors[score];
+
+        const scoreText = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][score];
+        zxcvbnDesc.textContent = `Password strength: ${scoreText}. ${zx.feedback.warning || ''} ${zx.feedback.suggestions.join(' ')}`;
+      }
     }
 
-    document.getElementById('length').addEventListener('input', (e) => {
-      document.getElementById('length-val').textContent = e.target.value;
-      update();
+    lengthSlider.addEventListener('input', () => {
+      lengthVal.textContent = lengthSlider.value;
+      updatePassword();
     });
 
-    ['uppercase', 'lowercase', 'numbers', 'symbols', 'theme-select'].forEach(id => {
-      document.getElementById(id).addEventListener('change', update);
+    uppercaseCheckbox.addEventListener('change', updatePassword);
+    lowercaseCheckbox.addEventListener('change', updatePassword);
+    numbersCheckbox.addEventListener('change', updatePassword);
+    symbolsCheckbox.addEventListener('change', updatePassword);
+    themeSelect.addEventListener('change', updatePassword);
+    rerollBtn.addEventListener('click', updatePassword);
+
+    // Initial update on load
+    updatePassword();
+
+    // Test your own password input event
+    testInput.addEventListener('input', () => {
+      const pw = testInput.value;
+      if (typeof zxcvbn === 'function' && pw.length > 0) {
+        const zx = zxcvbn(pw);
+        const score = zx.score || 0;
+        const zPercent = (score / 4) * 100;
+        testFill.style.width = zPercent + '%';
+
+        const colors = ['#e74c3c', '#f39c12', '#f1c40f', '#27ae60', '#2ecc71'];
+        testFill.style.backgroundColor = colors[score];
+
+        const scoreText = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][score];
+        testDesc.textContent = `Password strength: ${scoreText}. ${zx.feedback.warning || ''} ${zx.feedback.suggestions.join(' ')}`;
+      } else {
+        testFill.style.width = '0%';
+        testDesc.textContent = 'Enter a password above to see how strong it is.';
+      }
     });
-
-    document.getElementById('reroll').addEventListener('click', update);
-
-    update();
   });
 </script>
 </body>
