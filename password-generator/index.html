@@ -41,7 +41,9 @@
       margin-bottom: 1.25rem;
     }
 
+
     .options label {
+
       display: block;
       margin: 0.5rem 0;
       user-select: none;
@@ -57,9 +59,11 @@
       border-radius: 10px;
       border: 2px solid #ddd;
       resize: none;
+
       user-select: all;
       height: 4.5rem;
     }
+
 
     .bar-label {
       margin-top: 1.5rem;
@@ -68,7 +72,9 @@
 
     .bar {
       width: 100%;
+
       height: 14px;
+
       background: #ddd;
       border-radius: 7px;
       overflow: hidden;
@@ -79,19 +85,25 @@
       height: 100%;
       width: 0%;
       background: #2d9cdb;
+
       transition: width 0.3s ease, background-color 0.3s ease;
+
     }
 
     .description {
+      
       margin-top: 0.75rem;
+
       font-size: 0.9rem;
       color: #444;
       line-height: 1.4;
     }
 
+
     input[type=range], select {
       width: 100%;
       margin-top: 0.5rem;
+
       padding: 0.3rem;
       font-size: 1rem;
       border-radius: 6px;
@@ -132,6 +144,7 @@
 
     <textarea id="password" readonly aria-label="Generated password"></textarea>
 
+
     <div class="bar-label">Entropy Strength</div>
     <div class="bar"><div id="entropy-fill" class="fill"></div></div>
     <div class="description" id="entropy-desc">
@@ -150,10 +163,12 @@
 <script>
   // Wait for zxcvbn to be ready because defer script
   window.addEventListener('DOMContentLoaded', () => {
+
     const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const lower = 'abcdefghijklmnopqrstuvwxyz';
     const numbers = '0123456789';
     const symbols = '!@#$%^&*()-_=+[]{}|;:,.<>?';
+
 
     const symbolMap = {
       'a': '@', 'i': '!', 's': '$', 'o': '()', 't': '+',
@@ -164,18 +179,21 @@
     };
 
     // Full themes dictionary:
+
     const themes = {
       "sci-fi": [
         "star", "warp", "nova", "alien", "robot", "laser", "orbit", "quantum", "galaxy", "nebula",
         "plasma", "cyber", "android", "asteroid", "hyper", "droid", "void", "solar", "comet", "pulse",
         "ion", "mech", "clone", "portal", "engine", "space", "lunar", "eclipse", "gravity", "satellite",
         "fusion", "rocket", "sensor", "cosmos", "astro", "turbo", "cyborg", "photon", "binary"
+
       ],
       "movie": [
         "film", "scene", "take", "script", "reel", "actor", "director", "studio", "popcorn", "blockbuster",
         "cinema", "trailer", "drama", "comedy", "cinematics", "cast", "soundtrack", "producer", "screen", "credits",
         "camera", "dialogue", "shoot", "clip", "premiere", "ticket", "set", "frame", "action", "cut",
         "editor", "screenplay", "audition", "cinematographer", "stunt", "voiceover", "genre", "plot"
+
       ],
       "fantasy": [
         "dragon", "elf", "magic", "sword", "quest", "castle", "wizard", "spell", "troll", "knight",
@@ -313,6 +331,7 @@
       return result.slice(0, length);
     }
 
+
     function generatePassword(length, opts, themeWords) {
       let charset = '';
       if (opts.uppercase) charset += upper;
@@ -321,6 +340,7 @@
       if (opts.symbols) charset += symbols;
 
       if (!charset && (!themeWords || themeWords.length === 0)) return '';
+
 
       if (themeWords && themeWords.length > 0) {
         if (!opts.uppercase && !opts.lowercase) {
@@ -341,11 +361,13 @@
             pw += w;
           } else {
             // Fill remaining length with random chars
+
             while (pw.length < length) {
               pw += charset.charAt(randomInt(charset.length));
             }
           }
         }
+
 
         if ((opts.symbols || opts.numbers) && pw.length < length) {
           pw = insertSymbolsNumbers(pw, opts, length);
@@ -355,6 +377,7 @@
       }
 
       // If no theme words or no theme selected, build random from charset
+
       let password = '';
       for (let i = 0; i < length; i++) {
         password += charset.charAt(randomInt(charset.length));
@@ -362,15 +385,22 @@
       return password;
     }
 
+
     function estimateEntropy(password, opts) {
+
       let charsetSize = 0;
       if (opts.uppercase) charsetSize += 26;
       if (opts.lowercase) charsetSize += 26;
       if (opts.numbers) charsetSize += 10;
       if (opts.symbols) charsetSize += symbols.length;
 
+
       if (opts.theme && opts.themeWords && opts.themeWords.length > 0) {
         return password.length * 3; // rough estimate for themed
+      // If theme is used, assume smaller charset but mix with words
+        // Rough guess: word charset = average word length * number of words 
+        // but really words are less random, so reduce entropy heavily
+        // We'll estimate roughly as length * 3 bits for themed passwords
       }
 
       return password.length * Math.log2(charsetSize || 1);
@@ -385,11 +415,13 @@
       const colorScale = ['#F44336', '#FF9800', '#FFEB3B', '#8BC34A', '#4CAF50'];
       const ratingLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
 
+
       let entropyRatingIndex = 0;
       if (entropy >= 80) entropyRatingIndex = 4;
       else if (entropy >= 60) entropyRatingIndex = 3;
       else if (entropy >= 40) entropyRatingIndex = 2;
       else if (entropy >= 28) entropyRatingIndex = 1;
+
 
       entropyFillBar.style.backgroundColor = colorScale[entropyRatingIndex];
       document.getElementById('entropy-desc').textContent = ratingLabels[entropyRatingIndex];
@@ -398,9 +430,11 @@
       const zx = password ? zxcvbn(password) : {score: 0};
       const zxFillBar = document.getElementById('zxcvbn-fill');
       zxFillBar.style.width = ((zx.score + 1) * 20) + '%';
+
       zxFillBar.style.backgroundColor = colorScale[zx.score];
       document.getElementById('zxcvbn-desc').textContent = ratingLabels[zx.score];
     }
+
 
     function updatePassword() {
       const length = +document.getElementById('length').value;
@@ -417,7 +451,9 @@
         themeWords = themes[theme];
       }
 
+
       opts.themeWords = themeWords;
+
 
       const pw = generatePassword(length, opts, themeWords);
       const pwBox = document.getElementById('password');
@@ -427,6 +463,7 @@
       document.getElementById('length-val').textContent = length;
     }
 
+
     document.getElementById('length').addEventListener('input', updatePassword);
     document.getElementById('uppercase').addEventListener('change', updatePassword);
     document.getElementById('lowercase').addEventListener('change', updatePassword);
@@ -434,8 +471,10 @@
     document.getElementById('symbols').addEventListener('change', updatePassword);
     document.getElementById('theme-select').addEventListener('change', updatePassword);
 
+
     updatePassword();
   });
 </script>
+
 </body>
 </html>
