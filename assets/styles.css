@@ -106,115 +106,79 @@ main {
   gap: 0.75rem;
 }
 
-.input-group input#qr-input {
+/* Reroll button */
+button#reroll {
+  padding: 0.6rem 1.4rem;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  border: none;
+  background-color: #2d9cdb;
+  color: white;
+  cursor: pointer;
+  flex-shrink: 0;
+  height: auto;
+  align-self: flex-start;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(45, 156, 219, 0.3);
+}
+
+button#reroll:hover {
+  background-color: #1b7bbf;
+  box-shadow: 0 6px 12px rgba(27, 123, 191, 0.5);
+}
+
+button#reroll:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 156, 219, 0.6);
+}
+
+/* Textarea for generated password */
+textarea#password {
   width: 100%;
-  max-width: 100%;
-}
-
-.input-group button#generate-btn {
-  width: auto;
-  min-width: 160px;
-  align-self: center;
-}
-
-/* Input field */
-input#qr-input {
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  margin: 1rem 0 0 0;
+  margin-top: 1rem;
+  padding: 1rem;
+  font-family: monospace;
+  font-size: 1.2rem;
   border-radius: 10px;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
+  resize: none;
+  user-select: all;
+  height: 4.5rem;
   box-sizing: border-box;
-  transition: border 0.2s ease;
+  transition: border-color 0.3s ease;
+  background-color: #f9f9f9;
 }
 
-input#qr-input:focus {
+textarea#password:focus {
   border-color: #2d9cdb;
   outline: none;
+  background-color: #fff;
 }
 
-/* Generate button */
-button#generate-btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background: #2d9cdb;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-button#generate-btn:hover {
-  background: #1c82c1;
-}
-
-/* Error message */
-#error-msg {
-  color: #d32f2f;
-  margin-top: 1rem;
-  font-weight: 600;
-}
-
-/* QR wrapper and scaling */
-#qr-wrapper {
-  width: 160px;
-  height: 160px;
-  margin: 2rem auto 1rem;
-  transform: scale(0.14);
-  transform-origin: top left;
-}
-
-/* QR container */
-#qr-code {
-  width: 1080px;
-  height: 1080px;
-}
-
-#qr-code canvas,
-#qr-code svg {
+/* Password test input box */
+input#test-password-input {
   width: 100%;
-  height: 100%;
-  display: block;
+  padding: 1rem;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: 2px solid #ccc;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
-/* Download controls */
-#download-controls {
+input#test-password-input:focus {
+  border-color: #2d9cdb;
+  outline: none;
+  background-color: #fff;
+}
+
+/* Bar labels */
+.bar-label {
   margin-top: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-/* Format dropdown */
-#format-select {
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-/* Download link button */
-a#download-link {
-  display: inline-block;
-  padding: 0.5rem 1.25rem;
-  background: #27ae60;
-  color: white;
-  border-radius: 8px;
-  text-decoration: none;
   font-weight: 600;
-  transition: background 0.3s ease;
 }
 
-a#download-link:hover {
-  background: #219150;
-}
-
-/* Password strength bar styles */
-
+/* Bars */
 .bar {
   width: 100%;
   height: 14px;
@@ -231,7 +195,20 @@ a#download-link:hover {
   transition: width 0.3s ease, background-color 0.3s ease;
 }
 
-.bar-label {
-  margin-top: 1.5rem;
-  font-weight: 600;
+/* Descriptions */
+.description {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: #444;
+  line-height: 1.4;
+}
+
+input[type=range], select {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
