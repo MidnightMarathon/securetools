@@ -117,46 +117,36 @@ main {
   align-self: center;
 }
 
-/* Input fields and textarea */
-input#qr-input, textarea, input[type=password] {
+/* Input field */
+input#qr-input {
   padding: 0.75rem 1rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   margin: 1rem 0 0 0;
   border-radius: 10px;
   border: 1px solid #ccc;
   box-sizing: border-box;
   transition: border 0.2s ease;
-  width: 100%;
-  resize: vertical;
-  font-family: monospace;
 }
 
-input#qr-input:focus, textarea:focus, input[type=password]:focus {
+input#qr-input:focus {
   border-color: #2d9cdb;
   outline: none;
 }
 
-/* Buttons */
-button#generate-btn, button#reroll {
+/* Generate button */
+button#generate-btn {
   padding: 0.75rem 1.5rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   background: #2d9cdb;
   color: white;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.3s ease;
-  font-weight: 600;
-  user-select: none;
 }
 
-button#generate-btn:hover, button#reroll:hover {
+button#generate-btn:hover {
   background: #1c82c1;
-}
-
-button#reroll {
-  margin-top: 1rem;
-  width: 100%;
 }
 
 /* Error message */
@@ -166,7 +156,7 @@ button#reroll {
   font-weight: 600;
 }
 
-/* QR wrapper and scaling (not relevant here, but kept) */
+/* QR wrapper and scaling */
 #qr-wrapper {
   width: 160px;
   height: 160px;
@@ -198,16 +188,13 @@ button#reroll {
   flex-wrap: wrap;
 }
 
-/* Format dropdown and theme select */
-#format-select, select#theme-select {
+/* Format dropdown */
+#format-select {
   padding: 0.5rem;
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
   cursor: pointer;
-  width: 100%;
-  max-width: 220px;
-  margin-top: 0.5rem;
 }
 
 /* Download link button */
@@ -226,11 +213,7 @@ a#download-link:hover {
   background: #219150;
 }
 
-/* Password strength bars and labels */
-.bar-label {
-  margin-top: 1.5rem;
-  font-weight: 600;
-}
+/* Password strength bar styles */
 
 .bar {
   width: 100%;
@@ -248,53 +231,7 @@ a#download-link:hover {
   transition: width 0.3s ease, background-color 0.3s ease;
 }
 
-/* Descriptions */
-.description {
-  margin-top: 0.75rem;
-  font-size: 0.9rem;
-  color: #444;
-  line-height: 1.4;
-}
-
-/* Responsive desktop styles for wider main container */
-@media (min-width: 992px) {
-  main {
-    max-width: 900px;
-    padding: 2rem 3rem;
-  }
-
-  /* Layout for password generator controls */
-  .options-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 2rem;
-  }
-
-  .options {
-    flex: 1 1 50%;
-  }
-
-  button#reroll {
-    flex-shrink: 0;
-    align-self: flex-start;
-    margin-top: 0;
-    width: auto;
-  }
-
-  /* Length label and slider side by side */
-  label[for="length"] {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  input[type=range] {
-    width: 70%;
-  }
-
-  /* Theme select smaller max width */
-  select#theme-select {
-    max-width: 250px;
-  }
+.bar-label {
+  margin-top: 1.5rem;
+  font-weight: 600;
 }
