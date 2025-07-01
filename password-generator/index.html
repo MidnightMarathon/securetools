@@ -147,10 +147,18 @@
 
     <div class="bar-label">Entropy Strength</div>
     <div class="bar"><div id="entropy-fill" class="fill"></div></div>
-    <div class="description" id="entropy-desc">
-      Entropy measures the randomness and complexity of your password. Higher entropy means a stronger password.<br>
-      Estimated crack time assumes 10 billion guesses per second.
-    </div>
+    <div class="description" id="entropy-desc">Strong</div>
+<div class="description">
+  <strong>What is entropy?</strong><br>
+  Entropy estimates how unpredictable your password is, based on character variety and length. Higher entropy means greater resistance to brute-force attacks.<br><br>
+
+  <strong>Estimated Crack Times:</strong><br>
+  • 🧑 Single CPU (1B guesses/sec): <span id="crack-time-cpu"></span><br>
+  • 🎮 Gaming GPU (e.g. RTX 3090): <span id="crack-time-gpu"></span><br>
+  • 🤖 Hacker Group (100 GPUs): <span id="crack-time-group"></span><br>
+  • 🏛️ Nation-State Supercomputer: <span id="crack-time-state"></span>
+</div>
+
 
     <div class="bar-label" style="margin-top: 1.25rem;">zxcvbn Pattern Strength</div>
     <div class="bar"><div id="zxcvbn-fill" class="fill"></div></div>
@@ -409,6 +417,23 @@
 
   return Math.max(baseEntropy, 0);
 }
+    function formatCrackTime(seconds) {
+  if (seconds < 1) return "instantly";
+  const units = [
+    { label: "year", secs: 31536000 },
+    { label: "day", secs: 86400 },
+    { label: "hour", secs: 3600 },
+    { label: "minute", secs: 60 },
+    { label: "second", secs: 1 }
+  ];
+  for (const { label, secs } of units) {
+    if (seconds >= secs) {
+      const val = Math.floor(seconds / secs);
+      return `${val} ${label}${val > 1 ? "s" : ""}`;
+    }
+  }
+  return "unknown";
+}
 
 
     function updateStrengthBars(password, opts) {
@@ -438,6 +463,12 @@
 
       zxFillBar.style.backgroundColor = colorScale[zx.score];
       document.getElementById('zxcvbn-desc').textContent = ratingLabels[zx.score];
+      const guesses = Math.pow(2, entropy);
+document.getElementById("crack-time-cpu").textContent = formatCrackTime(guesses / 1e9);
+document.getElementById("crack-time-gpu").textContent = formatCrackTime(guesses / 1e12);
+document.getElementById("crack-time-group").textContent = formatCrackTime(guesses / 1e14);
+document.getElementById("crack-time-state").textContent = formatCrackTime(guesses / 1e17);
+
     }
 
 
