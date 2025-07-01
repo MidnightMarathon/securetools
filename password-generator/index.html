@@ -3,71 +3,156 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Themed Password Generator</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>SecureTools – Password Generator</title>
+  <meta name="description" content="Generate strong, random passwords securely in your browser with SecureTools. No tracking, no signup." />
+  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js" defer></script>
+  <script src="password-generator.js" defer></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      background: linear-gradient(135deg, #f093fb, #8fd3f4, #b388eb);
+      background-size: 300% 300%;
+      animation: gradientFlow 15s ease infinite;
+      margin: 0;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #home-pill {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      background: #fff;
+      color: #2d9cdb;
+      font-weight: 600;
+      border-radius: 9999px;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      user-select: none;
+    }
+
+    main {
+      max-width: 520px;
+      width: 100%;
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .options label {
+      display: block;
+      margin: 0.5rem 0;
+      user-select: none;
+    }
+
+    textarea {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      border: 2px solid #ddd;
+      resize: none;
+      user-select: all;
+    }
+
+    .bar-label {
+      margin-top: 1.5rem;
+      font-weight: 600;
+    }
+
+    .bar {
+      width: 100%;
+      height: 14px;
+      background: #ddd;
+      border-radius: 7px;
+      overflow: hidden;
+      margin-top: 0.4rem;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0%;
+      background: #2d9cdb;
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    .description {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: #444;
+      line-height: 1.4;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.85rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background-color: #2d9cdb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    input[type=range] {
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
-  <main>
-    <h1>Themed Password Generator</h1>
+<a id="home-pill" href="/">← SecureTools Home</a>
 
-    <div class="section">
-      <label>Password length: <span id="length-val">16</span></label>
-      <input id="length" type="range" min="4" max="64" value="16" step="1" />
-    </div>
+<main>
+  <h1>Password Generator</h1>
 
-    <div class="section options">
-      <label><input type="checkbox" id="uppercase" checked /> Uppercase</label><br />
-      <label><input type="checkbox" id="lowercase" checked /> Lowercase</label><br />
-      <label><input type="checkbox" id="numbers" checked /> Numbers</label><br />
-      <label><input type="checkbox" id="symbols" /> Symbols</label><br />
-      <label><input type="checkbox" id="no-ambiguous" /> Exclude ambiguous characters</label>
-    </div>
+  <label for="length">Length: <span id="length-val">16</span></label>
+  <input type="range" id="length" min="8" max="64" value="16" />
 
-    <div class="section">
-      <label for="theme-select">Theme:</label>
-      <select id="theme-select">
-        <option value="">None</option>
-        <option value="sci-fi">Sci-Fi</option>
-        <option value="movie">Movie</option>
-        <option value="fantasy">Fantasy</option>
-        <option value="horror">Horror</option>
-        <option value="cyberpunk">Cyberpunk</option>
-        <option value="adventure">Adventure</option>
-        <option value="nature">Nature</option>
-        <option value="technology">Technology</option>
-        <option value="food">Food</option>
-        <option value="music">Music</option>
-        <option value="space">Space</option>
-        <option value="mythology">Mythology</option>
-        <option value="custom">Custom</option>
-      </select>
+  <div class="options">
+    <label><input type="checkbox" id="uppercase" checked /> Uppercase (A-Z)</label>
+    <label><input type="checkbox" id="lowercase" checked /> Lowercase (a-z)</label>
+    <label><input type="checkbox" id="numbers" checked /> Numbers (0-9)</label>
+    <label><input type="checkbox" id="symbols" /> Symbols (!@#$...)</label>
+  </div>
 
-      <div id="custom-theme-wrapper" style="display: none;">
-        <label for="custom-theme">Enter your custom words (comma-separated):</label>
-        <textarea id="custom-theme"></textarea>
-      </div>
-    </div>
+  <button id="generate">Generate Password</button>
 
-    <div class="section">
-      <input id="password" readonly />
-      <button onclick="copyPassword()">Copy</button>
-    </div>
+  <textarea id="password" readonly aria-label="Generated password"></textarea>
 
-    <div class="section">
-      <div class="bar-label">Estimated Entropy</div>
-      <div class="bar"><div id="entropy-fill" class="fill"></div></div>
-      <div id="entropy-desc" class="description"></div>
-      <div id="attack-times" class="description"></div>
-    </div>
+  <div class="bar-label">Entropy Strength</div>
+  <div class="bar"><div id="entropy-fill" class="fill"></div></div>
+  <div class="description" id="entropy-desc">
+    Entropy measures the randomness and complexity of your password. Higher entropy means a stronger password.<br>
+    Estimated crack time assumes 10 billion guesses per second.
+  </div>
 
-    <div class="section">
-      <div class="bar-label">zxcvbn Score</div>
-      <div class="bar"><div id="zxcvbn-fill" class="fill"></div></div>
-      <div id="zxcvbn-desc" class="description"></div>
-    </div>
-  </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/zxcvbn@4.4.2/dist/zxcvbn.js" defer></script>
-  <script src="password-generator.js" defer></script>
+  <div class="bar-label" style="margin-top: 1.25rem;">zxcvbn Pattern Strength</div>
+  <div class="bar"><div id="zxcvbn-fill" class="fill"></div></div>
+  <div class="description" id="zxcvbn-desc">
+    The <code>zxcvbn</code> score detects common patterns and weaknesses like dictionary words or repeats.<br>
+    Score ranges from 0 (very weak) to 4 (very strong).
+  </div>
+</main>
 </body>
 </html>
