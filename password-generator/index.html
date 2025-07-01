@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SecureTools – Password Generator with Themes</title>
+  <title>SecureTools – Password Generator</title>
+  <meta name="description" content="Generate strong, random passwords securely in your browser with SecureTools. No tracking, no signup." />
+  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js" defer></script>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       background: linear-gradient(135deg, #f093fb, #8fd3f4, #b388eb);
       background-size: 300% 300%;
       animation: gradientFlow 15s ease infinite;
@@ -18,194 +20,239 @@
       align-items: center;
     }
     @keyframes gradientFlow {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
+
+    #home-pill {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      background: #fff;
+      color: #2d9cdb;
+      font-weight: 600;
+      border-radius: 9999px;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      user-select: none;
+    }
+
     main {
-      max-width: 600px;
+      max-width: 520px;
       width: 100%;
       background: white;
       padding: 2rem;
       border-radius: 20px;
-      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 15px 25px rgba(0,0,0,0.1);
     }
+
     h1 {
       text-align: center;
       font-size: 2rem;
       margin-bottom: 1.25rem;
     }
-    .section {
-      margin-bottom: 1.5rem;
-    }
-    .options label,
-    .options select {
+
+    .options label {
       display: block;
       margin: 0.5rem 0;
+      user-select: none;
     }
-    input[type="range"],
-    select,
+
     textarea {
       width: 100%;
-      padding: 0.3rem;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    #password {
-      width: 100%;
-      font-size: 1.2rem;
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+      padding: 1rem;
       font-family: monospace;
+      font-size: 1.2rem;
       border-radius: 10px;
       border: 2px solid #ddd;
+      resize: none;
+      user-select: all;
     }
-    button {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      cursor: pointer;
-    }
+
     .bar-label {
+      margin-top: 1.5rem;
       font-weight: 600;
-      margin-top: 1rem;
     }
+
     .bar {
-      height: 12px;
       width: 100%;
+      height: 14px;
       background: #ddd;
-      border-radius: 6px;
+      border-radius: 7px;
       overflow: hidden;
-      margin: 0.3rem 0;
+      margin-top: 0.4rem;
     }
+
     .fill {
       height: 100%;
-      width: 0;
-      transition: width 0.3s ease;
+      width: 0%;
+      background: #2d9cdb;
+      transition: width 0.3s ease, background-color 0.3s ease;
     }
-    #entropy-fill.fill.very-weak,
-    #zxcvbn-fill.fill.very-weak {
-      background: #ff4d4d;
-    }
-    #entropy-fill.fill.weak,
-    #zxcvbn-fill.fill.weak {
-      background: #ff944d;
-    }
-    #entropy-fill.fill.fair,
-    #zxcvbn-fill.fill.fair {
-      background: #ffc107;
-    }
-    #entropy-fill.fill.good,
-    #zxcvbn-fill.fill.good {
-      background: #4caf50;
-    }
-    #entropy-fill.fill.strong,
-    #zxcvbn-fill.fill.strong {
-      background: #2196f3;
-    }
+
     .description {
+      margin-top: 0.75rem;
       font-size: 0.9rem;
       color: #444;
+      line-height: 1.4;
     }
-    #custom-theme-wrapper {
-      display: none;
-    }
-    #custom-theme {
+
+    button {
+      margin-top: 1.5rem;
       width: 100%;
-      height: 80px;
-      margin-top: 0.5rem;
+      padding: 0.85rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background-color: #2d9cdb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    input[type=range] {
+      width: 100%;
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Themed Password Generator</h1>
+<a id="home-pill" href="/">← SecureTools Home</a>
 
-    <div class="section">
-      <label>Password length: <span id="length-val">16</span></label>
-      <input
-        id="length"
-        type="range"
-        min="4"
-        max="64"
-        value="16"
-        step="1"
-        aria-label="Password length"
-      />
-    </div>
+<main>
+  <h1>Password Generator</h1>
 
-    <div class="section">
-      <label><input type="checkbox" id="uppercase" checked /> Uppercase</label
-      ><br />
-      <label><input type="checkbox" id="lowercase" checked /> Lowercase</label><br />
-      <label><input type="checkbox" id="numbers" checked /> Numbers</label><br />
-      <label><input type="checkbox" id="symbols" /> Symbols</label><br />
-      <label><input type="checkbox" id="no-ambiguous" /> Exclude ambiguous characters</label>
-    </div>
+  <label for="length">Length: <span id="length-val">16</span></label>
+  <input type="range" id="length" min="8" max="64" value="16" />
 
-    <div class="section">
-      <label for="theme-select">Theme:</label>
-      <select id="theme-select">
-        <option value="">None</option>
-        <option value="sci-fi">Sci-Fi</option>
-        <option value="movie">Movie</option>
-        <option value="fantasy">Fantasy</option>
-        <option value="horror">Horror</option>
-        <option value="cyberpunk">Cyberpunk</option>
-        <option value="adventure">Adventure</option>
-        <option value="nature">Nature</option>
-        <option value="technology">Technology</option>
-        <option value="food">Food</option>
-        <option value="music">Music</option>
-        <option value="space">Space</option>
-        <option value="mythology">Mythology</option>
-        <option value="custom">Custom</option>
-      </select>
+  <div class="options">
+    <label><input type="checkbox" id="uppercase" checked /> Uppercase (A-Z)</label>
+    <label><input type="checkbox" id="lowercase" checked /> Lowercase (a-z)</label>
+    <label><input type="checkbox" id="numbers" checked /> Numbers (0-9)</label>
+    <label><input type="checkbox" id="symbols" /> Symbols (!@#$...)</label>
+  </div>
 
-      <div id="custom-theme-wrapper">
-        <label for="custom-theme">Enter your custom words (comma-separated):</label>
-        <textarea id="custom-theme"></textarea>
-      </div>
-    </div>
+  <button id="generate">Generate Password</button>
 
-    <div class="section">
-      <input id="password" readonly aria-label="Generated password" />
-      <button onclick="copyPassword()">Copy</button>
-    </div>
+  <textarea id="password" readonly aria-label="Generated password"></textarea>
 
-    <div class="section">
-      <div class="bar-label">Estimated Entropy</div>
-      <div class="bar">
-        <div id="entropy-fill" class="fill"></div>
-      </div>
-      <div id="entropy-desc" class="description"></div>
-      <div id="attack-times" class="description"></div>
-    </div>
+  <div class="bar-label">Entropy Strength</div>
+  <div class="bar"><div id="entropy-fill" class="fill"></div></div>
+  <div class="description" id="entropy-desc">
+    Entropy measures the randomness and complexity of your password. Higher entropy means a stronger password.<br>
+    Estimated crack time assumes 10 billion guesses per second.
+  </div>
 
-    <div class="section">
-      <div class="bar-label">zxcvbn Score</div>
-      <div class="bar">
-        <div id="zxcvbn-fill" class="fill"></div>
-      </div>
-      <div id="zxcvbn-desc" class="description"></div>
-    </div>
-  </main>
+  <div class="bar-label" style="margin-top: 1.25rem;">zxcvbn Pattern Strength</div>
+  <div class="bar"><div id="zxcvbn-fill" class="fill"></div></div>
+  <div class="description" id="zxcvbn-desc">
+    The <code>zxcvbn</code> score detects common patterns and weaknesses like dictionary words or repeats.<br>
+    Score ranges from 0 (very weak) to 4 (very strong).
+  </div>
+</main>
 
-  <!-- Load zxcvbn FIRST -->
-  <script src="https://cdn.jsdelivr.net/npm/zxcvbn"></script>
-  <script src="password-generator.js"></script>
-  <script>
-    const themeSelect = document.getElementById("theme-select");
-    const customWrapper = document.getElementById("custom-theme-wrapper");
-    themeSelect.addEventListener("change", () => {
-      customWrapper.style.display = themeSelect.value === "custom" ? "block" : "none";
-    });
-  </script>
+<script>
+  const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const lower = 'abcdefghijklmnopqrstuvwxyz';
+  const numbers = '0123456789';
+  const symbols = '!@#$%^&*()-_=+[]{}|;:,.<>?';
+
+  // Generate password with selected charset and length
+  function generatePassword(length, opts) {
+    let charset = '';
+    if (opts.uppercase) charset += upper;
+    if (opts.lowercase) charset += lower;
+    if (opts.numbers) charset += numbers;
+    if (opts.symbols) charset += symbols;
+
+    if (!charset) return '';
+
+    const cryptoObj = window.crypto || window.msCrypto;
+    const values = new Uint32Array(length);
+    cryptoObj.getRandomValues(values);
+    return Array.from(values).map(v => charset[v % charset.length]).join('');
+  }
+
+  // Calculate entropy bits and estimate crack time in seconds
+  function calculateEntropy(password) {
+    let charsetSize = 0;
+    if (/[A-Z]/.test(password)) charsetSize += upper.length;
+    if (/[a-z]/.test(password)) charsetSize += lower.length;
+    if (/[0-9]/.test(password)) charsetSize += numbers.length;
+    if (/[^A-Za-z0-9]/.test(password)) charsetSize += symbols.length;
+
+    const entropy = password.length * Math.log2(charsetSize || 1);
+    const crackSeconds = Math.pow(2, entropy) / 1e10; // 10 billion guesses/sec attacker
+    return { entropy, crackSeconds };
+  }
+
+  // Format seconds into readable units (largest unit only)
+  function formatCrackTime(seconds) {
+    if (seconds < 1) return 'less than 1 second';
+    const units = [
+      { label: 'years', sec: 31536000 },
+      { label: 'days', sec: 86400 },
+      { label: 'hours', sec: 3600 },
+      { label: 'minutes', sec: 60 },
+      { label: 'seconds', sec: 1 },
+    ];
+    for (const u of units) {
+      const amount = Math.floor(seconds / u.sec);
+      if (amount > 0) {
+        return `${amount} ${u.label}`;
+      }
+    }
+    return 'less than 1 second';
+  }
+
+  function updateUI() {
+    const opts = {
+      uppercase: document.getElementById('uppercase').checked,
+      lowercase: document.getElementById('lowercase').checked,
+      numbers: document.getElementById('numbers').checked,
+      symbols: document.getElementById('symbols').checked,
+    };
+    const length = parseInt(document.getElementById('length').value, 10);
+    document.getElementById('length-val').textContent = length;
+
+    const password = generatePassword(length, opts);
+    document.getElementById('password').value = password;
+
+    // Entropy bar update
+    const { entropy, crackSeconds } = calculateEntropy(password);
+    // Cap entropy for bar width (say max 100 bits)
+    const entropyPct = Math.min(100, entropy);
+    const entropyFill = document.getElementById('entropy-fill');
+    entropyFill.style.width = entropyPct + '%';
+    entropyFill.style.backgroundColor = entropy > 80 ? '#0275d8' : entropy > 60 ? '#5cb85c' : entropy > 40 ? '#f9a825' : entropy > 20 ? '#f0ad4e' : '#d9534f';
+    document.getElementById('entropy-desc').innerHTML =
+      `Entropy: <strong>${entropy.toFixed(1)}</strong> bits — Estimated crack time: <strong>${formatCrackTime(crackSeconds)}</strong>`;
+
+    // zxcvbn bar update
+    if (typeof zxcvbn === 'function') {
+      const result = zxcvbn(password);
+      const score = result.score; // 0-4
+      const colors = ['#d9534f', '#f0ad4e', '#f9a825', '#5cb85c', '#0275d8'];
+      const labels = ['Very Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'];
+
+      const zxcvbnFill = document.getElementById('zxcvbn-fill');
+      zxcvbnFill.style.width = `${(score + 1) * 20}%`;
+      zxcvbnFill.style.backgroundColor = colors[score];
+      document.getElementById('zxcvbn-desc').innerHTML =
+        `zxcvbn Score: <strong>${labels[score]}</strong> — Detects common patterns and weaknesses.`;
+    }
+  }
+
+  document.getElementById('generate').addEventListener('click', updateUI);
+  ['length', 'uppercase', 'lowercase', 'numbers', 'symbols'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateUI);
+  });
+
+  // Initial run
+  updateUI();
+</script>
 </body>
 </html>
