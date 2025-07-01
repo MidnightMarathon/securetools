@@ -5,188 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SecureTools – Password Generator</title>
   <meta name="description" content="Generate strong, random passwords securely in your browser with SecureTools. No tracking, no signup." />
-  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="../assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="stylesheet" href="../assets/styles.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js" defer></script>
+  <script src="password-generator.js" defer></script>
+</head>
+<body>
   <nav>
     <a href="/" class="active">Home</a>
   </nav>
 
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-      background: linear-gradient(135deg, #f093fb, #8fd3f4, #b388eb);
-      background-size: 300% 300%;
-      animation: gradientFlow 15s ease infinite;
-      margin: 0;
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    @keyframes gradientFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    nav {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      display: flex;
-      gap: 0.5rem;
-      z-index: 10;
-      animation: fadeIn 0.8s ease-out both;
-    }
-
-    nav a {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background-color: #fff;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #333;
-      text-decoration: none;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s ease;
-    }
-
-    nav a:hover {
-      background-color: #eaeaea;
-      color: #2d9cdb;
-    }
-
-    nav a:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(45, 156, 219, 0.4);
-    }
-
-    nav a.active {
-      background-color: #d0d0d5;
-      font-weight: 600;
-      border-color: rgba(0, 0, 0, 0.2);
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-6px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    main {
-      max-width: 520px;
-      width: 100%;
-      background: white;
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 15px 25px rgba(0,0,0,0.1);
-      margin-top: 4rem; /* prevent overlap with nav pills */
-    }
-
-    h1, h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .options-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-      gap: 1rem;
-    }
-
-    .options {
-      flex: 1;
-    }
-
-    .options label {
-      display: block;
-      margin: 0.5rem 0;
-      user-select: none;
-      cursor: pointer;
-    }
-
-    button#reroll {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: none;
-      background-color: #2d9cdb;
-      color: white;
-      cursor: pointer;
-      flex-shrink: 0;
-      height: max-content;
-      align-self: flex-start;
-      transition: background-color 0.3s ease;
-    }
-    button#reroll:hover {
-      background-color: #1b7bbf;
-    }
-
-    textarea {
-      width: 100%;
-      margin-top: 1rem;
-      padding: 1rem;
-      font-family: monospace;
-      font-size: 1.2rem;
-      border-radius: 10px;
-      border: 2px solid #ddd;
-      resize: none;
-      user-select: all;
-      height: 4.5rem;
-    }
-
-    .bar-label {
-      margin-top: 1.5rem;
-      font-weight: 600;
-    }
-
-    .bar {
-      width: 100%;
-      height: 14px;
-      background: #ddd;
-      border-radius: 7px;
-      overflow: hidden;
-      margin-top: 0.4rem;
-    }
-
-    .fill {
-      height: 100%;
-      width: 0%;
-      background: #2d9cdb;
-      transition: width 0.3s ease, background-color 0.3s ease;
-    }
-
-    .description {
-      margin-top: 0.75rem;
-      font-size: 0.9rem;
-      color: #444;
-      line-height: 1.4;
-    }
-
-    input[type=range], select, input[type=password] {
-      width: 100%;
-      margin-top: 0.5rem;
-      padding: 0.3rem 0.5rem;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-  </style>
-</head>
-<body>
   <main>
     <h1>Password Generator</h1>
 
@@ -249,7 +77,6 @@
       Learn more: <a href="https://github.com/dropbox/zxcvbn" target="_blank" rel="noopener noreferrer">github.com/dropbox/zxcvbn</a>
     </div>
 
-    <!-- Test your own password section -->
     <h2 style="margin-top:2rem;">Test Your Own Password</h2>
     <p style="font-size: 0.9rem; color: #555;">
       Enter your own password below to check its strength. <strong>Why is it safe?</strong> All password analysis runs entirely <em>in your browser</em>. 
@@ -260,7 +87,6 @@
       type="password" 
       id="test-password-input" 
       placeholder="Enter your password to test" 
-      style="width:100%; padding: 0.75rem; font-size: 1.1rem; border-radius: 8px; border: 2px solid #ccc;" 
       aria-label="Input your own password to test strength" 
     />
 
@@ -270,7 +96,5 @@
       Enter a password above to see how strong it is.
     </div>
   </main>
-
-
 </body>
 </html>
