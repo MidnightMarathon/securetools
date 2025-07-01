@@ -387,24 +387,29 @@
 
 
     function estimateEntropy(password, opts) {
+  let charsetSize = 0;
+  if (opts.uppercase) charsetSize += 26;
+  if (opts.lowercase) charsetSize += 26;
+  if (opts.numbers) charsetSize += 10;
+  if (opts.symbols) charsetSize += symbols.length;
 
-      let charsetSize = 0;
-      if (opts.uppercase) charsetSize += 26;
-      if (opts.lowercase) charsetSize += 26;
-      if (opts.numbers) charsetSize += 10;
-      if (opts.symbols) charsetSize += symbols.length;
+  let baseEntropy = password.length * Math.log2(charsetSize || 1);
 
+  // Only apply a light penalty for theme-based words, since zxcvbn handles real weakness
+  if (opts.theme && opts.themeWords && opts.themeWords.length > 0) {
+    const themeRegex = new RegExp(opts.themeWords.join('|'), 'gi');
+    const matches = password.match(themeRegex);
+    const themedLength = matches ? matches.join('').length : 0;
+    const themedRatio = themedLength / password.length;
 
-      if (opts.theme && opts.themeWords && opts.themeWords.length > 0) {
-        return password.length * 3; // rough estimate for themed
-      // If theme is used, assume smaller charset but mix with words
-        // Rough guess: word charset = average word length * number of words 
-        // but really words are less random, so reduce entropy heavily
-        // We'll estimate roughly as length * 3 bits for themed passwords
-      }
+    // Light penalty — max 20% reduction, only if password is almost entirely theme words
+    const penaltyFactor = Math.min(themedRatio * 0.3, 0.2);
+    baseEntropy *= 1 - penaltyFactor;
+  }
 
-      return password.length * Math.log2(charsetSize || 1);
-    }
+  return Math.max(baseEntropy, 0);
+}
+
 
     function updateStrengthBars(password, opts) {
       const entropy = estimateEntropy(password, opts);
