@@ -1,237 +1,97 @@
-/* Apple-style pill navigation in top-left */
-nav {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  z-index: 10;
-  animation: fadeIn 0.8s ease-out both;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SecureTools – Password Generator</title>
+  <meta name="description" content="Generate strong, random passwords securely in your browser with SecureTools. No tracking, no signup." />
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js" defer></script>
+  <script src="/password-generator/password-generator.js" defer></script>
+  <nav>
+    <a href="/" class="active">Home</a>
+  </nav>
 
-/* Base nav link styling */
-nav a {
-  display: inline-block;
-  padding: 0.4rem 1rem;
-  background-color: #fff; /* White pills */
-  border-radius: 9999px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 0.85rem;
-  color: #333;
-  text-decoration: none;
-  font-weight: 600;  /* Bold all the time */
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
-}
+  <main>
+    <h1>Password Generator</h1>
 
-/* Hover state */
-nav a:hover {
-  background-color: #eaeaea;
-  border-color: rgba(0, 0, 0, 0.15);
-  color: #2d9cdb;
-  text-decoration: none; /* No underline */
-}
+    <label for="length">Length: <span id="length-val">16</span></label>
+    <input type="range" id="length" min="8" max="64" value="16" />
 
-/* Focus (keyboard/tab) state */
-nav a:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(45, 156, 219, 0.4);
-}
+    <div class="options-container">
+      <div class="options">
+        <label><input type="checkbox" id="uppercase" checked /> Uppercase (A-Z)</label>
+        <label><input type="checkbox" id="lowercase" checked /> Lowercase (a-z)</label>
+        <label><input type="checkbox" id="numbers" checked /> Numbers (0-9)</label>
+        <label><input type="checkbox" id="symbols" /> Symbols (!@#$...)</label>
+      </div>
+      <button id="reroll" aria-label="Generate a new password">Reroll</button>
+    </div>
 
-/* Active link (for current page) */
-nav a.active {
-  background-color: #d0d0d5;
-  font-weight: 600;
-  border-color: rgba(0, 0, 0, 0.2);
-}
+    <label for="theme-select">Theme (optional):</label>
+    <select id="theme-select" aria-label="Select password theme">
+      <option value="">None</option>
+      <option value="sci-fi">Sci-Fi</option>
+      <option value="movie">Movie</option>
+      <option value="fantasy">Fantasy</option>
+      <option value="horror">Horror</option>
+      <option value="cyberpunk">Cyberpunk</option>
+      <option value="adventure">Adventure</option>
+      <option value="nature">Nature</option>
+      <option value="technology">Technology</option>
+      <option value="food">Food</option>
+      <option value="music">Music</option>
+      <option value="space">Space</option>
+      <option value="mythology">Mythology</option>
+    </select>
 
-/* Fade-in animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+    <textarea id="password" readonly aria-label="Generated password"></textarea>
 
-/* Base styles */
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
-  background-size: 300% 300%;
-  animation: gradientFlow 15s ease infinite;
-  color: #1d1d1f;
-  margin: 0;
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-}
+    <div class="bar-label">Entropy Strength</div>
+    <div class="bar"><div id="entropy-fill" class="fill"></div></div>
+    <div class="description" id="entropy-desc">Strong</div>
 
-/* Optional animated background */
-@keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
+    <div class="description">
+      <strong>What is entropy?</strong><br>
+      Entropy estimates how unpredictable your password is, based on character variety and length. Higher entropy means greater resistance to brute-force attacks.<br><br>
 
-/* Main container */
-main {
-  max-width: 440px;
-  margin: auto;
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  margin-top: 4rem; /* push main down so pills don't overlap */
-}
+      <strong>Estimated Crack Times:</strong><br>
+      • 🧑 Single CPU (1B guesses/sec): <span id="crack-time-cpu" aria-live="polite"></span><br>
+      • 🎮 Gaming GPU (e.g. RTX 3090): <span id="crack-time-gpu" aria-live="polite"></span><br>
+      • 🤖 Hacker Group (100 GPUs): <span id="crack-time-group" aria-live="polite"></span><br>
+      • 🏛️ Nation-State Supercomputer: <span id="crack-time-state" aria-live="polite"></span>
+    </div>
 
-/* Input + Button group */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-}
+    <div class="bar-label" style="margin-top: 1.25rem;">zxcvbn Pattern Strength</div>
+    <div class="bar"><div id="zxcvbn-fill" class="fill"></div></div>
+    <div class="description" id="zxcvbn-desc">
+      The <code>zxcvbn</code> score detects common patterns and weaknesses like dictionary words or repeats.<br>
+      Score ranges from 0 (very weak) to 4 (very strong).
+    </div>
+    <div class="description" style="margin-top: 0.25rem;">
+      <strong>About zxcvbn:</strong><br>
+      Developed by Dropbox, <code>zxcvbn</code> is an advanced password strength estimator that goes beyond simple character counts by analyzing common password patterns, keyboard sequences, and dictionary matches to provide a more accurate and user-friendly strength score.<br>
+      Learn more: <a href="https://github.com/dropbox/zxcvbn" target="_blank" rel="noopener noreferrer">github.com/dropbox/zxcvbn</a>
+    </div>
 
-.input-group input#qr-input {
-  width: 100%;
-  max-width: 100%;
-}
+    <h2 style="margin-top:2rem;">Test Your Own Password</h2>
+    <p style="font-size: 0.9rem; color: #555;">
+      Enter your own password below to check its strength. <strong>Why is it safe?</strong> All password analysis runs entirely <em>in your browser</em>. 
+      Your password <em>never leaves your device</em>, and we do not store or send it anywhere. The code is open source and auditable. Your privacy is respected.
+    </p>
 
-.input-group button#generate-btn {
-  width: auto;
-  min-width: 160px;
-  align-self: center;
-}
+    <input 
+      type="password" 
+      id="test-password-input" 
+      placeholder="Enter your password to test" 
+      aria-label="Input your own password to test strength" 
+    />
 
-/* Input field */
-input#qr-input {
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  margin: 1rem 0 0 0;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  transition: border 0.2s ease;
-}
-
-input#qr-input:focus {
-  border-color: #2d9cdb;
-  outline: none;
-}
-
-/* Generate button */
-button#generate-btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background: #2d9cdb;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-button#generate-btn:hover {
-  background: #1c82c1;
-}
-
-/* Error message */
-#error-msg {
-  color: #d32f2f;
-  margin-top: 1rem;
-  font-weight: 600;
-}
-
-/* QR wrapper and scaling */
-#qr-wrapper {
-  width: 160px;
-  height: 160px;
-  margin: 2rem auto 1rem;
-  transform: scale(0.14);
-  transform-origin: top left;
-}
-
-/* QR container */
-#qr-code {
-  width: 1080px;
-  height: 1080px;
-}
-
-#qr-code canvas,
-#qr-code svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* Download controls */
-#download-controls {
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-/* Format dropdown */
-#format-select {
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-/* Download link button */
-a#download-link {
-  display: inline-block;
-  padding: 0.5rem 1.25rem;
-  background: #27ae60;
-  color: white;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-a#download-link:hover {
-  background: #219150;
-}
-
-/* Password strength bar styles */
-
-.bar {
-  width: 100%;
-  height: 14px;
-  background: #ddd;
-  border-radius: 7px;
-  overflow: hidden;
-  margin-top: 0.4rem;
-}
-
-.fill {
-  height: 100%;
-  width: 0%;
-  background: #2d9cdb;
-  transition: width 0.3s ease, background-color 0.3s ease;
-}
-
-.bar-label {
-  margin-top: 1.5rem;
-  font-weight: 600;
-}
+    <div class="bar-label" style="margin-top: 1rem;">Test Password Strength</div>
+    <div class="bar"><div id="test-zxcvbn-fill" class="fill"></div></div>
+    <div class="description" id="test-zxcvbn-desc" style="margin-bottom: 1rem;">
+      Enter a password above to see how strong it is.
+    </div>
+  </main>
+</body>
+</html>
