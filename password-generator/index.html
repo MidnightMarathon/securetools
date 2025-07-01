@@ -267,42 +267,34 @@
 
       return password.length * Math.log2(charsetSize || 1);
     }
-
     function updateStrengthBars(password, opts) {
       const entropy = estimateEntropy(password, opts);
-      const entropyFill = Math.min(entropy / 100, 1) * 100; // cap at 100 bits for bar
+      const entropyFill = Math.min(entropy / 100, 1) * 100;
       const entropyFillBar = document.getElementById('entropy-fill');
       entropyFillBar.style.width = entropyFill + '%';
-      entropyFillBar.style.backgroundColor =
-  entropy > 80 ? '#0275d8' :
-  entropy > 60 ? '#5cb85c' :
-  entropy > 40 ? '#f9a825' :
-  entropy > 20 ? '#4CAF50' :
-  '#d9534f';
-
-
-
-      const entropyDesc = document.getElementById('entropy-desc');
-      if (entropy < 28) entropyDesc.textContent = "Very Weak";
-      else if (entropy < 36) entropyDesc.textContent = "Weak";
-      else if (entropy < 60) entropyDesc.textContent = "Reasonable";
-      else if (entropy < 80) entropyDesc.textContent = "Strong";
-      else entropyDesc.textContent = "Very Strong";
-
-      // zxcvbn
+    
+      // Shared color scale
+      const colorScale = ['#F44336', '#FF9800', '#FFEB3B', '#8BC34A', '#4CAF50'];
+      const ratingLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+    
+      let entropyRatingIndex = 0;
+      if (entropy >= 80) entropyRatingIndex = 4;
+      else if (entropy >= 60) entropyRatingIndex = 3;
+      else if (entropy >= 40) entropyRatingIndex = 2;
+      else if (entropy >= 28) entropyRatingIndex = 1;
+    
+      entropyFillBar.style.backgroundColor = colorScale[entropyRatingIndex];
+      document.getElementById('entropy-desc').textContent = ratingLabels[entropyRatingIndex];
+    
       const zx = zxcvbn(password);
       const zxFillBar = document.getElementById('zxcvbn-fill');
       zxFillBar.style.width = (zx.score + 1) * 20 + '%';
-      zxFillBar.style.backgroundColor = ['#F44336', '#FF9800', '#FFEB3B', '#8BC34A', '#4CAF50'][zx.score];
-
-
-
-      const zxDesc = document.getElementById('zxcvbn-desc');
-      const zxMessages = [
-        "Very Weak", "Weak", "Fair", "Good", "Strong"
-      ];
-      zxDesc.textContent = zxMessages[zx.score] || "";
+      zxFillBar.style.backgroundColor = colorScale[zx.score];
+      document.getElementById('zxcvbn-desc').textContent = ratingLabels[zx.score];
     }
+
+      
+    
 
     function updatePassword() {
       const length = +document.getElementById('length').value;
