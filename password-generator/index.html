@@ -274,11 +274,12 @@
       const entropyFillBar = document.getElementById('entropy-fill');
       entropyFillBar.style.width = entropyFill + '%';
       entropyFillBar.style.backgroundColor =
-      entropy > 80 ? '#0275d8' :
-      entropy > 60 ? '#5cb85c' :
-      entropy > 40 ? '#f9a825' :
-      entropy > 20 ? '#f0ad4e' :
-      '#d9534f';
+  entropy > 80 ? '#0275d8' :
+  entropy > 60 ? '#5cb85c' :
+  entropy > 40 ? '#f9a825' :
+  entropy > 20 ? '#f0ad4e' :
+  '#d9534f';
+
 
 
       const entropyDesc = document.getElementById('entropy-desc');
@@ -292,7 +293,8 @@
       const zx = zxcvbn(password);
       const zxFillBar = document.getElementById('zxcvbn-fill');
       zxFillBar.style.width = (zx.score + 1) * 20 + '%';
-zxFillBar.style.backgroundColor = ['#d9534f', '#f0ad4e', '#f9a825', '#5cb85c', '#0275d8'][zx.score];
+      zxFillBar.style.backgroundColor = ['#F44336', '#FF9800', '#FFEB3B', '#8BC34A', '#4CAF50'][zx.score];
+
 
 
       const zxDesc = document.getElementById('zxcvbn-desc');
