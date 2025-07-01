@@ -18,6 +18,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
     }
     @keyframes gradientFlow {
       0% { background-position: 0% 50%; }
@@ -37,6 +38,7 @@
       text-decoration: none;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       user-select: none;
+      z-index: 1000;
     }
 
     main {
@@ -58,6 +60,7 @@
       display: block;
       margin: 0.5rem 0;
       user-select: none;
+      cursor: pointer;
     }
 
     textarea {
@@ -70,6 +73,7 @@
       border: 2px solid #ddd;
       resize: none;
       user-select: all;
+      height: 4.5rem;
     }
 
     .bar-label {
@@ -100,159 +104,263 @@
       line-height: 1.4;
     }
 
-    button {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 0.85rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      background-color: #2d9cdb;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      user-select: none;
-    }
-
     input[type=range] {
       width: 100%;
     }
   </style>
 </head>
 <body>
-<a id="home-pill" href="/">← SecureTools Home</a>
+  <a id="home-pill" href="/">← SecureTools Home</a>
 
-<main>
-  <h1>Password Generator</h1>
+  <main>
+    <h1>Password Generator</h1>
 
-  <label for="length">Length: <span id="length-val">16</span></label>
-  <input type="range" id="length" min="8" max="64" value="16" />
+    <label for="length">Length: <span id="length-val">16</span></label>
+    <input type="range" id="length" min="8" max="64" value="16" />
 
-  <div class="options">
-    <label><input type="checkbox" id="uppercase" checked /> Uppercase (A-Z)</label>
-    <label><input type="checkbox" id="lowercase" checked /> Lowercase (a-z)</label>
-    <label><input type="checkbox" id="numbers" checked /> Numbers (0-9)</label>
-    <label><input type="checkbox" id="symbols" /> Symbols (!@#$...)</label>
-  </div>
+    <div class="options">
+      <label><input type="checkbox" id="uppercase" checked /> Uppercase (A-Z)</label>
+      <label><input type="checkbox" id="lowercase" checked /> Lowercase (a-z)</label>
+      <label><input type="checkbox" id="numbers" checked /> Numbers (0-9)</label>
+      <label><input type="checkbox" id="symbols" /> Symbols (!@#$...)</label>
+    </div>
 
-  <button id="generate">Generate Password</button>
+    <textarea id="password" readonly aria-label="Generated password"></textarea>
 
-  <textarea id="password" readonly aria-label="Generated password"></textarea>
+    <div class="bar-label">Entropy Strength</div>
+    <div class="bar"><div id="entropy-fill" class="fill"></div></div>
+    <div class="description" id="entropy-desc">
+      Entropy measures the randomness and complexity of your password. Higher entropy means a stronger password.<br>
+      Estimated crack time assumes 10 billion guesses per second.
+    </div>
 
-  <div class="bar-label">Entropy Strength</div>
-  <div class="bar"><div id="entropy-fill" class="fill"></div></div>
-  <div class="description" id="entropy-desc">
-    Entropy measures the randomness and complexity of your password. Higher entropy means a stronger password.<br>
-    Estimated crack time assumes 10 billion guesses per second.
-  </div>
+    <div class="bar-label" style="margin-top: 1.25rem;">zxcvbn Pattern Strength</div>
+    <div class="bar"><div id="zxcvbn-fill" class="fill"></div></div>
+    <div class="description" id="zxcvbn-desc">
+      The <code>zxcvbn</code> score detects common patterns and weaknesses like dictionary words or repeats.<br>
+      Score ranges from 0 (very weak) to 4 (very strong).
+    </div>
+  </main>
 
-  <div class="bar-label" style="margin-top: 1.25rem;">zxcvbn Pattern Strength</div>
-  <div class="bar"><div id="zxcvbn-fill" class="fill"></div></div>
-  <div class="description" id="zxcvbn-desc">
-    The <code>zxcvbn</code> score detects common patterns and weaknesses like dictionary words or repeats.<br>
-    Score ranges from 0 (very weak) to 4 (very strong).
-  </div>
-</main>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
 <script>
   const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const lower = 'abcdefghijklmnopqrstuvwxyz';
   const numbers = '0123456789';
   const symbols = '!@#$%^&*()-_=+[]{}|;:,.<>?';
 
-  // Generate password with selected charset and length
-  function generatePassword(length, opts) {
+  const symbolMap = {
+    'a': '@', 'i': '!', 's': '$', 'o': '()', 't': '+', 'b': '8', 'e': '€'
+  };
+
+  const numberMap = {
+    'e': '3', 'o': '0', 'i': '1', 'a': '4', 's': '5', 't': '7', 'b': '8'
+  };
+
+  function randomInt(max) {
+    const array = new Uint32Array(1);
+    window.crypto.getRandomValues(array);
+    return array[0] % max;
+  }
+
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  function applyRandomCaseStyle(word) {
+    const styles = ['pascal', 'camel', 'alt'];
+    const style = styles[randomInt(styles.length)];
+    if (style === 'pascal') return capitalize(word.toLowerCase());
+    if (style === 'camel') return word.charAt(0).toLowerCase() + word.slice(1).toUpperCase();
+    if (style === 'alt') {
+      return word.split('').map((ch, i) =>
+        i % 2 === 0 ? ch.toUpperCase() : ch.toLowerCase()
+      ).join('');
+    }
+    return word;
+  }
+
+  function substituteChars(word, opts) {
+    let map = {};
+    if (opts.symbols && opts.numbers) {
+      map = { ...numberMap, ...symbolMap };
+    } else if (opts.symbols) {
+      map = symbolMap;
+    } else if (opts.numbers) {
+      map = numberMap;
+    } else {
+      return word;
+    }
+
+    let result = '';
+    for (const char of word) {
+      const lowerChar = char.toLowerCase();
+      if (map[lowerChar] && Math.random() < 0.4) {
+        result += map[lowerChar];
+      } else {
+        result += char;
+      }
+    }
+    return result;
+  }
+
+  function processThemeWord(word, opts) {
+    if (!opts.uppercase && !opts.lowercase) {
+      // Neither upper nor lower selected: don't use theme words
+      return null;
+    }
+    if (opts.uppercase && !opts.lowercase) {
+      word = word.toUpperCase();
+    } else if (!opts.uppercase && opts.lowercase) {
+      word = word.toLowerCase();
+    } else if (opts.uppercase && opts.lowercase) {
+      word = applyRandomCaseStyle(word);
+    }
+
+    word = substituteChars(word, opts);
+
+    return word;
+  }
+
+  function insertSymbolsNumbers(pw, opts, length) {
+    const symbolsArr = opts.symbols ? Object.values(symbolMap).flatMap(s => s.split('')) : [];
+    const numbersArr = opts.numbers ? Object.values(numberMap) : [];
+    const extras = [...symbolsArr, ...numbersArr];
+
+    let result = pw;
+
+    while (result.length < length) {
+      const pos = Math.floor(Math.random() * (result.length + 1));
+      const charToInsert = extras[randomInt(extras.length)] || '';
+
+      result = result.slice(0, pos) + charToInsert + result.slice(pos);
+    }
+
+    return result.slice(0, length);
+  }
+
+  function generatePassword(length, opts, themeWords) {
     let charset = '';
     if (opts.uppercase) charset += upper;
     if (opts.lowercase) charset += lower;
     if (opts.numbers) charset += numbers;
     if (opts.symbols) charset += symbols;
 
-    if (!charset) return '';
+    if (!charset && (!themeWords || themeWords.length === 0)) return '';
 
-    const cryptoObj = window.crypto || window.msCrypto;
-    const values = new Uint32Array(length);
-    cryptoObj.getRandomValues(values);
-    return Array.from(values).map(v => charset[v % charset.length]).join('');
-  }
-
-  // Calculate entropy bits and estimate crack time in seconds
-  function calculateEntropy(password) {
-    let charsetSize = 0;
-    if (/[A-Z]/.test(password)) charsetSize += upper.length;
-    if (/[a-z]/.test(password)) charsetSize += lower.length;
-    if (/[0-9]/.test(password)) charsetSize += numbers.length;
-    if (/[^A-Za-z0-9]/.test(password)) charsetSize += symbols.length;
-
-    const entropy = password.length * Math.log2(charsetSize || 1);
-    const crackSeconds = Math.pow(2, entropy) / 1e10; // 10 billion guesses/sec attacker
-    return { entropy, crackSeconds };
-  }
-
-  // Format seconds into readable units (largest unit only)
-  function formatCrackTime(seconds) {
-    if (seconds < 1) return 'less than 1 second';
-    const units = [
-      { label: 'years', sec: 31536000 },
-      { label: 'days', sec: 86400 },
-      { label: 'hours', sec: 3600 },
-      { label: 'minutes', sec: 60 },
-      { label: 'seconds', sec: 1 },
-    ];
-    for (const u of units) {
-      const amount = Math.floor(seconds / u.sec);
-      if (amount > 0) {
-        return `${amount} ${u.label}`;
+    if (themeWords && themeWords.length > 0) {
+      if (!opts.uppercase && !opts.lowercase) {
+        // Don't use theme words if no case selected
+        themeWords = null;
       }
     }
-    return 'less than 1 second';
-  }
 
-  function updateUI() {
-    const opts = {
-      uppercase: document.getElementById('uppercase').checked,
-      lowercase: document.getElementById('lowercase').checked,
-      numbers: document.getElementById('numbers').checked,
-      symbols: document.getElementById('symbols').checked,
-    };
-    const length = parseInt(document.getElementById('length').value, 10);
-    document.getElementById('length-val').textContent = length;
+    if (themeWords && themeWords.length > 0) {
+      let pw = '';
 
-    const password = generatePassword(length, opts);
-    document.getElementById('password').value = password;
+      while (pw.length < length) {
+        let w = themeWords[randomInt(themeWords.length)];
+        w = processThemeWord(w, opts);
+        if (!w) break;
 
-    // Entropy bar update
-    const { entropy, crackSeconds } = calculateEntropy(password);
-    // Cap entropy for bar width (say max 100 bits)
-    const entropyPct = Math.min(100, entropy);
-    const entropyFill = document.getElementById('entropy-fill');
-    entropyFill.style.width = entropyPct + '%';
-    entropyFill.style.backgroundColor = entropy > 80 ? '#0275d8' : entropy > 60 ? '#5cb85c' : entropy > 40 ? '#f9a825' : entropy > 20 ? '#f0ad4e' : '#d9534f';
-    document.getElementById('entropy-desc').innerHTML =
-      `Entropy: <strong>${entropy.toFixed(1)}</strong> bits — Estimated crack time: <strong>${formatCrackTime(crackSeconds)}</strong>`;
+        if (pw.length + w.length <= length) {
+          pw += w;
+        } else {
+          // Fill remaining length with random chars
+          while (pw.length < length) {
+            pw += charset.charAt(randomInt(charset.length));
+          }
+        }
+      }
 
-    // zxcvbn bar update
-    if (typeof zxcvbn === 'function') {
-      const result = zxcvbn(password);
-      const score = result.score; // 0-4
-      const colors = ['#d9534f', '#f0ad4e', '#f9a825', '#5cb85c', '#0275d8'];
-      const labels = ['Very Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'];
+      if ((opts.symbols || opts.numbers) && pw.length < length) {
+        pw = insertSymbolsNumbers(pw, opts, length);
+      }
 
-      const zxcvbnFill = document.getElementById('zxcvbn-fill');
-      zxcvbnFill.style.width = `${(score + 1) * 20}%`;
-      zxcvbnFill.style.backgroundColor = colors[score];
-      document.getElementById('zxcvbn-desc').innerHTML =
-        `zxcvbn Score: <strong>${labels[score]}</strong> — Detects common patterns and weaknesses.`;
+      return pw.slice(0, length);
     }
+
+    // If no theme words or no theme selected, build random from charset
+    let password = '';
+    for (let i = 0; i < length; i++) {
+      password += charset.charAt(randomInt(charset.length));
+    }
+    return password;
   }
 
-  document.getElementById('generate').addEventListener('click', updateUI);
-  ['length', 'uppercase', 'lowercase', 'numbers', 'symbols'].forEach(id => {
-    document.getElementById(id).addEventListener('input', updateUI);
-  });
+  function estimateEntropy(password, opts) {
+    let charsetSize = 0;
+    if (opts.uppercase) charsetSize += 26;
+    if (opts.lowercase) charsetSize += 26;
+    if (opts.numbers) charsetSize += 10;
+    if (opts.symbols) charsetSize += symbols.length;
 
-  // Initial run
-  updateUI();
+    if (opts.theme && opts.themeWords && opts.themeWords.length > 0) {
+      return password.length * 3; // rough estimate for themed
+    }
+
+    return password.length * Math.log2(charsetSize || 1);
+  }
+
+  function updateStrengthBars(password, opts) {
+    const entropy = estimateEntropy(password, opts);
+    const entropyFill = Math.min(entropy / 100, 1) * 100;
+    const entropyFillBar = document.getElementById('entropy-fill');
+    entropyFillBar.style.width = entropyFill + '%';
+
+    const colorScale = ['#F44336', '#FF9800', '#FFEB3B', '#8BC34A', '#4CAF50'];
+    const ratingLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+
+    let entropyRatingIndex = 0;
+    if (entropy >= 80) entropyRatingIndex = 4;
+    else if (entropy >= 60) entropyRatingIndex = 3;
+    else if (entropy >= 40) entropyRatingIndex = 2;
+    else if (entropy >= 28) entropyRatingIndex = 1;
+
+    entropyFillBar.style.backgroundColor = colorScale[entropyRatingIndex];
+    document.getElementById('entropy-desc').textContent = ratingLabels[entropyRatingIndex];
+
+    const zx = zxcvbn(password);
+    const zxFillBar = document.getElementById('zxcvbn-fill');
+    zxFillBar.style.width = (zx.score + 1) * 20 + '%';
+    zxFillBar.style.backgroundColor = colorScale[zx.score];
+    document.getElementById('zxcvbn-desc').textContent = ratingLabels[zx.score];
+  }
+
+  function updatePassword() {
+    const length = +document.getElementById('length').value;
+    const uppercase = document.getElementById('uppercase').checked;
+    const lowercase = document.getElementById('lowercase').checked;
+    const numbers = document.getElementById('numbers').checked;
+    const symbols = document.getElementById('symbols').checked;
+    const theme = document.getElementById('theme-select').value;
+
+    const opts = { uppercase, lowercase, numbers, symbols, theme };
+
+    let themeWords = null;
+    if (theme && themes[theme]) {
+      themeWords = themes[theme];
+    }
+
+    opts.themeWords = themeWords;
+
+    const pw = generatePassword(length, opts, themeWords);
+    const pwBox = document.getElementById('password');
+    pwBox.value = pw;
+
+    updateStrengthBars(pw, opts);
+    document.getElementById('length-val').textContent = length;
+  }
+
+  document.getElementById('length').addEventListener('input', updatePassword);
+  document.getElementById('uppercase').addEventListener('change', updatePassword);
+  document.getElementById('lowercase').addEventListener('change', updatePassword);
+  document.getElementById('numbers').addEventListener('change', updatePassword);
+  document.getElementById('symbols').addEventListener('change', updatePassword);
+  document.getElementById('theme-select').addEventListener('change', updatePassword);
+
+  updatePassword();
 </script>
+
 </body>
 </html>
