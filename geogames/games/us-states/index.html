@@ -2,18 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>US States Game – GeoGames</title>
-  <link rel="stylesheet" href="game.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>US States Map Quiz</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <nav>
+    <a href="/" aria-label="Home">← Back</a>
+  </nav>
+
   <main>
-    <h1>US States Quiz</h1>
-    <p id="prompt">Click on: <strong id="target-state">Loading...</strong></p>
-    <div id="map-container"></div>
-    <p id="score">Score: <span id="score-count">0</span></p>
+    <h1>US States Map Quiz</h1>
+    <p class="instruction">Click on: <strong id="target-state">Loading...</strong></p>
+    <div id="map-container" class="map-container">
+      <!-- SVG will load here -->
+    </div>
   </main>
+
   <script src="game.js"></script>
 </body>
 </html>
-
