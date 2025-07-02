@@ -45,11 +45,27 @@ fetch("us.svg")
         el.style.cursor = "pointer";
 
         el.addEventListener("click", () => {
-          if (id === currentTarget) {
-            const wrongGuesses = attempts[id];
+          if (id !== currentTarget) {
+            // Wrong guess
+            attempts[currentTarget]++;
+            const targetEl = document.getElementById(currentTarget);
+
+            if (attempts[currentTarget] >= 5) {
+              targetEl.classList.add("fail");
+              // Do NOT move to next target until clicked correctly
+            } else {
+              el.classList.add("incorrect");
+              setTimeout(() => el.classList.remove("incorrect"), 800);
+            }
+
+          } else {
+            // Correct guess
+            const el = document.getElementById(currentTarget);
+            const wrongGuesses = attempts[currentTarget];
 
             if (wrongGuesses >= 5) {
               el.classList.add("fail");
+              // No score increase
             } else if (wrongGuesses > 0) {
               el.classList.add("partial");
               score++;
@@ -60,18 +76,6 @@ fetch("us.svg")
 
             updateScoreDisplay();
             pickNewTarget();
-
-          } else {
-            attempts[currentTarget]++;
-            const targetEl = document.getElementById(currentTarget);
-
-            if (attempts[currentTarget] >= 5) {
-              // Show it's failed, but require correct click to move on
-              targetEl.classList.add("fail");
-            } else {
-              el.classList.add("incorrect");
-              setTimeout(() => el.classList.remove("incorrect"), 800);
-            }
           }
         });
       }
