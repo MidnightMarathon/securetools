@@ -64,8 +64,10 @@ fetch("us.svg")
               pickNewTarget();
             } else {
               // Clicking other states while failed target active -> flash incorrect
-              el.classList.add("incorrect");
-              setTimeout(() => el.classList.remove("incorrect"), 1000);
+              el.classList.remove("incorrect-temp"); // reset if clicked rapidly
+              void el.offsetWidth; // force reflow
+              el.classList.add("incorrect-temp");
+
             }
             return; // stop here
           }
