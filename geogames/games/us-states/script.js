@@ -1,12 +1,10 @@
-let states = []; // Stores 2-letter state abbreviations (e.g., "NY", "CA")
-let currentTarget = null; // The 2-letter abbreviation of the state to find
+let states = [];
+let currentTarget = null;
 let score = 0;
 let total = 0;
-const attempts = {}; // attempts[stateId] stores incorrect clicks for the *current* target
-const failedStates = new Set(); // Stores IDs of states user has "given up" on
+const attempts = {};
+const failedStates = new Set();
 
-// Helper function to map 2-letter abbr to full state name for display
-// This map is useful because it's guaranteed to be complete and consistent
 const stateNames = {
     "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California",
     "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "FL": "Florida", "GA": "Georgia",
@@ -17,15 +15,18 @@ const stateNames = {
     "NM": "New Mexico", "NY": "New York", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio",
     "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina",
     "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont",
-    "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"
+    "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming",
+    "DC": "District of Columbia" // Ensure DC is in your stateNames map
 };
 
 function getFullStateName(abbr) {
-    return stateNames[abbr] || abbr; // Returns full name, falls back to abbr if not found
+    return stateNames[abbr] || abbr;
 }
 
+// List of states that will use the cutout method
+const statesWithCutout = ["DC"]; // Add "RI" if you create a cutout for it too
+
 function pickNewTarget() {
-    // Filter out states that are already 'correct' or 'partial' or in the 'failedStates' Set
     const remaining = states.filter(id => {
         const el = document.getElementById(id);
         return el &&
@@ -34,34 +35,146 @@ function pickNewTarget() {
                !failedStates.has(id);
     });
 
-    // Reset the 'fail' class on the *previous* current target if it was there
-    // This is important if the user failed a state, then gave up, and we moved on.
-    if (currentTarget) {
+    // Reset visual state of the PREVIOUS target if it was a cutout state
+    if (currentTarget && statesWithCutout.includes(currentTarget)) {
+        const magnifiedEl = document.getElementById(`${currentTarget}-magnified`);
+        if (magnifiedEl) {
+            magnifiedEl.classList.remove("highlight-target");
+            magnifiedEl.classList.add("inactive-magnified"); // Make it inactive
+            magnifiedEl.classList.remove("correct", "partial", "fail", "given-up", "incorrect-temp"); // Clear any feedback
+        }
+    }
+    
+    // Reset the 'fail' class on the *previous* current target if it was there (for non-cutout states)
+    if (currentTarget && !statesWithCutout.includes(currentTarget)) {
         const prevTargetEl = document.getElementById(currentTarget);
         if (prevTargetEl) {
             prevTargetEl.classList.remove("fail");
         }
     }
-    
+
     if (remaining.length === 0) {
         document.getElementById("target-state").textContent = "All done! 🎉";
         currentTarget = null;
         return;
     }
 
-    // Pick a new random target from the remaining states
     currentTarget = remaining[Math.floor(Math.random() * remaining.length)];
-    // Reset attempts for the newly selected target state
-    attempts[currentTarget] = 0; 
+    attempts[currentTarget] = 0;
 
-    // Display the full name of the target state
     document.getElementById("target-state").textContent = getFullStateName(currentTarget);
+
+    // Apply visual state to the NEW target if it's a cutout state
+    if (statesWithCutout.includes(currentTarget)) {
+        const magnifiedEl = document.getElementById(`${currentTarget}-magnified`);
+        if (magnifiedEl) {
+            magnifiedEl.classList.remove("inactive-magnified"); // Make it active
+            magnifiedEl.classList.add("highlight-target"); // Highlight it
+        }
+    }
 }
 
 function updateScoreDisplay() {
-    // Prevent division by zero if total is 0
     const percentage = (total > 0) ? ((score / total) * 100).toFixed(1) : 0;
     document.getElementById("score").textContent = `${score} / ${total} (${percentage}%)`;
+}
+
+// Refactored click handler for reusability
+function handleStateClick(clickedId) {
+    if (!currentTarget) return;
+
+    // Get the element for the clicked state (original path)
+    const clickedEl = document.getElementById(clickedId);
+    // Get the element for the current target state (original path)
+    const currentTargetEl = document.getElementById(currentTarget);
+    // Get the magnified element for the clicked state, if it exists
+    const magnifiedClickedEl = statesWithCutout.includes(clickedId) ? document.getElementById(`${clickedId}-magnified`) : null;
+    // Get the magnified element for the current target state, if it exists
+    const magnifiedCurrentTargetEl = statesWithCutout.includes(currentTarget) ? document.getElementById(`${currentTarget}-magnified`) : null;
+
+
+    // --- SCENARIO 1: Current target is marked 'fail' (red), user *must* click it to acknowledge ---
+    if (currentTargetEl && currentTargetEl.classList.contains("fail")) {
+        if (clickedId === currentTarget) {
+            // User clicked the correct failed target state (original or magnified)
+            currentTargetEl.classList.remove("fail");
+            currentTargetEl.classList.add("given-up");
+            if (magnifiedCurrentTargetEl) {
+                 magnifiedCurrentTargetEl.classList.remove("fail");
+                 magnifiedCurrentTargetEl.classList.add("given-up");
+                 magnifiedCurrentTargetEl.classList.remove("highlight-target"); // Remove highlight
+            }
+            failedStates.add(currentTarget);
+            pickNewTarget();
+        } else {
+            // User clicked a wrong state while a target was failed and waiting for acknowledgment
+            // Apply temporary red flash to the *clicked* element (original or magnified)
+            const elToFlash = magnifiedClickedEl || clickedEl; // Prioritize flashing the magnified if it exists
+            if (elToFlash) {
+                elToFlash.classList.remove("incorrect-temp");
+                void elToFlash.offsetWidth; // Force reflow
+                elToFlash.classList.add("incorrect-temp");
+                setTimeout(() => {
+                    elToFlash.classList.remove("incorrect-temp");
+                }, 800);
+            }
+        }
+        return;
+    }
+
+    // --- SCENARIO 2: Normal gameplay ---
+    if (clickedId !== currentTarget) {
+        // Incorrect Guess for the current target
+        attempts[currentTarget]++;
+
+        // Apply temporary red flash to the *clicked* element
+        const elToFlash = magnifiedClickedEl || clickedEl; // Prioritize flashing the magnified if it exists
+        if (elToFlash) {
+            elToFlash.classList.remove("incorrect-temp");
+            void elToFlash.offsetWidth;
+            elToFlash.classList.add("incorrect-temp");
+            setTimeout(() => {
+                elToFlash.classList.remove("incorrect-temp");
+            }, 800);
+        }
+
+        if (attempts[currentTarget] >= 5) {
+            // Current target has exceeded max attempts, mark it as 'fail' (red, pulsating)
+            if (currentTargetEl) {
+                currentTargetEl.classList.add("fail");
+            }
+            if (magnifiedCurrentTargetEl) {
+                 magnifiedCurrentTargetEl.classList.add("fail");
+            }
+        }
+
+    } else {
+        // Correct Guess for the current target
+        const wrongGuessesCount = attempts[currentTarget];
+
+        // Apply correct/partial class to the original state element
+        if (currentTargetEl) {
+            if (wrongGuessesCount === 0) {
+                currentTargetEl.classList.add("correct");
+            } else {
+                currentTargetEl.classList.add("partial");
+            }
+        }
+        // Apply correct/partial class to the magnified state element (if it exists)
+        if (magnifiedCurrentTargetEl) {
+            if (wrongGuessesCount === 0) {
+                magnifiedCurrentTargetEl.classList.add("correct");
+            } else {
+                magnifiedCurrentTargetEl.classList.add("partial");
+            }
+            magnifiedCurrentTargetEl.classList.remove("highlight-target"); // Remove highlight on success
+            magnifiedCurrentTargetEl.classList.remove("inactive-magnified"); // Ensure no inactive class remains
+        }
+
+        score++;
+        updateScoreDisplay();
+        pickNewTarget(); // Move to the next state
+    }
 }
 
 
@@ -74,110 +187,73 @@ fetch("us.svg")
     .then(svg => {
         document.getElementById("map-container").innerHTML = svg;
 
-        // Select all path elements within the map-container that have an ID
-        // Filter to ensure it's a valid 2-letter state abbreviation
         states = Array.from(document.querySelectorAll("#map-container path[id]"))
                       .map(p => p.id)
-                      .filter(id => id.length === 2 && stateNames[id]);
+                      .filter(id => id.length === 2 && stateNames[id]); // Ensures valid states are included
 
         total = states.length;
 
         document.getElementById("total-states").textContent = total;
-        updateScoreDisplay(); // Initialize score display
+        updateScoreDisplay();
 
-        // Attach event listeners and clean up inline styles for all identified state paths
+        // Loop through all states to set up event listeners
         states.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
-                // *** CRITICAL FIX: Remove inline styles to allow CSS classes to control appearance ***
                 el.removeAttribute("style");
                 el.removeAttribute("fill");
-                // (Your CSS rules will now correctly apply default fill and stroke)
 
-                // Add mouseover/mouseout for hover effect (using CSS class)
-                el.addEventListener('mouseover', function() {
-                    // Only apply hover if not already marked as a final state or active feedback state
-                    if (!this.classList.contains("correct") &&
-                        !this.classList.contains("partial") &&
-                        !this.classList.contains("fail") && // Allow hover on 'fail' if clickable
-                        !this.classList.contains("given-up") &&
-                        !this.classList.contains("incorrect-temp")) {
-                        this.classList.add("hover-state");
-                    }
-                });
-                el.addEventListener('mouseout', function() {
-                    this.classList.remove("hover-state");
-                });
+                // Check if this state uses a cutout (e.g., DC)
+                if (statesWithCutout.includes(id)) {
+                    // Original tiny state: make it non-clickable and dim it
+                    el.classList.add("has-cutout"); // Add class for dimming/pointer-events: none
 
-                // Attach the main click handler
-                el.addEventListener("click", () => {
-                    if (!currentTarget) return; // Game over or no target yet
-
-                    // Get the element for the current target state (could be different from clicked `id`)
-                    const currentTargetEl = document.getElementById(currentTarget);
-
-                    // --- SCENARIO 1: Current target is marked 'fail' (red), user *must* click it to acknowledge ---
-                    if (currentTargetEl && currentTargetEl.classList.contains("fail")) {
-                        if (id === currentTarget) {
-                            // User clicked the correct failed target state
-                            currentTargetEl.classList.remove("fail"); // Remove pulsing red
-                            currentTargetEl.classList.add("given-up"); // Apply permanent dark red
-                            failedStates.add(currentTarget); // Add to the set of permanently failed states
-                            pickNewTarget(); // Move to the next state
-                        } else {
-                            // User clicked a wrong state while a target was failed and waiting for acknowledgment
-                            // Provide temporary visual feedback for the clicked wrong state
-                            el.classList.remove("incorrect-temp"); // Reset animation if clicked rapidly
-                            void el.offsetWidth; // Force reflow to restart CSS animation
-                            el.classList.add("incorrect-temp");
-                            // No score change, no change to the current target state's status
-                            // The game waits for the user to click the `fail` state.
-                        }
-                        return; // Stop further processing in this click event
-                    }
-
-                    // --- SCENARIO 2: Normal gameplay (no failed target waiting for acknowledgment) ---
-                    if (id !== currentTarget) {
-                        // Incorrect Guess for the current target
-                        attempts[currentTarget]++; // Increment incorrect attempt count for the *current* target
-
-                        // Apply temporary red flash to the *clicked* state
-                        el.classList.remove("incorrect-temp"); // Reset animation if rapid clicks
-                        void el.offsetWidth; // Force reflow to restart CSS animation
-                        el.classList.add("incorrect-temp");
-                        
-                        // Set a timeout to remove the 'incorrect-temp' class (duration matches CSS animation)
-                        setTimeout(() => {
-                            el.classList.remove("incorrect-temp");
-                        }, 800); // Matches the 0.8s animation duration in CSS
-
-                        if (attempts[currentTarget] >= 5) {
-                            // Current target has exceeded max attempts, mark it as 'fail' (red, pulsating)
-                            // This state is now awaiting user acknowledgment.
-                            if (currentTargetEl) { // Ensure element exists
-                                currentTargetEl.classList.add("fail");
+                    // Handle clicks on the MAGNIFIED version of the state in the cutout
+                    const magnifiedEl = document.getElementById(`${id}-magnified`);
+                    if (magnifiedEl) {
+                        magnifiedEl.addEventListener('mouseover', function() {
+                            // Apply hover effect to the magnified element itself
+                            // Only if it's currently the target (active)
+                            if (currentTarget === id && 
+                                !this.classList.contains("correct") &&
+                                !this.classList.contains("partial") &&
+                                !this.classList.contains("fail") &&
+                                !this.classList.contains("given-up") &&
+                                !this.classList.contains("incorrect-temp")) {
+                                this.classList.add("hover-state");
                             }
-                            // Do NOT pick a new target here. User *must* click the now-red `fail` state.
-                        }
+                        });
+                        magnifiedEl.addEventListener('mouseout', function() {
+                            this.classList.remove("hover-state");
+                        });
 
-                    } else {
-                        // Correct Guess for the current target
-                        const wrongGuessesCount = attempts[currentTarget]; // Get count of wrong guesses for this state
-
-                        if (wrongGuessesCount === 0) {
-                            el.classList.add("correct"); // Green (first try)
-                        } else {
-                            el.classList.add("partial"); // Yellow (correct after misses)
-                        }
-                        score++; // Score increases for all successful guesses
-
-                        // The CSS rules for .correct and .partial will handle `pointer-events: none;`
-                        // So these states become non-clickable after being identified.
-
-                        updateScoreDisplay();
-                        pickNewTarget(); // Move to the next state
+                        magnifiedEl.addEventListener("click", () => {
+                            // Call the general click handler, passing the original state ID ("DC")
+                            // The logic within handleStateClick will determine if it's correct/incorrect
+                            handleStateClick(id);
+                        });
+                        // Initialize magnified state as inactive until it becomes the target
+                        magnifiedEl.classList.add("inactive-magnified");
                     }
-                });
+                } else {
+                    // For all other regular states, attach event listeners directly to the path
+                    el.addEventListener('mouseover', function() {
+                        if (!this.classList.contains("correct") &&
+                            !this.classList.contains("partial") &&
+                            !this.classList.contains("fail") &&
+                            !this.classList.contains("given-up") &&
+                            !this.classList.contains("incorrect-temp")) {
+                            this.classList.add("hover-state");
+                        }
+                    });
+                    el.addEventListener('mouseout', function() {
+                        this.classList.remove("hover-state");
+                    });
+
+                    el.addEventListener("click", () => {
+                        handleStateClick(id);
+                    });
+                }
             } else {
                 console.warn(`Element with ID "${id}" not found in the SVG. Check your SVG or selector.`);
             }
