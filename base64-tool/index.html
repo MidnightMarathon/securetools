@@ -85,23 +85,26 @@
   <textarea id="input" maxlength="16000" oninput="updateCounts()" placeholder="Enter text or Base64 here..."></textarea>
   <div style="text-align:right; font-size: 0.9rem;">Input length: <span id="inputCount">0</span></div>
 
-  <div style="margin: 1rem 0;">
-    <label for="stripWhitespace" style="cursor: pointer;">
-  <input type="checkbox" id="stripWhitespace" checked />
-  Strip whitespace & newlines before decoding
-  <span title="Check this if your Base64 input contains spaces or line breaks (common when copied from emails or formatted text).">
-    &#x1F6C8; <!-- info symbol -->
-  </span>
-</label>
+<div style="margin: 1rem 0;">
+  <label for="stripWhitespace" style="cursor: pointer;">
+    <input type="checkbox" id="stripWhitespace" checked />
+    Strip whitespace & newlines before decoding
+    <span title="Check this if your Base64 input contains spaces or line breaks (common when copied from emails or formatted text).">&#x1F6C8;</span>
+  </label><br/>
 
-    <label>
-      <input type="checkbox" id="urlSafe" />
-      Use URL-safe Base64 (MIME-safe)
-    </label>
-    <label>
-  <input type="checkbox" id="formatBase64" />
-  Insert line breaks every 76 characters (MIME format)
-</label>
+  <label for="urlSafe" style="cursor: pointer;">
+    <input type="checkbox" id="urlSafe" />
+    Use URL-safe Base64 (MIME-safe)
+    <span title="Use the URL-safe Base64 variant, replacing + and / with - and _. Useful for URLs and filenames.">&#x1F6C8;</span>
+  </label><br/>
+
+  <label for="formatBase64" style="cursor: pointer;">
+    <input type="checkbox" id="formatBase64" />
+    Insert line breaks every 76 characters (MIME format)
+    <span title="Format the Base64 output with line breaks every 76 characters. Useful for email or MIME compatibility.">&#x1F6C8;</span>
+  </label>
+</div>
+
 
   </div>
 
