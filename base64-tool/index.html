@@ -117,6 +117,24 @@
 
   <div id="error" class="error"></div>
   <div id="copied" class="copy-note">Copied to clipboard!</div>
+
+  <hr style="margin: 3rem 0;" />
+
+<h2>Convert File to Base64</h2>
+<p>Select a file to instantly convert it to Base64 in your browser.</p>
+
+<input type="file" id="fileInput" onchange="handleFileUpload()" />
+<div style="margin: 1rem 0;">
+  <label>
+    <input type="checkbox" id="stripDataPrefix" checked />
+    Strip <code>data:</code> prefix
+  </label>
+</div>
+
+<textarea id="fileOutput" readonly placeholder="Encoded Base64 will appear here..." style="min-height: 180px;"></textarea>
+<div style="text-align: right; font-size: 0.9rem;">Length: <span id="fileOutputCount">0</span></div>
+<button onclick="copyToClipboard('fileOutput')">Copy File Base64</button>
+
 </main>
 
   <script src="script.js"></script>
