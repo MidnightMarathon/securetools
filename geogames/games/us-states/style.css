@@ -46,9 +46,9 @@ h1 {
 /* Responsive map container */
 .map-container {
   max-width: 800px;
-  width: 100%;          /* ensure it scales */
+  width: 100%;       /* ensure it scales */
   margin: 0 auto;
-  user-select: none;
+  user-select: none; /* Prevent text selection within the map */
 }
 
 /* Make SVG scale smoothly */
@@ -60,63 +60,90 @@ svg {
 
 /* Style SVG paths (states) */
 path {
-  fill: #cfd8dc;            /* neutral base color */
-  stroke: #607d8b;          /* subtle outline */
+  fill: #cfd8dc;       /* neutral base color */
+  stroke: #607d8b;     /* subtle outline */
   stroke-width: 1;
-  transition: fill 0.3s ease, filter 0.3s ease;
-  cursor: pointer;
+  transition: fill 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+  cursor: pointer; /* Default cursor for clickable states */
 }
 
-/* Hover effect - lighter blue */
-path:hover:not(.correct):not(.incorrect) {
-  fill: #a0c4ff !important;            /* softer blue highlight */
+/* Hover effect for active states */
+path.hover-state { /* Class added by JS for hover */
+  fill: #a0c4ff !important; /* Softer blue highlight */
   filter: drop-shadow(0 0 5px #a0c4ff);
 }
 
-/* Correct state - permanent green */
+
+/* Current Target State Highlight (Optional) */
+path.target-highlight {
+    /* Optional: a subtle border or glow to indicate the target */
+    stroke: #2196F3; /* Blue border */
+    stroke-width: 2px;
+    filter: drop-shadow(0 0 4px rgba(33, 150, 243, 0.7)); /* Blue glow */
+}
+
+
+/* Correct state (first try) - permanent green */
 .correct {
-  fill: #4caf50 !important;
+  fill: #4caf50 !important; /* Green */
   transition: fill 0.3s ease;
   animation: pop-up 0.4s ease forwards;
   filter: drop-shadow(0 0 8px #4caf50);
+  pointer-events: none; /* Make correct states non-clickable */
+  cursor: default;
 }
 
-/* Update the animation */
-@keyframes pop-up {
-  0% {
-    transform: scale(1) translateY(0);
-  }
-  50% {
-    transform: scale(1.15) translateY(-4px); /* up and larger */
-  }
-  100% {
-    transform: scale(1) translateY(0);
-  }
+/* Correct state (after misses) - permanent yellow */
+.partial {
+  fill: #ffeb3b !important; /* Yellow/Amber */
+  animation: pop-up 0.4s ease forwards;
+  filter: drop-shadow(0 0 6px #ffeb3b);
+  pointer-events: none; /* Make partial states non-clickable */
+  cursor: default;
 }
 
-
-/* Incorrect state - permanent red */
-.incorrect {
-  fill: #f44336 !important;
-  transition: fill 0.3s ease;
-  animation: pop 0.4s ease forwards;
+/* Current target state after 5 incorrect attempts - temporary red */
+/* This is the state the user *must* click to acknowledge failure */
+path.fail {
+  fill: #f44336 !important; /* Red */
   filter: drop-shadow(0 0 8px #f44336);
+  animation: pulse-red 1s infinite alternate; /* Make it pulse to draw attention */
+  cursor: pointer; /* Keep clickable so user can acknowledge */
 }
 
-/* Pop animation for feedback */
+/* Permanent Failed state (after user clicks the 'fail' state) - darker red */
+/* This is for states that have been given up on */
+path.permanent-fail {
+  fill: #b71c1c !important; /* Darker red */
+  pointer-events: none; /* No longer clickable */
+  cursor: default;
+  filter: none; /* Remove any active glow */
+  animation: none; /* Stop pulsing */
+}
+
+
+/* Incorrect click (brief flash) - less aggressive red */
+path.incorrect-flash {
+  fill: #ff9800 !important; /* Orange/lighter red for flash */
+  transition: fill 0.15s ease; /* Faster transition for flash */
+  animation: pop 0.2s ease forwards; /* Quick pop for feedback */
+}
+
+
+/* Animations */
+@keyframes pop-up {
+  0% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.05) translateY(-4px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
 @keyframes pop {
   0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  50% { transform: scale(1.05); }
   100% { transform: scale(1); }
 }
 
-.partial {
-  fill: #ffeb3b !important;
-  animation: pop-up 0.4s ease forwards;
-  filter: drop-shadow(0 0 6px #ffeb3b);
-}
-
-.fail {
-  fill: #d32f2f !important;
-  filter: drop-shadow(0 0 8px #d32f2f);
+@keyframes pulse-red {
+    from { filter: drop-shadow(0 0 8px #f44336); }
+    to { filter: drop-shadow(0 0 15px #f44336) brightness(1.2); }
 }
