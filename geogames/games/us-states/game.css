@@ -1,1 +1,37 @@
 
+body {
+  font-family: sans-serif;
+  background: #f0f4fa;
+  margin: 0;
+  padding: 2rem;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+#map-container {
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+svg path {
+  fill: #ccc;
+  stroke: #fff;
+  stroke-width: 1;
+  cursor: pointer;
+  transition: fill 0.2s ease;
+}
+
+svg path:hover {
+  fill: #aaa;
+}
+
+.correct {
+  fill: #4caf50 !important;
+}
+
+.incorrect {
+  fill: #f44336 !important;
+}
