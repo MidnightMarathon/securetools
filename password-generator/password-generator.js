@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const testFill = document.getElementById("test-zxcvbn-fill");
   const testDesc = document.getElementById("test-zxcvbn-desc");
 
+
   // Character sets
   const CHARSETS = {
     uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -39,37 +40,89 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Themes character overrides (optional)
-  const THEMES = {
-    // Example themes — you can customize or expand
-    "sci-fi": "0123456789ABCDEF", // hex-like
-    "movie": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-    "fantasy": "abcdefghijklmnopqrstuvwxyz",
-    "horror": "!@#$%^&*",
-    "cyberpunk": "0123456789abcdef!@#$%",
-    "adventure": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-    "nature": "abcdefghijklmnopqrstuvwxyz",
-    "technology": "01",
-    "food": "abcdefghijklmnopqrstuvwxyz",
-    "music": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    "space": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-    "mythology": "abcdefghijklmnopqrstuvwxyz"
-  };
 
-  // Utility: Random integer between min (incl) and max (excl)
+    const themes = {
+      "sci-fi": [
+        "star", "warp", "nova", "alien", "robot", "laser", "orbit", "quantum", "galaxy", "nebula",
+        "plasma", "cyber", "android", "asteroid", "hyper", "droid", "void", "solar", "comet", "pulse",
+        "ion", "mech", "clone", "portal", "engine", "space", "lunar", "eclipse", "gravity", "satellite",
+        "fusion", "rocket", "sensor", "cosmos", "astro", "turbo", "cyborg", "asteroid", "photon", "binary"
+      ],
+      "movie": [
+        "film", "scene", "take", "script", "reel", "actor", "director", "studio", "popcorn", "blockbuster",
+        "cinema", "trailer", "drama", "comedy", "cinematics", "cast", "soundtrack", "producer", "screen", "credits",
+        "camera", "dialogue", "shoot", "clip", "premiere", "ticket", "set", "frame", "action", "cut",
+        "producer", "editor", "screenplay", "audition", "cinematographer", "stunt", "voiceover", "genre", "plot", "scene"
+      ],
+      "fantasy": [
+        "dragon", "elf", "magic", "sword", "quest", "castle", "wizard", "spell", "troll", "knight",
+        "orc", "phoenix", "dwarf", "frost", "crown", "enchanted", "goblin", "hero", "myth", "realm",
+        "legend", "battle", "charm", "curse", "portal", "shield", "fable", "dagger", "beast", "rune",
+        "alchemy", "siege", "sorcery", "faerie", "crystal", "golem", "wyrm", "bard", "throne", "cloak"
+      ],
+      "horror": [
+        "ghost", "night", "fear", "dark", "blood", "skull", "creep", "haunt", "witch", "zombie",
+        "curse", "shadow", "grave", "panic", "scream", "spook", "vampire", "monster", "evil", "demon",
+        "claw", "terror", "crypt", "fog", "bat", "boo", "phantom", "chill", "nightmare", "gore",
+        "casket", "cobweb", "ghoul", "poltergeist", "web", "shiver", "hex", "mummy", "chains", "fog"
+      ],
+      "cyberpunk": [
+        "neon", "hack", "chrome", "matrix", "glitch", "byte", "code", "virus", "deck", "cyber",
+        "blade", "tech", "wire", "pulse", "net", "loop", "frame", "core", "drive", "node",
+        "signal", "mesh", "data", "ghost", "quant", "link", "bot", "grid", "flux", "circuit",
+        "drone", "synth", "holo", "pixel", "cypher", "firewall", "proxy", "ledger", "quantum", "script"
+      ],
+      "adventure": [
+        "trail", "map", "rope", "camp", "peak", "river", "climb", "trek", "explore", "cave",
+        "quest", "summit", "path", "gear", "wild", "voyage", "route", "hike", "trailblaze", "journey",
+        "escape", "safari", "guide", "island", "trailhead", "campfire", "ridge", "basecamp", "expedition", "wilderness",
+        "navigator", "compass", "backpack", "pioneer", "cliff", "ocean", "desert", "valley", "canyon", "summit"
+      ],
+      "nature": [
+        "tree", "river", "mountain", "forest", "flower", "leaf", "breeze", "rain", "sun", "cloud",
+        "earth", "stone", "wild", "meadow", "ocean", "pine", "creek", "valley", "rock", "sky",
+        "wildlife", "trail", "lake", "spring", "glade", "moss", "dawn", "twilight", "fern", "canyon"
+      ],
+      "technology": [
+        "circuit", "pixel", "code", "server", "cloud", "cache", "data", "binary", "logic", "kernel",
+        "algorithm", "script", "network", "byte", "debug", "firewall", "interface", "stack", "thread", "node",
+        "virtual", "compile", "source", "protocol", "hash", "loop", "array", "bit", "drive", "command"
+      ],
+      "food": [
+        "spice", "sugar", "salt", "pepper", "basil", "chili", "curry", "mint", "honey", "olive",
+        "berry", "lemon", "apple", "grape", "plum", "nut", "bean", "carrot", "garlic", "ginger",
+        "honey", "thyme", "roast", "butter", "cream", "sauce", "cake", "pie", "bread", "grain"
+      ],
+      "music": [
+        "note", "beat", "chord", "melody", "rhythm", "bass", "drum", "guitar", "piano", "vocal",
+        "harmony", "tempo", "scale", "tune", "lyric", "sound", "band", "concert", "song", "voice",
+        "synth", "tempo", "bridge", "solo", "verse", "chorus", "instrument", "acoustic", "bass", "key"
+      ],
+      "space": [
+        "orbit", "cosmos", "galaxy", "star", "comet", "planet", "rocket", "asteroid", "meteor", "nebula",
+        "satellite", "lunar", "solar", "eclipse", "gravity", "blackhole", "supernova", "space", "voyager", "astronaut",
+        "telescope", "cosmic", "quasar", "constellation", "asteroid", "celestial", "orbit", "vacuum", "universe", "rocket"
+      ],
+      "mythology": [
+        "zeus", "hera", "poseidon", "athena", "apollo", "ares", "thor", "loki", "freya",
+        "odin", "valhalla", "medusa", "minotaur", "cerberus", "pegasus", "hydra", "cyclops", "nymph", "titan",
+        "sphinx", "chimera", "hephaestus", "hades", "demeter", "nike"
+      ]
+    };
+
+ // Utility: Random integer between min (incl) and max (excl)
   function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
   // Generate password based on current settings
   function generatePassword() {
-    let length = parseInt(lengthInput.value, 10);
+    const length = parseInt(lengthInput.value, 10);
     let charset = "";
 
     if (themeSelect.value && THEMES[themeSelect.value]) {
-      // If theme selected, use theme charset only
       charset = THEMES[themeSelect.value];
     } else {
-      // Otherwise, build charset from checked options
       if (uppercaseCheckbox.checked) charset += CHARSETS.uppercase;
       if (lowercaseCheckbox.checked) charset += CHARSETS.lowercase;
       if (numbersCheckbox.checked) charset += CHARSETS.numbers;
@@ -82,6 +135,17 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < length; i++) {
       pwd += charset.charAt(randomInt(0, charset.length));
     }
+
+    // Enforce uppercase checkbox: if only uppercase checked, convert all to uppercase
+    // If lowercase checkbox is also checked, keep as is (mixed)
+    // If only lowercase checked, convert to lowercase
+    if (uppercaseCheckbox.checked && !lowercaseCheckbox.checked) {
+      pwd = pwd.toUpperCase();
+    } else if (!uppercaseCheckbox.checked && lowercaseCheckbox.checked) {
+      pwd = pwd.toLowerCase();
+    }
+    // else if both checked or none checked, leave as generated
+
     return pwd;
   }
 
