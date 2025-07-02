@@ -65,7 +65,7 @@ fetch("us.svg")
             } else {
               // Clicking other states while failed target active -> flash incorrect
               el.classList.add("incorrect");
-              setTimeout(() => el.classList.remove("incorrect"), 800);
+              setTimeout(() => el.classList.remove("incorrect"), 1000);
             }
             return; // stop here
           }
