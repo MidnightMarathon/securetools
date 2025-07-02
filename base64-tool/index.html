@@ -73,8 +73,7 @@
 </head>
 <body>
   <nav>
-    <a href="/" class="active">Home</a>
-    <a href="/about.html">About</a>
+    <a href="/" class="pill-home" aria-label="Home">Home</a>
   </nav>
 
 <main class="container">
@@ -85,27 +84,24 @@
   <textarea id="input" maxlength="16000" oninput="updateCounts()" placeholder="Enter text or Base64 here..."></textarea>
   <div style="text-align:right; font-size: 0.9rem;">Input length: <span id="inputCount">0</span></div>
 
-<div style="margin: 1rem 0;">
-  <label for="stripWhitespace" style="cursor: pointer;">
-    <input type="checkbox" id="stripWhitespace" checked />
-    Strip whitespace & newlines before decoding
-    <span title="Check this if your Base64 input contains spaces or line breaks (common when copied from emails or formatted text).">&#x1F6C8;</span>
-  </label><br/>
+  <div style="margin: 1rem 0;">
+    <label for="stripWhitespace" style="cursor: pointer;">
+      <input type="checkbox" id="stripWhitespace" checked />
+      Strip whitespace & newlines before decoding
+      <span title="Check this if your Base64 input contains spaces or line breaks (common when copied from emails or formatted text).">&#x1F6C8;</span>
+    </label><br/>
 
-  <label for="urlSafe" style="cursor: pointer;">
-    <input type="checkbox" id="urlSafe" />
-    Use URL-safe Base64 (MIME-safe)
-    <span title="Use the URL-safe Base64 variant, replacing + and / with - and _. Useful for URLs and filenames.">&#x1F6C8;</span>
-  </label><br/>
+    <label for="urlSafe" style="cursor: pointer;">
+      <input type="checkbox" id="urlSafe" />
+      Use URL-safe Base64 (MIME-safe)
+      <span title="Use the URL-safe Base64 variant, replacing + and / with - and _. Useful for URLs and filenames.">&#x1F6C8;</span>
+    </label><br/>
 
-  <label for="formatBase64" style="cursor: pointer;">
-    <input type="checkbox" id="formatBase64" />
-    Insert line breaks every 76 characters (MIME format)
-    <span title="Format the Base64 output with line breaks every 76 characters. Useful for email or MIME compatibility.">&#x1F6C8;</span>
-  </label>
-</div>
-
-
+    <label for="formatBase64" style="cursor: pointer;">
+      <input type="checkbox" id="formatBase64" />
+      Insert line breaks every 76 characters (MIME format)
+      <span title="Format the Base64 output with line breaks every 76 characters. Useful for email or MIME compatibility.">&#x1F6C8;</span>
+    </label>
   </div>
 
   <div class="btn-row">
@@ -132,38 +128,38 @@
 
   <hr style="margin: 3rem 0;" />
 
-<h2>Convert File to Base64</h2>
-<p>Select a file to instantly convert it to Base64 in your browser.</p>
+  <h2>Convert File to Base64</h2>
+  <p>Select a file to instantly convert it to Base64 in your browser.</p>
 
-<input type="file" id="fileInput" onchange="handleFileUpload()" />
-<div style="margin: 1rem 0;">
-  <label>
-    <input type="checkbox" id="stripDataPrefix" checked />
-    Strip <code>data:</code> prefix
-  </label>
-</div>
+  <input type="file" id="fileInput" onchange="handleFileUpload()" />
+  <div style="margin: 1rem 0;">
+    <label>
+      <input type="checkbox" id="stripDataPrefix" checked />
+      Strip <code>data:</code> prefix
+    </label>
+  </div>
 
   <hr style="margin: 3rem 0;" />
 
-<h2>Download Decoded Base64 as File</h2>
-<p>Paste Base64 text below and save it as a file.</p>
+  <h2>Download Decoded Base64 as File</h2>
+  <p>Paste Base64 text below and save it as a file.</p>
 
-<label for="downloadFilename">Filename:</label>
-<input type="text" id="downloadFilename" placeholder="example.txt" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem;" />
+  <label for="downloadFilename">Filename:</label>
+  <input type="text" id="downloadFilename" placeholder="example.txt" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem;" />
 
-<textarea id="downloadBase64Input" placeholder="Paste Base64 here..." style="min-height: 180px;"></textarea>
-<div style="text-align: right; font-size: 0.9rem;">Length: <span id="downloadBase64Count">0</span></div>
+  <textarea id="downloadBase64Input" placeholder="Paste Base64 here..." style="min-height: 180px;" oninput="updateDownloadCount()"></textarea>
+  <div style="text-align: right; font-size: 0.9rem;">Length: <span id="downloadBase64Count">0</span></div>
 
-<button onclick="handleBase64Download()">Download File</button>
+  <button onclick="handleBase64Download()">Download File</button>
 
-<div id="downloadError" class="error"></div>
+  <div id="downloadError" class="error"></div>
 
-<textarea id="fileOutput" readonly placeholder="Encoded Base64 will appear here..." style="min-height: 180px;"></textarea>
-<div style="text-align: right; font-size: 0.9rem;">Length: <span id="fileOutputCount">0</span></div>
-<button onclick="copyToClipboard('fileOutput')">Copy File Base64</button>
+  <textarea id="fileOutput" readonly placeholder="Encoded Base64 will appear here..." style="min-height: 180px;"></textarea>
+  <div style="text-align: right; font-size: 0.9rem;">Length: <span id="fileOutputCount">0</span></div>
+  <button onclick="copyToClipboard('fileOutput')">Copy File Base64</button>
 
 </main>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
