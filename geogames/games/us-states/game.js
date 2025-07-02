@@ -1,22 +1,25 @@
 let states = [];
 let currentTarget = null;
+let score = 0;
 
 function pickNewTarget() {
-  currentTarget = states[Math.floor(Math.random() * states.length)];
+  const remaining = states.filter(id => {
+    const el = document.getElementById(id);
+    return el && !el.classList.contains("correct");
+  });
+
+  if (remaining.length === 0) {
+    document.getElementById("target-state").textContent = "All done! 🎉";
+    return;
+  }
+
+  currentTarget = remaining[Math.floor(Math.random() * remaining.length)];
   document.getElementById("target-state").textContent = currentTarget.replace(/-/g, " ");
 }
 
-function handleClick(id, el) {
-  if (id === currentTarget) {
-    el.classList.add("correct");
-    setTimeout(() => {
-      el.classList.remove("correct");
-      pickNewTarget();
-    }, 1000);
-  } else {
-    el.classList.add("incorrect");
-    setTimeout(() => el.classList.remove("incorrect"), 1000);
-  }
+function updateScore() {
+  score++;
+  document.getElementById("score").textContent = score;
 }
 
 fetch("us.svg")
@@ -24,13 +27,28 @@ fetch("us.svg")
   .then(svg => {
     document.getElementById("map-container").innerHTML = svg;
     states = Array.from(document.querySelectorAll("path")).map(p => p.id);
+
+    // Set total states count in the UI
+    document.getElementById("total-states").textContent = states.length;
+
     pickNewTarget();
 
     states.forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         el.style.cursor = "pointer";
-        el.addEventListener("click", () => handleClick(id, el));
+        el.addEventListener("click", () => {
+          if (id === currentTarget) {
+            if (!el.classList.contains("correct")) {
+              el.classList.add("correct");
+              updateScore();
+              pickNewTarget();
+            }
+          } else {
+            el.classList.add("incorrect");
+            setTimeout(() => el.classList.remove("incorrect"), 1000);
+          }
+        });
       }
     });
   })
