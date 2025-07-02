@@ -1,9 +1,23 @@
-const targetDisplay = document.getElementById("target-state");
-const scoreDisplay = document.getElementById("score-count");
-
-let score = 0;
 let states = [];
-let currentTarget = "";
+let currentTarget = null;
+
+function pickNewTarget() {
+  currentTarget = states[Math.floor(Math.random() * states.length)];
+  document.getElementById("target-state").textContent = currentTarget.replace(/-/g, " ");
+}
+
+function handleClick(id, el) {
+  if (id === currentTarget) {
+    el.classList.add("correct");
+    setTimeout(() => {
+      el.classList.remove("correct");
+      pickNewTarget();
+    }, 1000);
+  } else {
+    el.classList.add("incorrect");
+    setTimeout(() => el.classList.remove("incorrect"), 1000);
+  }
+}
 
 fetch("map.svg")
   .then(res => res.text())
@@ -14,24 +28,10 @@ fetch("map.svg")
 
     states.forEach(id => {
       const el = document.getElementById(id);
-      el.addEventListener("click", () => handleClick(id, el));
+      if (el) {
+        el.style.cursor = "pointer";
+        el.addEventListener("click", () => handleClick(id, el));
+      }
     });
-  });
-
-function pickNewTarget() {
-  currentTarget = states[Math.floor(Math.random() * states.length)];
-  targetDisplay.textContent = currentTarget.replace(/-/g, " ");
-}
-
-function handleClick(id, el) {
-  if (id === currentTarget) {
-    el.classList.add("correct");
-    score++;
-    scoreDisplay.textContent = score;
-    pickNewTarget();
-  } else {
-    el.classList.add("incorrect");
-    setTimeout(() => el.classList.remove("incorrect"), 700);
-  }
-}
-
+  })
+  .catch(err => console.error("Failed to load SVG:", err));
