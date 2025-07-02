@@ -59,9 +59,10 @@ svg {
 }
 
 /* Style SVG paths (states) */
+/* Override inline fills with !important */
 path {
-  fill: #cfd8dc;            /* neutral base color */
-  stroke: #607d8b;          /* subtle outline */
+  fill: #cfd8dc !important;            /* neutral base color */
+  stroke: #607d8b;
   stroke-width: 1;
   transition: fill 0.3s ease, filter 0.3s ease;
   cursor: pointer;
@@ -69,7 +70,7 @@ path {
 
 /* Hover effect - lighter blue */
 path:hover:not(.correct):not(.incorrect) {
-  fill: #a0c4ff;            /* softer blue highlight */
+  fill: #a0c4ff !important;            /* softer blue highlight */
   filter: drop-shadow(0 0 5px #a0c4ff);
 }
 
