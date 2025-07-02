@@ -104,11 +104,11 @@ path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial)
   cursor: default; /* no more clicks needed */
 }
 
-/* Incorrect click flash animation */
 .incorrect {
-  animation: flash-red 0.8s;
   fill: #f44336 !important;
-  filter: drop-shadow(0 0 8px #f44336);
+  transition: fill 0.6s ease;
+  animation: fade-red 1s forwards;
+  filter: drop-shadow(0 0 6px #f44336);
 }
 
 /* Hover fix: do not highlight incorrect/failed/given-up states */
@@ -133,7 +133,18 @@ path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial)
   }
 }
 
-@keyframes flash-red {
-  0%, 100% { fill: none; }
-  50% { fill: #e57373; }
+
+@keyframes fade-red {
+  0% {
+    fill: #f44336;
+    filter: drop-shadow(0 0 6px #f44336);
+  }
+  80% {
+    fill: #f44336;
+    filter: drop-shadow(0 0 2px #f44336);
+  }
+  100% {
+    fill: #cfd8dc;
+    filter: none;
+  }
 }
