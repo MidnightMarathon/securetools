@@ -33,30 +33,31 @@ fetch("us.svg")
 
     pickNewTarget();
 
-    states.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        // Remove inline styles to allow CSS to control colors
-        el.removeAttribute("style");
+ states.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    // Remove inline styles to allow CSS to control colors
+    el.removeAttribute("style");
 
-        // Set base fill color via JS (matches your CSS base fill)
-        el.style.fill = "#cfd8dc";
+    // DO NOT set fill inline here; CSS handles base color now
+    // el.style.fill = "#cfd8dc";  <-- REMOVE or COMMENT OUT this line
 
-        el.style.cursor = "pointer";
+    el.style.cursor = "pointer";
 
-        el.addEventListener("click", () => {
-          if (id === currentTarget) {
-            if (!el.classList.contains("correct")) {
-              el.classList.add("correct");
-              updateScore();
-              pickNewTarget();
-            }
-          } else {
-            el.classList.add("incorrect");
-            setTimeout(() => el.classList.remove("incorrect"), 1000);
-          }
-        });
+    el.addEventListener("click", () => {
+      if (id === currentTarget) {
+        if (!el.classList.contains("correct")) {
+          el.classList.add("correct");
+          updateScore();
+          pickNewTarget();
+        }
+      } else {
+        el.classList.add("incorrect");
+        setTimeout(() => el.classList.remove("incorrect"), 1000);
       }
     });
+  }
+});
+
   })
   .catch(err => console.error("Failed to load SVG:", err));
