@@ -263,7 +263,29 @@ function entropyColor(entropy) {
       default: return "";
     }
   }
+  function calcEntropy(password, opts) {
+  let characterSetSize = 0;
+  if (opts.lowercase) characterSetSize += CHARSETS.lowercase.length;
+  if (opts.uppercase) characterSetSize += CHARSETS.uppercase.length;
+  if (opts.numbers) characterSetSize += CHARSETS.numbers.length;
+  if (opts.symbols) characterSetSize += CHARSETS.symbols.length;
 
+  // If no character type is selected, default to all character sets.
+  // This should ideally match your password generation logic's default.
+  if (characterSetSize === 0) {
+    characterSetSize = CHARSETS.lowercase.length + CHARSETS.uppercase.length + CHARSETS.numbers.length + CHARSETS.symbols.length;
+  }
+
+  // Shannon entropy formula: E = L * log2(N)
+  // L is the length of the password.
+  // N is the size of the character set.
+  if (password.length === 0 || characterSetSize === 0) {
+    return 0;
+  }
+
+  const entropy = password.length * (Math.log(characterSetSize) / Math.log(2));
+  return entropy;
+}
   function updateEntropy(password, opts) {
     const entropy = calcEntropy(password, opts);
     const maxEntropy = 80;
