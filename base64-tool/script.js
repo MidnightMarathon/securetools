@@ -16,9 +16,14 @@ function safeDecode(str) {
   }
 }
 
+function insertLineBreaks(str, every = 76) {
+  return str.replace(new RegExp(`(.{1,${every}})`, 'g'), '$1\n');
+}
+
 function handleEncode() {
   const input = document.getElementById("input").value;
   const urlSafe = document.getElementById("urlSafe").checked;
+  const formatBase64 = document.getElementById("formatBase64").checked;
   const errorBox = document.getElementById("error");
   errorBox.textContent = "";
 
@@ -37,9 +42,14 @@ function handleEncode() {
     encoded = encoded.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   }
 
+  if (formatBase64) {
+    encoded = insertLineBreaks(encoded, 76);
+  }
+
   document.getElementById("encoded").value = encoded;
   document.getElementById("encodedCount").textContent = encoded.length;
 }
+
 
 function handleDecode() {
   let input = document.getElementById("input").value;
