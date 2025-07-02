@@ -112,3 +112,12 @@ h1 {
 }
 
 /* Keyframes for animations */
+@keyframes flashRed {
+    0% { fill: #ff6666 !important; } /* Start red and FORCE it to override other fills */
+    100% { fill: #cfd8dc; } /* End at default state color */
+}
+
+@keyframes pulseRed {
+    0% { fill: #ff6666; } /* Brighter red */
+    100% { fill: #cc0000; } /* Darker red */
+}
