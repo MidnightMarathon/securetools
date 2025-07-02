@@ -3,7 +3,7 @@ const MAX_INPUT_LENGTH = 16000;
 function safeEncode(str) {
   try {
     return btoa(unescape(encodeURIComponent(str)));
-  } catch (err) {
+  } catch {
     return null;
   }
 }
@@ -11,13 +11,14 @@ function safeEncode(str) {
 function safeDecode(str) {
   try {
     return decodeURIComponent(escape(atob(str)));
-  } catch (err) {
+  } catch {
     return null;
   }
 }
 
 function handleEncode() {
   const input = document.getElementById("input").value;
+  const urlSafe = document.getElementById("urlSafe").checked;
   const errorBox = document.getElementById("error");
   errorBox.textContent = "";
 
@@ -26,22 +27,43 @@ function handleEncode() {
     return;
   }
 
-  const encoded = safeEncode(input);
-  document.getElementById("encoded").value = encoded ?? "⚠️ Encoding failed. Check your input.";
+  let encoded = safeEncode(input);
+  if (!encoded) {
+    errorBox.textContent = "⚠️ Encoding failed. Check your input.";
+    return;
+  }
+
+  if (urlSafe) {
+    encoded = encoded.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+
+  document.getElementById("encoded").value = encoded;
+  document.getElementById("encodedCount").textContent = encoded.length;
 }
 
 function handleDecode() {
-  const input = document.getElementById("input").value;
+  let input = document.getElementById("input").value;
+  const stripWS = document.getElementById("stripWhitespace").checked;
   const errorBox = document.getElementById("error");
   errorBox.textContent = "";
+
+  if (stripWS) {
+    input = input.replace(/\s+/g, "");
+  }
 
   if (input.length > MAX_INPUT_LENGTH) {
     errorBox.textContent = `⚠️ Input too long. Limit: ${MAX_INPUT_LENGTH} characters.`;
     return;
   }
 
-  const decoded = safeDecode(input);
-  document.getElementById("decoded").value = decoded ?? "⚠️ Decoding failed. Not valid Base64 input.";
+  let decoded = safeDecode(input);
+  if (!decoded) {
+    errorBox.textContent = "⚠️ Decoding failed. Not valid Base64 input.";
+    return;
+  }
+
+  document.getElementById("decoded").value = decoded;
+  document.getElementById("decodedCount").textContent = decoded.length;
 }
 
 function copyToClipboard(targetId) {
@@ -57,3 +79,7 @@ function copyToClipboard(targetId) {
   }, 1500);
 }
 
+function updateCounts() {
+  const input = document.getElementById("input").value;
+  document.getElementById("inputCount").textContent = input.length;
+}
