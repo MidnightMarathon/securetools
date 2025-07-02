@@ -16,9 +16,10 @@
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
       padding: 2rem;
     }
+
     textarea {
       width: 100%;
-      height: 140px;
+      min-height: 120px;
       padding: 1rem;
       font-family: monospace;
       font-size: 1rem;
@@ -27,12 +28,14 @@
       resize: vertical;
       margin-bottom: 1rem;
     }
+
     .btn-row {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
       margin-bottom: 1rem;
     }
+
     button {
       flex: 1;
       padding: 0.75rem 1rem;
@@ -45,14 +48,26 @@
       color: white;
       transition: background 0.2s;
     }
+
     button:hover {
       background-color: #208ecf;
     }
+
     .copy-note {
       color: green;
       font-size: 0.875rem;
       display: none;
       text-align: right;
+    }
+
+    .output-section {
+      margin-bottom: 2rem;
+    }
+
+    .error {
+      color: crimson;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
@@ -64,23 +79,32 @@
 
   <main class="container">
     <h1>Base64 Encoder & Decoder</h1>
-    <p>Encode or decode Base64 text directly in your browser. Your text never leaves your device.</p>
+    <p>Convert text to and from Base64 securely in your browser. Max 16,000 characters.</p>
 
     <label for="input">Input:</label>
-    <textarea id="input" placeholder="Enter text to encode or decode..."></textarea>
+    <textarea id="input" maxlength="16000" placeholder="Enter text or Base64 here..."></textarea>
 
     <div class="btn-row">
-      <button onclick="encode()">Encode</button>
-      <button onclick="decode()">Decode</button>
-      <button onclick="copyOutput()">Copy Output</button>
+      <button onclick="handleEncode()">Encode</button>
+      <button onclick="handleDecode()">Decode</button>
     </div>
 
-    <label for="output">Output:</label>
-    <textarea id="output" readonly placeholder="Result will appear here..."></textarea>
-    <div class="copy-note" id="copied">Copied to clipboard!</div>
+    <div class="output-section">
+      <label for="encoded">Encoded Output:</label>
+      <textarea id="encoded" readonly placeholder="Encoded result will appear here..."></textarea>
+      <button onclick="copyToClipboard('encoded')">Copy Encoded</button>
+    </div>
+
+    <div class="output-section">
+      <label for="decoded">Decoded Output:</label>
+      <textarea id="decoded" readonly placeholder="Decoded result will appear here..."></textarea>
+      <button onclick="copyToClipboard('decoded')">Copy Decoded</button>
+    </div>
+
+    <div id="error" class="error"></div>
+    <div id="copied" class="copy-note">Copied to clipboard!</div>
   </main>
 
   <script src="script.js"></script>
 </body>
 </html>
-
