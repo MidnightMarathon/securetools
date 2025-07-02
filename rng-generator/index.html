@@ -1,1 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>✨ Random Number Generator</title>
+  <meta name="description" content="Generate random numbers securely in your browser with SecureTools." />
+  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(to bottom right, #fceaff, #dbeeff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #6b4c9a;
+      margin-bottom: 0.5rem;
+    }
+
+    .number {
+      font-size: 3rem;
+      color: #ff69b4;
+      font-weight: bold;
+      margin: 1.5rem 0;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    button {
+      background: #ffb6c1;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #ff6fa7;
+    }
+
+    input {
+      width: 60px;
+      padding: 0.4rem;
+      border: 2px solid #d4bfff;
+      border-radius: 0.8rem;
+      font-size: 1rem;
+      text-align: center;
+      margin: 0 0.5rem;
+    }
+
+    .inputs {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎲 Random Number</h1>
+    <div class="inputs">
+      <input type="number" id="min" placeholder="Min" value="1" />
+      <input type="number" id="max" placeholder="Max" value="100" />
+    </div>
+    <div class="number" id="result">—</div>
+    <button onclick="generateRandom()">Generate</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
 
