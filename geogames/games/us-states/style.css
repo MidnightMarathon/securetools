@@ -77,9 +77,23 @@ path:hover:not(.correct):not(.incorrect) {
 .correct {
   fill: #4caf50 !important;
   transition: fill 0.3s ease;
-  animation: pop 0.4s ease forwards;
+  animation: pop-up 0.4s ease forwards;
   filter: drop-shadow(0 0 8px #4caf50);
 }
+
+/* Update the animation */
+@keyframes pop-up {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.15) translateY(-4px); /* up and larger */
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
 
 /* Incorrect state - permanent red */
 .incorrect {
