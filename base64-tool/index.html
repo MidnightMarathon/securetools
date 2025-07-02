@@ -7,88 +7,14 @@
   <meta name="description" content="Encode or decode Base64 text securely in your browser with SecureTools. No tracking. No data sent to a server." />
   <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
   <link rel="stylesheet" href="/assets/styles.css" />
-  <style>
-    /* Additional inline styles for container and elements */
-    .container {
-      max-width: 720px;
-      margin: 4rem auto;
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-      padding: 2rem;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 120px;
-      padding: 1rem;
-      font-family: monospace;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      resize: vertical;
-      margin-bottom: 1rem;
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-
-    button {
-      flex: 1;
-      padding: 0.75rem 1rem;
-      font-weight: bold;
-      font-size: 1rem;
-      border-radius: 9999px;
-      border: none;
-      cursor: pointer;
-      background-color: #2d9cdb;
-      color: white;
-      transition: background 0.2s;
-    }
-
-    button:hover {
-      background-color: #208ecf;
-    }
-
-    .copy-note {
-      color: green;
-      font-size: 0.875rem;
-      display: none;
-      text-align: right;
-    }
-
-    .output-section {
-      margin-bottom: 2rem;
-    }
-
-    .error {
-      color: crimson;
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-    }
-
-    /* Tooltip styling for info icons */
-    span[title] {
-      cursor: help;
-      border-bottom: 1px dotted #888;
-      color: #555;
-      margin-left: 4px;
-    }
-  </style>
 </head>
 <body>
-  <header class="site-header">
-    <nav>
-      <a href="/" class="pill-button home-pill" aria-label="Go to SecureTools Home">Home</a>
-      <a href="/about.html">About</a>
-    </nav>
-  </header>
 
-  <main class="container">
+  <nav>
+    <a href="/" class="pill-button home-pill" aria-label="Go to SecureTools Home">Home</a>
+  </nav>
+
+  <main>
     <h1>Base64 Encoder & Decoder</h1>
     <p>Convert text to and from Base64 securely in your browser. Max 16,000 characters.</p>
 
@@ -100,19 +26,19 @@
       <label for="stripWhitespace" style="cursor: pointer;">
         <input type="checkbox" id="stripWhitespace" checked />
         Strip whitespace & newlines before decoding
-        <span title="Check this if your Base64 input contains spaces or line breaks (common when copied from emails or formatted text).">&#x1F6C8;</span>
+        <span title="Check if input contains spaces or line breaks.">&#x1F6C8;</span>
       </label><br/>
 
       <label for="urlSafe" style="cursor: pointer;">
         <input type="checkbox" id="urlSafe" />
         Use URL-safe Base64 (MIME-safe)
-        <span title="Use the URL-safe Base64 variant, replacing + and / with - and _. Useful for URLs and filenames.">&#x1F6C8;</span>
+        <span title="Use URL-safe Base64 variant, replacing + and / with - and _.">&#x1F6C8;</span>
       </label><br/>
 
       <label for="formatBase64" style="cursor: pointer;">
         <input type="checkbox" id="formatBase64" />
         Insert line breaks every 76 characters (MIME format)
-        <span title="Format the Base64 output with line breaks every 76 characters. Useful for email or MIME compatibility.">&#x1F6C8;</span>
+        <span title="Format output with line breaks every 76 characters for email compatibility.">&#x1F6C8;</span>
       </label>
     </div>
 
@@ -163,12 +89,13 @@
     <label for="downloadFilename">Filename:</label>
     <input type="text" id="downloadFilename" placeholder="example.txt" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem;" />
 
-    <textarea id="downloadBase64Input" placeholder="Paste Base64 here..." style="min-height: 180px;"></textarea>
+    <textarea id="downloadBase64Input" placeholder="Paste Base64 here..." style="min-height: 180px;" oninput="updateDownloadCount()"></textarea>
     <div style="text-align: right; font-size: 0.9rem;">Length: <span id="downloadBase64Count">0</span></div>
 
     <button onclick="handleBase64Download()">Download File</button>
 
     <div id="downloadError" class="error"></div>
+
   </main>
 
   <script src="script.js"></script>
