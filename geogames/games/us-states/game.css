@@ -43,39 +43,55 @@ h1 {
   margin-bottom: 1rem;
 }
 
+/* Responsive map container */
 .map-container {
   max-width: 800px;
+  width: 100%;          /* ensure it scales */
   margin: 0 auto;
   user-select: none;
 }
 
+/* Make SVG scale smoothly */
+svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* Style SVG paths (states) */
 path {
-  fill: #cfd8dc;
-  stroke: #607d8b;
+  fill: #cfd8dc;            /* neutral base color */
+  stroke: #607d8b;          /* subtle outline */
   stroke-width: 1;
-  transition: fill 0.3s ease;
+  transition: fill 0.3s ease, filter 0.3s ease;
   cursor: pointer;
 }
 
 /* Hover effect - lighter blue */
-path:hover:not(.correct) {
-  fill: #4caf50; /* Green on hover */
+path:hover:not(.correct):not(.incorrect) {
+  fill: #a0c4ff;            /* softer blue highlight */
+  filter: drop-shadow(0 0 5px #a0c4ff);
 }
 
 /* Correct state - permanent green */
 .correct {
   fill: #4caf50 !important;
   transition: fill 0.3s ease;
+  animation: pop 0.4s ease forwards;
+  filter: drop-shadow(0 0 8px #4caf50);
 }
 
-/* Incorrect state - flash red */
-@keyframes flashRed {
-  0%, 100% { fill: #cfd8dc; }
-  50% { fill: #e53935; }
-}
-
+/* Incorrect state - permanent red */
 .incorrect {
-  animation: flashRed 1s ease;
-  cursor: pointer;
+  fill: #f44336 !important;
+  transition: fill 0.3s ease;
+  animation: pop 0.4s ease forwards;
+  filter: drop-shadow(0 0 8px #f44336);
+}
+
+/* Pop animation for feedback */
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
