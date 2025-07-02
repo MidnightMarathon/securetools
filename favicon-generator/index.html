@@ -1,1 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Favicon Generator – SecureTools</title>
+  <meta name="description" content="Generate favicons instantly in your browser — no upload, no tracking." />
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="../index.html" class="pill-button home-pill" aria-label="Go to SecureTools Home">Home</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Favicon Generator</h1>
+
+    <input type="file" accept="image/png, image/jpeg, image/svg+xml" id="upload" aria-describedby="upload-desc" />
+    <p id="upload-desc" class="sr-only">Upload an image to generate favicon files.</p>
+    
+    <div id="preview" aria-live="polite" style="margin: 1em 0;"></div>
+
+    <div id="downloads" style="margin-top: 1em;"></div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
 
