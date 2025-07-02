@@ -113,8 +113,16 @@ h1 {
 
 /* Keyframes for animations */
 @keyframes flashRed {
-    0% { fill: #ff6666 !important; } /* Start red and FORCE it to override other fills */
-    100% { fill: #cfd8dc; } /* End at default state color */
+    0% {
+        fill: #ff6666 !important; /* Start red and FORCE it to override other fills */
+        stroke: #ff0000 !important; /* Also flash the border red */
+        stroke-width: 3px !important; /* Make border thicker */
+    }
+    100% {
+        fill: #cfd8dc; /* End at default state color */
+        stroke: #607d8b; /* End at default border color */
+        stroke-width: 1px; /* End at default border width */
+    }
 }
 
 @keyframes pulseRed {
