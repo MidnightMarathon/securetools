@@ -120,13 +120,7 @@ const THEMES = {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-function applyRandomCaseStyle(word) {
-  // Only apply 'alt' (alternating case) if both upper and lower are allowed
-  // The primary control for upper/lower will now be the charPool
-  return word.split('').map((ch, i) =>
-    i % 2 === 0 ? ch.toUpperCase() : ch.toLowerCase()
-  ).join('');
-}
+
 
 
 function secureBool() {
@@ -155,56 +149,114 @@ function substituteChars(word, opts) {
 }
 
 function generatePassword(opts) {
-  let charPool = '';
+    let charPool = '';
 
-  // --- START OF CRITICAL CHANGES FOR CASE SELECTION ---
-  if (opts.uppercase && !opts.lowercase) {
-    charPool += CHARSETS.uppercase;
-  } else if (opts.lowercase && !opts.uppercase) {
-    charPool += CHARSETS.lowercase;
-  } else if (opts.uppercase && opts.lowercase) {
-    // If both are checked, we include both in the pool for random selection
-    charPool += CHARSETS.uppercase + CHARSETS.lowercase;
-  }
-  // If neither uppercase nor lowercase is checked, charPool will not include letters.
-  // This means if *only* numbers and/or symbols are selected, letters won't appear.
+    // --- REVISED LOGIC FOR charPool AND THEME WORD PROCESSING ---
+    const includeUppercase = opts.uppercase;
+    const includeLowercase = opts.lowercase;
+    const includeNumbers = opts.numbers;
+    const includeSymbols = opts.symbols;
 
-  if (opts.numbers) charPool += CHARSETS.numbers;
-  if (opts.symbols) charPool += CHARSETS.symbols;
-
-  // Fallback: If no character types are selected at all, use all.
-  // This prevents an infinite loop if charPool is empty.
-  if (!charPool) {
-    charPool = CHARSETS.lowercase + CHARSETS.uppercase + CHARSETS.numbers + CHARSETS.symbols;
-  }
-  // --- END OF CRITICAL CHANGES FOR CASE SELECTION ---
-
-
-  if (opts.theme && THEMES[opts.theme]) {
-    const themeWords = THEMES[opts.theme];
-    let words = [];
-    while (words.length < Math.ceil(opts.length / 6)) { // Use a reasonable word count
-      const w = themeWords[randomInt(themeWords.length)];
-      // Apply alternating case ONLY if both upper and lower are explicitly allowed
-      // Otherwise, the charPool will handle the case based on selection
-      words.push((opts.uppercase && opts.lowercase) ? applyRandomCaseStyle(w) : w);
+    if (includeUppercase && !includeLowercase) {
+        charPool += CHARSETS.uppercase;
+    } else if (includeLowercase && !includeUppercase) {
+        charPool += CHARSETS.lowercase;
+    } else if (includeUppercase && includeLowercase) {
+        charPool += CHARSETS.uppercase + CHARSETS.lowercase;
     }
-    let password = words.join('');
-    password = substituteChars(password, opts);
+    // If neither uppercase nor lowercase is checked, no letter charsets are added to charPool for random generation.
 
-    // This part ensures the password reaches the desired length using the *final* charPool
-    while (password.length < opts.length) {
-      password += charPool.charAt(randomInt(charPool.length));
+    if (includeNumbers) charPool += CHARSETS.numbers;
+    if (includeSymbols) charPool += CHARSETS.symbols;
+
+    // Fallback: If no character types are selected at all, use all.
+    // This prevents an empty charPool for random character appending.
+    if (!charPool) {
+        charPool = CHARSETS.lowercase + CHARSETS.uppercase + CHARSETS.numbers + CHARSETS.symbols;
     }
-    return password.slice(0, opts.length); // Trim to exact length
-  }
+    // --- END REVISED charPool LOGIC ---
 
-  // Original logic for non-theme passwords, now using the refined charPool
-  let password = '';
-  for (let i = 0; i < opts.length; i++) {
-    password += charPool.charAt(randomInt(charPool.length));
-  }
-  return password;
+
+    if (opts.theme && THEMES[opts.theme]) {
+        const themeWords = THEMES[opts.theme];
+        let words = [];
+        let currentPasswordLength = 0;
+
+        while (currentPasswordLength < opts.length && words.length < themeWords.length * 2) { // Add a safety break
+            const originalWord = themeWords[randomInt(themeWords.length)];
+            let processedWord = originalWord;
+
+            // Apply case rules to theme words BEFORE adding them
+            if (includeUppercase && !includeLowercase) {
+                processedWord = originalWord.toUpperCase();
+            } else if (includeLowercase && !includeUppercase) {
+                processedWord = originalWord.toLowerCase();
+            } else if (includeUppercase && includeLowercase) {
+                // If both are checked, apply alternating case to make it "random"
+                processedWord = applyRandomCaseStyle(originalWord);
+            } else {
+                // If no letters are allowed, filter out letters from theme words
+                processedWord = originalWord.split('').filter(char => {
+                    const isLetter = (CHARSETS.uppercase.includes(char.toUpperCase()) || CHARSETS.lowercase.includes(char.toLowerCase()));
+                    return !isLetter;
+                }).join('');
+
+                // If filtering makes the word empty, or if original word only had letters
+                // and no letters are allowed, skip this word or fill with non-letter chars.
+                if (processedWord.length === 0 && (includeNumbers || includeSymbols)) {
+                    // Try to add a random number or symbol if theme word can't be used
+                    processedWord = charPool.charAt(randomInt(charPool.length));
+                } else if (processedWord.length === 0) { // If no letters and no numbers/symbols allowed, this shouldn't happen with the fallback charPool
+                     // Skip this word if it became empty and nothing else can be added
+                     continue;
+                }
+            }
+            
+            // Only add word if it contributes meaningfully
+            if (processedWord.length > 0) {
+                words.push(processedWord);
+                currentPasswordLength += processedWord.length;
+            }
+        }
+        
+        let password = words.join('');
+        password = substituteChars(password, opts); // Apply substitutions after case and before final length adjustment
+
+        // Trim or extend to exact length using the *correctly filtered* charPool
+        if (password.length > opts.length) {
+            password = password.slice(0, opts.length);
+        } else if (password.length < opts.length) {
+            while (password.length < opts.length) {
+                // Ensure charPool is not empty, though the initial fallback should prevent this
+                if (charPool.length === 0) {
+                    console.warn("charPool is empty when trying to extend password length. This indicates an issue with character set selection.");
+                    break;
+                }
+                password += charPool.charAt(randomInt(charPool.length));
+            }
+        }
+        return password;
+
+    } else {
+        // Original logic for non-theme passwords, now using the refined charPool
+        let password = '';
+        for (let i = 0; i < opts.length; i++) {
+            // Ensure charPool is not empty
+            if (charPool.length === 0) {
+                console.warn("charPool is empty for non-theme password generation.");
+                break; // Prevent infinite loop
+            }
+            password += charPool.charAt(randomInt(charPool.length));
+        }
+        return password;
+    }
+}
+
+// Keep applyRandomCaseStyle as is for the "both upper and lower" scenario with themes
+function applyRandomCaseStyle(word) {
+    return word.split('').map((ch, i) =>
+        i % 2 === 0 ? ch.toUpperCase() : ch.toLowerCase()
+    ).join('');
 }
 
 
