@@ -109,3 +109,14 @@ path:hover:not(.correct):not(.incorrect) {
   50% { transform: scale(1.15); }
   100% { transform: scale(1); }
 }
+
+.partial {
+  fill: #ffeb3b !important;
+  animation: pop-up 0.4s ease forwards;
+  filter: drop-shadow(0 0 6px #ffeb3b);
+}
+
+.fail {
+  fill: #d32f2f !important;
+  filter: drop-shadow(0 0 8px #d32f2f);
+}
