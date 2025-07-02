@@ -77,33 +77,47 @@
     <a href="/about.html">About</a>
   </nav>
 
-  <main class="container">
-    <h1>Base64 Encoder & Decoder</h1>
-    <p>Convert text to and from Base64 securely in your browser. Max 16,000 characters.</p>
+<main class="container">
+  <h1>Base64 Encoder & Decoder</h1>
+  <p>Convert text to and from Base64 securely in your browser. Max 16,000 characters.</p>
 
-    <label for="input">Input:</label>
-    <textarea id="input" maxlength="16000" placeholder="Enter text or Base64 here..."></textarea>
+  <label for="input">Input:</label>
+  <textarea id="input" maxlength="16000" oninput="updateCounts()" placeholder="Enter text or Base64 here..."></textarea>
+  <div style="text-align:right; font-size: 0.9rem;">Input length: <span id="inputCount">0</span></div>
 
-    <div class="btn-row">
-      <button onclick="handleEncode()">Encode</button>
-      <button onclick="handleDecode()">Decode</button>
-    </div>
+  <div style="margin: 1rem 0;">
+    <label>
+      <input type="checkbox" id="stripWhitespace" />
+      Strip whitespace & newlines before decoding
+    </label><br/>
+    <label>
+      <input type="checkbox" id="urlSafe" />
+      Use URL-safe Base64 (MIME-safe)
+    </label>
+  </div>
 
-    <div class="output-section">
-      <label for="encoded">Encoded Output:</label>
-      <textarea id="encoded" readonly placeholder="Encoded result will appear here..."></textarea>
-      <button onclick="copyToClipboard('encoded')">Copy Encoded</button>
-    </div>
+  <div class="btn-row">
+    <button onclick="handleEncode()">Encode</button>
+    <button onclick="handleDecode()">Decode</button>
+  </div>
 
-    <div class="output-section">
-      <label for="decoded">Decoded Output:</label>
-      <textarea id="decoded" readonly placeholder="Decoded result will appear here..."></textarea>
-      <button onclick="copyToClipboard('decoded')">Copy Decoded</button>
-    </div>
+  <div class="output-section">
+    <label for="encoded">Encoded Output:</label>
+    <textarea id="encoded" readonly></textarea>
+    <div style="text-align:right; font-size: 0.9rem;">Length: <span id="encodedCount">0</span></div>
+    <button onclick="copyToClipboard('encoded')">Copy Encoded</button>
+  </div>
 
-    <div id="error" class="error"></div>
-    <div id="copied" class="copy-note">Copied to clipboard!</div>
-  </main>
+  <div class="output-section">
+    <label for="decoded">Decoded Output:</label>
+    <textarea id="decoded" readonly></textarea>
+    <div style="text-align:right; font-size: 0.9rem;">Length: <span id="decodedCount">0</span></div>
+    <button onclick="copyToClipboard('decoded')">Copy Decoded</button>
+  </div>
+
+  <div id="error" class="error"></div>
+  <div id="copied" class="copy-note">Copied to clipboard!</div>
+</main>
 
   <script src="script.js"></script>
 </body>
