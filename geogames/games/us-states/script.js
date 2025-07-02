@@ -81,7 +81,7 @@ fetch("us.svg")
               // Don't move on until user clicks failed target
             } else {
               el.classList.add("incorrect");
-              setTimeout(() => el.classList.remove("incorrect"), 800);
+              setTimeout(() => el.classList.remove("incorrect"), 1000);
             }
           } else {
             // Correct guess
