@@ -131,6 +131,22 @@
   </label>
 </div>
 
+  <hr style="margin: 3rem 0;" />
+
+<h2>Download Decoded Base64 as File</h2>
+<p>Paste Base64 text below and save it as a file.</p>
+
+<label for="downloadFilename">Filename:</label>
+<input type="text" id="downloadFilename" placeholder="example.txt" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem;" />
+
+<textarea id="downloadBase64Input" placeholder="Paste Base64 here..." style="min-height: 180px;"></textarea>
+<div style="text-align: right; font-size: 0.9rem;">Length: <span id="downloadBase64Count">0</span></div>
+
+<button onclick="handleBase64Download()">Download File</button>
+
+<div id="downloadError" class="error"></div>
+
+
 <textarea id="fileOutput" readonly placeholder="Encoded Base64 will appear here..." style="min-height: 180px;"></textarea>
 <div style="text-align: right; font-size: 0.9rem;">Length: <span id="fileOutputCount">0</span></div>
 <button onclick="copyToClipboard('fileOutput')">Copy File Base64</button>
