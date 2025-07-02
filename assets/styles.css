@@ -240,12 +240,12 @@ a#download-link:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  justify-content: center; /* or space-between */
+  justify-content: center;
 }
 
 .tool-link {
-  flex: 1 1 200px; /* grow, shrink, basis */
-  max-width: 250px; /* max width of each card */
+  flex: 1 1 200px;
+  max-width: 250px;
   text-decoration: none;
   color: inherit;
 }
@@ -255,7 +255,7 @@ a#download-link:hover {
   flex-direction: column;
   align-items: center;
   padding: 1rem;
-  height: 300px; /* fixed height for all cards */
+  height: 300px; /* fixed height for uniformity */
   box-sizing: border-box;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -276,9 +276,10 @@ a#download-link:hover {
 }
 
 .tool-desc {
+  flex-grow: 1; /* fill remaining space to align card heights */
   text-align: center;
-  flex-grow: 1; /* so desc takes leftover space */
   font-size: 0.9rem;
   color: #555;
+  overflow-wrap: break-word;
+  margin: 0;
 }
-
