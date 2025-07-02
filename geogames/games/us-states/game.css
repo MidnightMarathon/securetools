@@ -58,19 +58,24 @@ path {
   cursor: pointer;
 }
 
-/* Hover effect */
-path:hover {
-  fill: #90caf9;
+/* Hover effect - lighter blue */
+path:hover:not(.correct) {
+  fill: #4caf50; /* Green on hover */
 }
 
-/* Correct state */
+/* Correct state - permanent green */
 .correct {
   fill: #4caf50 !important;
   transition: fill 0.3s ease;
 }
 
-/* Incorrect state */
+/* Incorrect state - flash red */
+@keyframes flashRed {
+  0%, 100% { fill: #cfd8dc; }
+  50% { fill: #e53935; }
+}
+
 .incorrect {
-  fill: #e53935 !important;
-  transition: fill 0.3s ease;
+  animation: flashRed 1s ease;
+  cursor: pointer;
 }
