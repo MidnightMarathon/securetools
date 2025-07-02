@@ -1,1 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About SecureTools | Privacy-First Online Utilities</title>
+  <meta name="description" content="Learn about SecureTools — a privacy-first collection of free online utilities that respect your data and run securely in your browser." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
+      background-size: 300% 300%;
+      animation: gradientFlow 15s ease infinite;
+      color: #1d1d1f;
+      padding: 2rem;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    nav {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      display: flex;
+      gap: 0.75rem;
+      z-index: 10;
+    }
+
+    nav a {
+      display: inline-block;
+      padding: 0.5rem 1.25rem;
+      background-color: #f0f0f5;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      color: #333;
+      text-decoration: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: background-color 0.25s ease;
+      font-weight: 600;
+    }
+
+    nav a:hover {
+      background-color: #d6d6db;
+    }
+
+    nav a[aria-current="page"] {
+      background-color: #a18cff;
+      color: white;
+      pointer-events: none;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 8rem auto 4rem;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: saturate(180%) blur(16px);
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #444;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      padding-left: 1.25rem;
+      color: #444;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    li {
+      margin-bottom: 1rem;
+    }
+
+    li p:first-child {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    a {
+      color: #0057cc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 2rem;
+        margin: 6rem 1rem 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/about.html" aria-current="page">About</a>
+  </nav>
+
+  <main>
+    <h1>About SecureTools</h1>
+
+    <p>Welcome to SecureTools — your privacy-first collection of free, easy-to-use online utilities designed to simplify everyday tasks.</p>
+
+    <p>Our mission is to provide reliable and secure tools that help you generate passwords, create QR codes, generate random numbers, and more — all without compromising your privacy or security.</p>
+
+    <h2>Privacy Matters</h2>
+    <p>At SecureTools, we believe your data is yours alone. That's why:</p>
+    <ul>
+      <li>We don’t track you or collect personal data without your consent.</li>
+      <li>All processing happens securely and locally in your browser whenever possible.</li>
+      <li>We use industry best practices to protect any data you choose to provide.</li>
+    </ul>
+
+    <h2>Open and Transparent</h2>
+    <p>We strive to be fully transparent about how our tools work. The code powering SecureTools is <a href="https://github.com/MidnightMarathon/securetools" target="_blank" rel="noopener noreferrer">open source</a>, so you can verify for yourself.</p>
+
+    <h2>Get Involved</h2>
+    <p>Have ideas for new tools or improvements? Feel free to contribute on our GitHub or contact us directly. We love feedback from our community!</p>
+
+    <h2>Contact</h2>
+    <p>If you have questions, suggestions, or want to report an issue, please reach out at <a href="mailto:contact@securetools.com">contact@securetools.com</a>.</p>
+
+    <p>Thank you for trusting SecureTools with your everyday digital needs!</p>
+  </main>
+</body>
+</html>
 
