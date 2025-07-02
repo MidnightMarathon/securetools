@@ -19,7 +19,7 @@ function handleClick(id, el) {
   }
 }
 
-fetch("map.svg")
+fetch("us.svg")
   .then(res => res.text())
   .then(svg => {
     document.getElementById("map-container").innerHTML = svg;
