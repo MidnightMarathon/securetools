@@ -38,11 +38,73 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Themes object (fill in all your themes here)
-  const THEMES = {
-    sciFi: ["star", "warp", "nova", /* ... */],
-    movie: ["film", "scene", /* ... */],
-    // add all your themes here exactly as you expect themeSelect values to be
-  };
+const THEMES = {
+  "sci-fi": [
+    "star", "warp", "nova", "alien", "robot", "laser", "orbit", "quantum", "galaxy", "nebula",
+    "plasma", "cyber", "android", "asteroid", "hyper", "droid", "void", "solar", "comet", "pulse",
+    "ion", "mech", "clone", "portal", "engine", "space", "lunar", "eclipse", "gravity", "satellite",
+    "fusion", "rocket", "sensor", "cosmos", "astro", "turbo", "cyborg", "photon", "binary"
+  ],
+  "movie": [
+    "film", "scene", "take", "script", "reel", "actor", "director", "studio", "popcorn", "blockbuster",
+    "cinema", "trailer", "drama", "comedy", "cinematics", "cast", "soundtrack", "producer", "screen", "credits",
+    "camera", "dialogue", "shoot", "clip", "premiere", "ticket", "set", "frame", "action", "cut",
+    "editor", "screenplay", "audition", "cinematographer", "stunt", "voiceover", "genre", "plot"
+  ],
+  "fantasy": [
+    "dragon", "elf", "magic", "sword", "quest", "castle", "wizard", "spell", "troll", "knight",
+    "orc", "phoenix", "dwarf", "frost", "crown", "enchanted", "goblin", "hero", "myth", "realm",
+    "legend", "battle", "charm", "curse", "portal", "shield", "fable", "dagger", "beast", "rune",
+    "alchemy", "siege", "sorcery", "faerie", "crystal", "golem", "wyrm", "bard", "throne", "cloak"
+  ],
+  "horror": [
+    "ghost", "night", "fear", "dark", "blood", "skull", "creep", "haunt", "witch", "zombie",
+    "curse", "shadow", "grave", "panic", "scream", "spook", "vampire", "monster", "evil", "demon",
+    "claw", "terror", "crypt", "fog", "bat", "boo", "phantom", "chill", "nightmare", "gore",
+    "casket", "cobweb", "ghoul", "poltergeist", "web", "shiver", "hex", "mummy", "chains", "fog"
+  ],
+  "cyberpunk": [
+    "neon", "hack", "chrome", "matrix", "glitch", "byte", "code", "virus", "deck", "cyber",
+    "blade", "tech", "wire", "pulse", "net", "loop", "frame", "core", "drive", "node",
+    "signal", "mesh", "data", "ghost", "quant", "link", "bot", "grid", "flux", "circuit",
+    "drone", "synth", "holo", "pixel", "cypher", "firewall", "proxy", "ledger", "quantum", "script"
+  ],
+  "adventure": [
+    "trail", "map", "rope", "camp", "peak", "river", "climb", "trek", "explore", "cave",
+    "quest", "summit", "path", "gear", "wild", "voyage", "route", "hike", "trailblaze", "journey",
+    "escape", "safari", "guide", "island", "trailhead", "campfire", "ridge", "basecamp", "expedition", "wilderness",
+    "navigator", "compass", "backpack", "pioneer", "cliff", "ocean", "desert", "valley", "canyon", "summit"
+  ],
+  "nature": [
+    "tree", "river", "mountain", "forest", "flower", "leaf", "breeze", "rain", "sun", "cloud",
+    "earth", "stone", "wild", "meadow", "ocean", "pine", "creek", "valley", "rock", "sky",
+    "wildlife", "trail", "lake", "spring", "glade", "moss", "dawn", "twilight", "fern", "canyon"
+  ],
+  "technology": [
+    "circuit", "pixel", "code", "server", "cloud", "cache", "data", "binary", "logic", "kernel",
+    "algorithm", "script", "network", "byte", "debug", "firewall", "interface", "stack", "thread", "node",
+    "virtual", "compile", "source", "protocol", "hash", "loop", "array", "bit", "drive", "command"
+  ],
+  "food": [
+    "spice", "sugar", "salt", "pepper", "basil", "chili", "curry", "mint", "honey", "olive",
+    "berry", "lemon", "apple", "grape", "plum", "nut", "bean", "carrot", "garlic", "ginger",
+    "thyme", "roast", "butter", "cream", "sauce", "cake", "pie", "bread", "grain"
+  ],
+  "music": [
+    "note", "beat", "chord", "melody", "rhythm", "tune", "lyric", "bass", "drum", "piano",
+    "guitar", "violin", "horn", "scale", "tempo", "harmony", "voice", "sound", "echo", "solo",
+    "band", "song", "jam", "synth", "keyboard", "vibe", "hook", "track", "mix"
+  ],
+  "space": [
+    "star", "planet", "comet", "orbit", "gravity", "rocket", "cosmos", "eclipse", "meteor", "galaxy",
+    "asteroid", "satellite", "nebula", "quasar", "blackhole", "solar", "lunar", "crater", "probe", "telescope"
+  ],
+  "mythology": [
+    "zeus", "hera", "poseidon", "athena", "apollo", "hercules", "odin", "thor", "loki",
+    "freya", "anubis", "ra", "isis", "osiris", "venus", "mars", "jupiter", "mercury"
+  ]
+};
+
 
   // symbolMap and numberMap from your original code
   const symbolMap = { 'a': '@', 'i': '!', 's': '$', 'o': '()', 't': '+' };
