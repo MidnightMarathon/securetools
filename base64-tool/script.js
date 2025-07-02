@@ -83,3 +83,35 @@ function updateCounts() {
   const input = document.getElementById("input").value;
   document.getElementById("inputCount").textContent = input.length;
 }
+
+function handleFileUpload() {
+  const fileInput = document.getElementById("fileInput");
+  const output = document.getElementById("fileOutput");
+  const stripPrefix = document.getElementById("stripDataPrefix").checked;
+  const count = document.getElementById("fileOutputCount");
+
+  if (!fileInput.files.length) return;
+
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    let result = reader.result; // data:[mime];base64,[base64 string]
+
+    if (stripPrefix) {
+      const commaIndex = result.indexOf(",");
+      result = result.slice(commaIndex + 1);
+    }
+
+    output.value = result;
+    count.textContent = result.length;
+  };
+
+  reader.onerror = () => {
+    output.value = "⚠️ Failed to read file.";
+    count.textContent = 0;
+  };
+
+  reader.readAsDataURL(file);
+}
+
