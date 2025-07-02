@@ -235,3 +235,50 @@ a#download-link:hover {
   margin-top: 1.5rem;
   font-weight: 600;
 }
+
+.tools-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center; /* or space-between */
+}
+
+.tool-link {
+  flex: 1 1 200px; /* grow, shrink, basis */
+  max-width: 250px; /* max width of each card */
+  text-decoration: none;
+  color: inherit;
+}
+
+.tool-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  height: 300px; /* fixed height for all cards */
+  box-sizing: border-box;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: white;
+}
+
+.tool-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  flex-shrink: 0;
+}
+
+.tool-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.tool-desc {
+  text-align: center;
+  flex-grow: 1; /* so desc takes leftover space */
+  font-size: 0.9rem;
+  color: #555;
+}
+
