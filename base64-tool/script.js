@@ -115,3 +115,53 @@ function handleFileUpload() {
   reader.readAsDataURL(file);
 }
 
+function handleBase64Download() {
+  const base64Input = document.getElementById("downloadBase64Input").value.trim();
+  const filename = document.getElementById("downloadFilename").value.trim() || "download.bin";
+  const errorBox = document.getElementById("downloadError");
+  errorBox.textContent = "";
+
+  if (!base64Input) {
+    errorBox.textContent = "⚠️ Please paste Base64 content to download.";
+    return;
+  }
+
+  // Remove data: URL prefix if exists
+  const base64Data = base64Input.includes(",") ? base64Input.split(",")[1] : base64Input;
+
+  // Validate Base64 (basic check)
+  if (!/^[A-Za-z0-9+/=_-]+$/.test(base64Data)) {
+    errorBox.textContent = "⚠️ Invalid Base64 characters detected.";
+    return;
+  }
+
+  try {
+    // Decode base64 string to binary
+    const binaryString = atob(base64Data);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    // Create blob and trigger download
+    const blob = new Blob([bytes], { type: "application/octet-stream" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+
+    // Cleanup
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }, 100);
+
+  } catch {
+    errorBox.textContent = "⚠️ Decoding failed. Check your Base64 input.";
+  }
+}
+
