@@ -33,14 +33,12 @@ fetch("us.svg")
 
     pickNewTarget();
 
- states.forEach(id => {
+
+    states.forEach(id => {
   const el = document.getElementById(id);
   if (el) {
-    // Remove inline styles to allow CSS to control colors
-    el.removeAttribute("style");
-
-    // DO NOT set fill inline here; CSS handles base color now
-    // el.style.fill = "#cfd8dc";  <-- REMOVE or COMMENT OUT this line
+    el.removeAttribute("style");    // remove inline style attr
+    el.removeAttribute("fill");     // remove inline fill attr
 
     el.style.cursor = "pointer";
 
@@ -58,6 +56,7 @@ fetch("us.svg")
     });
   }
 });
+
 
   })
   .catch(err => console.error("Failed to load SVG:", err));
