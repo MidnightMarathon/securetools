@@ -68,7 +68,7 @@ path {
 }
 
 /* Hover effect - lighter blue */
-path:hover:not(.correct):not(.incorrect) {
+path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial) {
   fill: #a0c4ff !important;            /* softer blue highlight */
   filter: drop-shadow(0 0 5px #a0c4ff);
 }
@@ -81,42 +81,59 @@ path:hover:not(.correct):not(.incorrect) {
   filter: drop-shadow(0 0 8px #4caf50);
 }
 
-/* Update the animation */
-@keyframes pop-up {
-  0% {
-    transform: scale(1) translateY(0);
-  }
-  50% {
-    transform: scale(1.15) translateY(-4px); /* up and larger */
-  }
-  100% {
-    transform: scale(1) translateY(0);
-  }
-}
-
-
-/* Incorrect state - permanent red */
-.incorrect {
-  fill: #f44336 !important;
-  transition: fill 0.3s ease;
-  animation: pop 0.4s ease forwards;
-  filter: drop-shadow(0 0 8px #f44336);
-}
-
-/* Pop animation for feedback */
-@keyframes pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
-}
-
+/* Partial correct (after misses) - yellow */
 .partial {
   fill: #ffeb3b !important;
   animation: pop-up 0.4s ease forwards;
   filter: drop-shadow(0 0 6px #ffeb3b);
 }
 
+/* Fail state - red */
 .fail {
-  fill: #d32f2f !important;
-  filter: drop-shadow(0 0 8px #d32f2f);
+  fill: #f44336 !important;
+  filter: drop-shadow(0 0 8px #f44336);
+  cursor: pointer; /* user must click to acknowledge */
+}
+
+/* Given up - permanent fail (darker red) */
+.given-up {
+  fill: #b71c1c !important;
+  stroke: #7f0000 !important;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 8px #7f0000);
+  cursor: default; /* no more clicks needed */
+}
+
+/* Incorrect click flash animation */
+.incorrect {
+  animation: flash-red 0.8s;
+  fill: #f44336 !important;
+  filter: drop-shadow(0 0 8px #f44336);
+}
+
+/* Hover fix: do not highlight incorrect/failed/given-up states */
+.incorrect:hover,
+.fail:hover,
+.given-up:hover {
+  filter: drop-shadow(0 0 8px currentColor);
+  fill: inherit !important;
+  cursor: pointer;
+}
+
+/* Pop animation for feedback */
+@keyframes pop-up {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.15) translateY(-4px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes flash-red {
+  0%, 100% { fill: none; }
+  50% { fill: #e57373; }
 }
