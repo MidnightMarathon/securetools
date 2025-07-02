@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="/assets/styles.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js" defer></script>
   <script src="/password-generator/password-generator.js" defer></script>
+</head>
+<body>
   <nav>
     <a href="/" class="active">Home</a>
   </nav>
@@ -18,14 +20,14 @@
     <label for="length">Length: <span id="length-val">16</span></label>
     <input type="range" id="length" min="8" max="64" value="16" />
 
-    <div class="options-container">
-      <div class="options">
+    <div class="options-container" style="display:flex; align-items:center; gap:1rem; margin:1rem 0;">
+      <div class="options" style="display:flex; gap:1rem; flex-wrap:wrap;">
         <label><input type="checkbox" id="uppercase" checked /> Uppercase (A-Z)</label>
         <label><input type="checkbox" id="lowercase" checked /> Lowercase (a-z)</label>
         <label><input type="checkbox" id="numbers" checked /> Numbers (0-9)</label>
         <label><input type="checkbox" id="symbols" /> Symbols (!@#$...)</label>
       </div>
-      <button id="reroll" aria-label="Generate a new password">Reroll</button>
+      <button id="reroll" aria-label="Generate a new password" type="button">Reroll</button>
     </div>
 
     <label for="theme-select">Theme (optional):</label>
@@ -45,13 +47,13 @@
       <option value="mythology">Mythology</option>
     </select>
 
-    <textarea id="password" readonly aria-label="Generated password"></textarea>
+    <textarea id="password" readonly aria-label="Generated password" rows="3" style="width:100%; font-family: monospace; font-size:1.2rem; margin-top:1rem;"></textarea>
 
-    <div class="bar-label">Entropy Strength</div>
+    <div class="bar-label" style="margin-top: 1rem;">Entropy Strength</div>
     <div class="bar"><div id="entropy-fill" class="fill"></div></div>
     <div class="description" id="entropy-desc">Strong</div>
 
-    <div class="description">
+    <div class="description" style="margin-top: 1rem;">
       <strong>What is entropy?</strong><br>
       Entropy estimates how unpredictable your password is, based on character variety and length. Higher entropy means greater resistance to brute-force attacks.<br><br>
 
@@ -85,9 +87,10 @@
       id="test-password-input" 
       placeholder="Enter your password to test" 
       aria-label="Input your own password to test strength" 
+      style="width: 100%; padding: 0.5rem; font-size: 1rem; margin-bottom: 1rem;"
     />
 
-    <div class="bar-label" style="margin-top: 1rem;">Test Password Strength</div>
+    <div class="bar-label">Test Password Strength</div>
     <div class="bar"><div id="test-zxcvbn-fill" class="fill"></div></div>
     <div class="description" id="test-zxcvbn-desc" style="margin-bottom: 1rem;">
       Enter a password above to see how strong it is.
