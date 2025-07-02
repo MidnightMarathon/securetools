@@ -59,10 +59,9 @@ svg {
 }
 
 /* Style SVG paths (states) */
-/* Override inline fills with !important */
 path {
-  fill: #cfd8dc !important;            /* neutral base color */
-  stroke: #607d8b;
+  fill: #cfd8dc;            /* neutral base color */
+  stroke: #607d8b;          /* subtle outline */
   stroke-width: 1;
   transition: fill 0.3s ease, filter 0.3s ease;
   cursor: pointer;
