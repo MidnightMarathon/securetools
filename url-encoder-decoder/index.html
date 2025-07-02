@@ -2,92 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>URL Encoder & Decoder – SecureTools</title>
-  <meta name="description" content="Encode or decode URL text securely in your browser with SecureTools. No tracking. No data sent to a server." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Encode or decode URLs securely in your browser with SecureTools. No tracking, no data sent to a server." />
   <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
-  <link rel="stylesheet" href="/assets/style.css" />
-  <style>
-    .container {
-      max-width: 720px;
-      margin: 4rem auto;
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-      padding: 2rem;
-    }
-    textarea {
-      width: 100%;
-      min-height: 140px;
-      padding: 1rem;
-      font-family: monospace;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      resize: vertical;
-      margin-bottom: 1rem;
-    }
-    .btn-row {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-    button {
-      flex: 1;
-      padding: 0.75rem 1rem;
-      font-weight: bold;
-      font-size: 1rem;
-      border-radius: 9999px;
-      border: none;
-      cursor: pointer;
-      background-color: #2d9cdb;
-      color: white;
-      transition: background 0.2s;
-    }
-    button:hover {
-      background-color: #208ecf;
-    }
-    .copy-note {
-      color: green;
-      font-size: 0.875rem;
-      display: none;
-      text-align: right;
-    }
-    .output-section {
-      margin-bottom: 2rem;
-    }
-    .error {
-      color: crimson;
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-    }
-  </style>
+  <link rel="stylesheet" href="/assets/styles.css" />
 </head>
 <body>
   <nav>
-    <a href="/" class="pill-button home-pill">Home</a>
+    <a href="/" class="pill-button home-pill" aria-label="Go to SecureTools Home">Home</a>
   </nav>
 
   <main class="container">
     <h1>URL Encoder & Decoder</h1>
-    <p>Convert text to and from URL encoding directly in your browser. No data is sent anywhere.</p>
+    <p>Convert text to or from percent-encoded format (UTF-8 safe). All processing happens securely in your browser.</p>
 
     <label for="input">Input:</label>
-    <textarea id="input" placeholder="Enter text or URL-encoded string..."></textarea>
-    <div style="text-align:right; font-size: 0.9rem;">Input length: <span id="inputCount">0</span></div>
+    <textarea id="input" placeholder="Enter URL or text to encode/decode..." class="styled-textarea"></textarea>
 
     <div class="btn-row">
-      <button onclick="handleURLEncode()">Encode</button>
-      <button onclick="handleURLDecode()">Decode</button>
+      <button onclick="handleEncode()">Encode</button>
+      <button onclick="handleDecode()">Decode</button>
     </div>
 
-    <div class="output-section">
-      <label for="output">Output:</label>
-      <textarea id="output" readonly></textarea>
-      <div style="text-align:right; font-size: 0.9rem;">Length: <span id="outputCount">0</span></div>
-      <button onclick="copyToClipboard('output')">Copy Output</button>
-    </div>
+    <label for="output">Output:</label>
+    <textarea id="output" readonly placeholder="Result will appear here..." class="styled-textarea"></textarea>
+
+    <button onclick="copyOutput()">Copy Output</button>
 
     <div id="error" class="error"></div>
     <div id="copied" class="copy-note">Copied to clipboard!</div>
