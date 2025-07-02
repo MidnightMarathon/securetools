@@ -68,7 +68,7 @@ path {
 }
 
 /* Hover effect - lighter blue */
-path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial):not(.incorrect-temp) {
+path:hover:not(.correct):not(.incorrect-temp):not(.fail):not(.given-up):not(.partial) {
   fill: #a0c4ff !important;
   filter: drop-shadow(0 0 5px #a0c4ff);
 }
@@ -76,7 +76,6 @@ path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial)
 /* Correct state - permanent green */
 .correct {
   fill: #4caf50 !important;
-  transition: fill 0.3s ease;
   animation: pop-up 0.4s ease forwards;
   filter: drop-shadow(0 0 8px #4caf50);
 }
@@ -104,15 +103,13 @@ path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial)
   cursor: default;
 }
 
-/* Temporary incorrect guess */
+/* Incorrect temporary state - animated red flash */
 .incorrect-temp {
-  fill: #f44336 !important;
-  pointer-events: none;
   animation: fade-red 1s forwards;
-  filter: drop-shadow(0 0 6px #f44336);
+  pointer-events: none;
 }
 
-/* Pop animation for feedback */
+/* Pop animation for correct/partial */
 @keyframes pop-up {
   0% {
     transform: scale(1) translateY(0);
@@ -125,12 +122,13 @@ path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial)
   }
 }
 
+/* Fade out incorrect red */
 @keyframes fade-red {
   0% {
     fill: #f44336;
     filter: drop-shadow(0 0 6px #f44336);
   }
-  80% {
+  50% {
     fill: #f44336;
     filter: drop-shadow(0 0 2px #f44336);
   }
