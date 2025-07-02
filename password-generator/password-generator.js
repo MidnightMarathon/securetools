@@ -120,112 +120,100 @@ const THEMES = {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  function applyRandomCaseStyle(word) {
-    const styles = ['pascal', 'camel', 'alt'];
-    const style = styles[randomInt(styles.length)];
-    if (style === 'pascal') return capitalize(word.toLowerCase());
-    if (style === 'camel') return word.charAt(0).toLowerCase() + word.slice(1).toUpperCase();
-    if (style === 'alt') {
+function applyRandomCaseStyle(word) {
+  const styles = ['pascal', 'camel', 'alt'];
+  const style = styles[randomInt(styles.length)];
+
+  switch (style) {
+    case 'pascal':
+      return capitalize(word.toLowerCase());
+    case 'camel':
+      return word.charAt(0).toLowerCase() + word.slice(1).toUpperCase();
+    case 'alt':
       return word.split('').map((ch, i) =>
         i % 2 === 0 ? ch.toUpperCase() : ch.toLowerCase()
       ).join('');
-    }
-    return word;
+    default:
+      return word;
+  }
+}
+
+
+function secureBool() {
+  const array = new Uint8Array(1);
+  window.crypto.getRandomValues(array);
+  return array[0] > 127; // ~50% chance
+}
+
+function substituteChars(word, opts) {
+  let map = {};
+  if (opts.symbols && opts.numbers) {
+    map = { ...numberMap, ...symbolMap };
+  } else if (opts.symbols) {
+    map = symbolMap;
+  } else if (opts.numbers) {
+    map = numberMap;
   }
 
-  function substituteChars(word, opts) {
-    let map = {};
-    if (opts.symbols && opts.numbers) {
-      map = { ...numberMap, ...symbolMap };
-    } else if (opts.symbols) {
-      map = symbolMap;
-    } else if (opts.numbers) {
-      map = numberMap;
+  return word.split('').map(ch => {
+    const lower = ch.toLowerCase();
+    if (map[lower] && secureBool()) {
+      return map[lower];
     }
+    return ch;
+  }).join('');
+}
 
-    return word.split('').map(ch => {
-      const lower = ch.toLowerCase();
-      if (map[lower]) {
-        if (Math.random() > 0.5) {
-          return map[lower];
-        }
-      }
-      return ch;
-    }).join('');
-  }
-
-  function generatePassword(opts) {
-    if (opts.theme && THEMES[opts.theme]) {
-      const themeWords = THEMES[opts.theme];
-      let words = [];
-      while (words.length < Math.ceil(opts.length / 6)) {
-        const w = themeWords[randomInt(themeWords.length)];
-        words.push(w);
-      }
-      let password = words.join('');
-      password = applyRandomCaseStyle(password);
-      password = substituteChars(password, opts);
-
-      while (password.length < opts.length) {
-        let charPool = '';
-        if (opts.uppercase) charPool += CHARSETS.uppercase;
-        if (opts.lowercase) charPool += CHARSETS.lowercase;
-        if (opts.numbers) charPool += CHARSETS.numbers;
-        if (opts.symbols) charPool += CHARSETS.symbols;
-        if (!charPool) charPool = CHARSETS.lowercase + CHARSETS.uppercase + CHARSETS.numbers + CHARSETS.symbols;
-        password += charPool.charAt(randomInt(charPool.length));
-      }
-      return password.slice(0, opts.length);
+function generatePassword(opts) {
+  if (opts.theme && THEMES[opts.theme]) {
+    const themeWords = THEMES[opts.theme];
+    let words = [];
+    while (words.length < Math.ceil(opts.length / 6)) {
+      const w = themeWords[randomInt(themeWords.length)];
+      words.push(applyRandomCaseStyle(w));
     }
+    let password = words.join('');
+    password = substituteChars(password, opts);
 
-    let charPool = '';
-    if (opts.uppercase) charPool += CHARSETS.uppercase;
-    if (opts.lowercase) charPool += CHARSETS.lowercase;
-    if (opts.numbers) charPool += CHARSETS.numbers;
-    if (opts.symbols) charPool += CHARSETS.symbols;
-    if (!charPool) charPool = CHARSETS.lowercase + CHARSETS.uppercase + CHARSETS.numbers + CHARSETS.symbols;
-
-    let password = '';
-    for (let i = 0; i < opts.length; i++) {
+    while (password.length < opts.length) {
+      let charPool = '';
+      if (opts.uppercase) charPool += CHARSETS.uppercase;
+      if (opts.lowercase) charPool += CHARSETS.lowercase;
+      if (opts.numbers) charPool += CHARSETS.numbers;
+      if (opts.symbols) charPool += CHARSETS.symbols;
+      if (!charPool) charPool = CHARSETS.lowercase + CHARSETS.uppercase + CHARSETS.numbers + CHARSETS.symbols;
       password += charPool.charAt(randomInt(charPool.length));
     }
-    return password;
+    return password.slice(0, opts.length);
   }
 
-  function calcEntropy(password, opts) {
-    let charsetLength = 0;
+  let charPool = '';
+  if (opts.uppercase) charPool += CHARSETS.uppercase;
+  if (opts.lowercase) charPool += CHARSETS.lowercase;
+  if (opts.numbers) charPool += CHARSETS.numbers;
+  if (opts.symbols) charPool += CHARSETS.symbols;
+  if (!charPool) charPool = CHARSETS.lowercase + CHARSETS.uppercase + CHARSETS.numbers + CHARSETS.symbols;
 
-    if (opts.theme && THEMES[opts.theme]) {
-      charsetLength = THEMES[opts.theme].length;
-    } else {
-      if (opts.uppercase) charsetLength += CHARSETS.uppercase.length;
-      if (opts.lowercase) charsetLength += CHARSETS.lowercase.length;
-      if (opts.numbers) charsetLength += CHARSETS.numbers.length;
-      if (opts.symbols) charsetLength += CHARSETS.symbols.length;
-    }
-    if (charsetLength === 0) return 0;
-    return password.length * Math.log2(charsetLength);
+  let password = '';
+  for (let i = 0; i < opts.length; i++) {
+    password += charPool.charAt(randomInt(charPool.length));
   }
+  return password;
+}
 
-  function entropyColor(entropy) {
-    const min = 0;
-    const mid = 30;
-    const max = 60;
 
-    if (entropy <= mid) {
-      const ratio = entropy / mid;
-      const r = 255;
-      const g = Math.round(255 * ratio);
-      const b = 0;
-      return `rgb(${r},${g},${b})`;
-    } else {
-      const ratio = (entropy - mid) / (max - mid);
-      const r = Math.round(255 * (1 - ratio));
-      const g = Math.round(255 - (127 * ratio));
-      const b = 0;
-      return `rgb(${r},${g},${b})`;
-    }
-  }
+function entropyColor(entropy) {
+  const clamped = Math.min(Math.max(entropy, 0), 80);
+  const percent = clamped / 80;
+
+  // Gradient from dark red → red → orange → yellow → green
+  if (percent < 0.25) return "#8B0000";      // Dark Red
+  if (percent < 0.4)  return "#FF0000";      // Red
+  if (percent < 0.6)  return "#FF8C00";      // Orange
+  if (percent < 0.8)  return "#FFD700";      // Yellow
+  return "#00C853";                          // Green
+}
+
 
   function entropyDescription(entropy) {
     if (entropy < 20) return "Very Weak";
