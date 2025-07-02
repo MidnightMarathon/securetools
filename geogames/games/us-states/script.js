@@ -45,27 +45,43 @@ fetch("us.svg")
         el.style.cursor = "pointer";
 
         el.addEventListener("click", () => {
+          // If current target is failed, must click it correctly first
+          if (attempts[currentTarget] >= 5) {
+            if (id === currentTarget) {
+              // Correctly clicked failed target, remove fail and mark correct
+              el.classList.remove("fail");
+              el.classList.add("correct");
+              score++;  // maybe count score here if you want
+              updateScoreDisplay();
+              pickNewTarget();
+            } else {
+              // Clicking other states while current is fail: no effect
+              el.classList.add("incorrect");
+              setTimeout(() => el.classList.remove("incorrect"), 800);
+            }
+            return; // prevent rest of code running
+          }
+
           if (id !== currentTarget) {
-            // Wrong guess
+            // Wrong guess, increment attempts for current target
             attempts[currentTarget]++;
             const targetEl = document.getElementById(currentTarget);
 
             if (attempts[currentTarget] >= 5) {
               targetEl.classList.add("fail");
-              // Do NOT move to next target until clicked correctly
-            } else {
-              el.classList.add("incorrect");
-              setTimeout(() => el.classList.remove("incorrect"), 800);
             }
+
+            el.classList.add("incorrect");
+            setTimeout(() => el.classList.remove("incorrect"), 800);
 
           } else {
             // Correct guess
-            const el = document.getElementById(currentTarget);
             const wrongGuesses = attempts[currentTarget];
 
             if (wrongGuesses >= 5) {
+              // Already handled above, but just in case
               el.classList.add("fail");
-              // No score increase
+              // No score increment
             } else if (wrongGuesses > 0) {
               el.classList.add("partial");
               score++;
