@@ -46,7 +46,7 @@ h1 {
 /* Responsive map container */
 .map-container {
   max-width: 800px;
-  width: 100%;          /* ensure it scales */
+  width: 100%;
   margin: 0 auto;
   user-select: none;
 }
@@ -60,16 +60,16 @@ svg {
 
 /* Style SVG paths (states) */
 path {
-  fill: #cfd8dc;            /* neutral base color */
-  stroke: #607d8b;          /* subtle outline */
+  fill: #cfd8dc;
+  stroke: #607d8b;
   stroke-width: 1;
   transition: fill 0.3s ease, filter 0.3s ease;
   cursor: pointer;
 }
 
 /* Hover effect - lighter blue */
-path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial) {
-  fill: #a0c4ff !important;            /* softer blue highlight */
+path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial):not(.incorrect-temp) {
+  fill: #a0c4ff !important;
   filter: drop-shadow(0 0 5px #a0c4ff);
 }
 
@@ -92,7 +92,7 @@ path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial)
 .fail {
   fill: #f44336 !important;
   filter: drop-shadow(0 0 8px #f44336);
-  cursor: pointer; /* user must click to acknowledge */
+  cursor: pointer;
 }
 
 /* Given up - permanent fail (darker red) */
@@ -101,23 +101,15 @@ path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial)
   stroke: #7f0000 !important;
   stroke-width: 2;
   filter: drop-shadow(0 0 8px #7f0000);
-  cursor: default; /* no more clicks needed */
+  cursor: default;
 }
 
-.incorrect {
+/* Temporary incorrect guess */
+.incorrect-temp {
   fill: #f44336 !important;
-  transition: fill 0.6s ease;
+  pointer-events: none;
   animation: fade-red 1s forwards;
   filter: drop-shadow(0 0 6px #f44336);
-}
-
-/* Hover fix: do not highlight incorrect/failed/given-up states */
-.incorrect:hover,
-.fail:hover,
-.given-up:hover {
-  filter: drop-shadow(0 0 8px currentColor);
-  fill: inherit !important;
-  cursor: pointer;
 }
 
 /* Pop animation for feedback */
@@ -132,7 +124,6 @@ path:hover:not(.correct):not(.incorrect):not(.fail):not(.given-up):not(.partial)
     transform: scale(1) translateY(0);
   }
 }
-
 
 @keyframes fade-red {
   0% {
