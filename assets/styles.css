@@ -91,19 +91,28 @@ body {
 main {
   max-width: 960px;
   margin: auto;
+  background: #ffffff;
+  padding: 2rem 2rem 3rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
   margin-top: 4rem; /* push main down so pills don't overlap */
   width: 100%;
-  padding: 0 1rem;
 }
 
-/* Section heading */
-h1 {
+/* Section headings */
+main section {
+  margin-bottom: 3rem;
+}
+
+main section h2 {
   font-weight: 700;
-  font-size: 2.25rem;
-  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  color: #1d1d1f;
   text-align: center;
 }
 
+/* Description paragraph */
 p.description {
   font-size: 1.15rem;
   text-align: center;
@@ -112,35 +121,37 @@ p.description {
   color: #444;
 }
 
-/* Carousel wrapper and container */
-.carousel-wrapper {
-  position: relative;
-  width: 100vw;
-  overflow: hidden;
-  margin: 2rem 0;
+/* Tools grid */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns desktop */
+  gap: 2rem;
 }
 
-.carousel {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding: 0 2rem;
+/* Responsive breakpoints */
+@media (max-width: 960px) {
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns tablet */
+  }
 }
 
-/* Hide default scrollbar */
-.carousel::-webkit-scrollbar {
-  display: none;
-}
-.carousel {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+@media (max-width: 600px) {
+  .tools-grid {
+    grid-template-columns: 1fr; /* 1 column mobile */
+  }
 }
 
-/* Tool tile styling for carousel */
+/* Tool link wrapper */
+.tool-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Individual tool tile */
 .tool-tile {
-  flex: 0 0 40vw;  /* fixed width for 2.5 tiles per viewport */
-  max-width: 40vw;
   background: #fff;
   border-radius: 20px;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
@@ -150,7 +161,7 @@ p.description {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height: 300px;
+  height: 300px;  /* fixed height for uniformity */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-align: center;
 }
@@ -160,12 +171,14 @@ p.description {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
+/* Tool icon */
 .tool-icon {
   font-size: 3.5rem;
   margin-bottom: 1rem;
   color: #2d9cdb;
 }
 
+/* Tool name */
 .tool-name {
   font-weight: 700;
   font-size: 1.25rem;
@@ -173,6 +186,7 @@ p.description {
   color: #1d1d1f;
 }
 
+/* Tool description */
 .tool-desc {
   flex-grow: 1;
   font-size: 1rem;
@@ -181,50 +195,17 @@ p.description {
   margin: 0;
 }
 
-/* Apple-style textarea and text input */
-
-textarea,
-input[type="text"],
-input[type="file"],
-textarea[readonly] {
-  width: 100%;
-  min-height: 120px;
-  padding: 1rem 1.25rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #1c1c1e;
-  background-color: #f2f2f7;
-  border: 1px solid #d2d2d7;
-  border-radius: 12px;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-  resize: vertical;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
-  outline: none;
-  box-sizing: border-box;
-}
-
-textarea:focus,
-input[type="text"]:focus,
-input[type="file"]:focus,
-textarea[readonly]:focus {
-  border-color: #007aff;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
-  background-color: #fff;
-  color: #000;
-  outline: none;
-}
-
-/* Optional smaller height for inputs like filename or checkboxes */
-input[type="text"] {
-  min-height: 2.5rem;
-  padding: 0.5rem 1rem;
-}
-
-/* Make readonly textareas a bit lighter background */
-textarea[readonly] {
-  background-color: #ececec;
+/* Footer */
+footer {
+  margin-top: auto;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
   color: #555;
-  cursor: text;
+}
+
+/* Accessibility: focus outlines */
+.tool-tile:focus-visible {
+  outline: 3px solid #2d9cdb;
+  outline-offset: 3px;
 }
