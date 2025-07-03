@@ -9,41 +9,43 @@ nav {
   animation: fadeIn 0.8s ease-out both;
 }
 
-/* Base nav link styling */
+/* Glassmorphism pill nav links */
 nav a {
   display: inline-block;
-  padding: 0.4rem 1rem;
-  background-color: #fff; /* White pills */
+  padding: 0.5rem 1.2rem;
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 9999px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 0.85rem;
-  color: #333;
+  font-size: 0.9rem;
+  color: #1d1d1f;
   text-decoration: none;
-  font-weight: 600;  /* Bold all the time */
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: saturate(180%) blur(10px);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  transition: all 0.3s ease;
 }
 
 /* Hover state */
 nav a:hover {
-  background-color: #eaeaea;
-  border-color: rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.5);
   color: #2d9cdb;
-  text-decoration: none; /* No underline */
+  text-decoration: none;
 }
 
 /* Focus (keyboard/tab) state */
 nav a:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(45, 156, 219, 0.4);
+  box-shadow: 0 0 0 3px rgba(45, 156, 219, 0.5);
 }
 
 /* Active link (for current page) */
 nav a.active {
-  background-color: #d0d0d5;
-  font-weight: 600;
-  border-color: rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.55);
+  font-weight: 700;
+  border-color: rgba(45, 156, 219, 0.7);
+  color: #1a73e8;
 }
 
 /* Fade-in animation */
@@ -87,109 +89,101 @@ body {
   }
 }
 
-/* Main container */
+/* Main container tile */
 main {
-  max-width: 440px;
+  max-width: 960px;
   margin: auto;
-  background: #ffffff;
-  padding: 2rem;
+  padding: 2rem 1rem 3rem;
+  margin-top: 4rem;
+  background: #ffffff;           /* White tile */
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  margin-top: 4rem; /* push main down so pills don't overlap */
+  color: #1d1d1f;
 }
 
-/* Input + Button group */
-.input-group {
+/* Remove tile background on home */
+main.no-tile {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* Heading */
+h1 {
+  font-weight: 700;
+  font-size: 2.25rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Description */
+p.description {
+  font-size: 1.15rem;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 3rem auto;
+  color: #444;
+}
+
+/* Tools grid layout: 3 columns wide */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* Tool card link */
+.tool-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Tool tile card */
+.tool-tile {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  padding: 2rem 1.5rem;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
+  height: 300px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
 }
 
-.input-group input#qr-input {
-  width: 100%;
-  max-width: 100%;
+.tool-tile:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
-.input-group button#generate-btn {
-  width: auto;
-  min-width: 160px;
-  align-self: center;
+/* Tool icon */
+.tool-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: #2d9cdb;
 }
 
-/* Input field */
-input#qr-input {
-  padding: 0.75rem 1rem;
+/* Tool name */
+.tool-name {
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #1d1d1f;
+}
+
+/* Tool description */
+.tool-desc {
+  flex-grow: 1;
   font-size: 1rem;
-  margin: 1rem 0 0 0;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  transition: border 0.2s ease;
-}
-
-input#qr-input:focus {
-  border-color: #2d9cdb;
-  outline: none;
-}
-
-/* Generate button */
-button#generate-btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background: #2d9cdb;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-button#generate-btn:hover {
-  background: #1c82c1;
-}
-
-/* Error message */
-#error-msg {
-  color: #d32f2f;
-  margin-top: 1rem;
-  font-weight: 600;
-}
-
-
-/* Download controls */
-#download-controls {
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-/* Format dropdown */
-#format-select {
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-/* Download link button */
-a#download-link {
-  display: inline-block;
-  padding: 0.5rem 1.25rem;
-  background: #27ae60;
-  color: white;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-a#download-link:hover {
-  background: #219150;
+  color: #666;
+  line-height: 1.4;
+  margin: 0;
 }
 
 /* Password strength bar styles */
@@ -215,197 +209,11 @@ a#download-link:hover {
   font-weight: 600;
 }
 
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 2rem;
-}
-
-.tool-link {
-  display: block;
-  width: 100%;
-  height: 100%;
-  color: inherit;
-  text-decoration: none;
-}
-
-.tool-tile {
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-  padding: 2rem 1.5rem;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  height: 300px;  /* fixed height */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* Footer */
+footer {
+  margin-top: auto;
+  padding: 1.5rem 1rem;
   text-align: center;
-}
-
-.tool-icon {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  color: #2d9cdb;
-}
-
-.tool-name {
-  font-weight: 700;
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: #1d1d1f;
-}
-
-.tool-desc {
-  flex-grow: 1;
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.4;
-  margin: 0;
-}
-
-/* Apple-style textarea and text input */
-
-textarea,
-input[type="text"],
-input[type="file"],
-textarea[readonly] {
-  width: 100%;
-  min-height: 120px;
-  padding: 1rem 1.25rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #1c1c1e;
-  background-color: #f2f2f7;
-  border: 1px solid #d2d2d7;
-  border-radius: 12px;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-  resize: vertical;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
-  outline: none;
-  box-sizing: border-box;
-}
-
-textarea:focus,
-input[type="text"]:focus,
-input[type="file"]:focus,
-textarea[readonly]:focus {
-  border-color: #007aff;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
-  background-color: #fff;
-  color: #000;
-  outline: none;
-}
-
-/* Optional smaller height for inputs like filename or checkboxes */
-input[type="text"] {
-  min-height: 2.5rem;
-  padding: 0.5rem 1rem;
-}
-
-/* Make readonly textareas a bit lighter background */
-textarea[readonly] {
-  background-color: #ececec;
+  font-size: 0.875rem;
   color: #555;
-  cursor: text;
-}
-
-/* === New QR Code Generator Styles (Glass Morphism + Advanced Panel) === */
-
-.qr-tile {
-  background: rgba(255 255 255 / 0.4);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255 255 255 / 0.18);
-  padding: 2rem 1.5rem;
-  margin: 2rem auto;
-  max-width: 440px;
-  transition: all 0.3s ease;
-}
-
-#qr-wrapper {
-  margin: 2rem auto 1rem;
-  width: 280px;
-  height: 280px;
-}
-
-#qr-code {
-  width: 100%;
-  height: 100%;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-input#qr-input {
-  background: rgba(255 255 255 / 0.75);
-  border-radius: 12px;
-  border: none;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  color: #1d1d1f;
-  box-shadow: 0 4px 30px rgba(31, 38, 135, 0.1);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  transition: box-shadow 0.3s ease;
-}
-
-input#qr-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px #2d9cdbaa;
-}
-
-/* Button */
-button#generate-btn {
-  background: #2d9cdb;
-  color: white;
-  font-weight: 700;
-  border: none;
-  border-radius: 12px;
-  padding: 0.75rem 1.5rem;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  box-shadow: 0 4px 15px #2d9cdbaa;
-}
-
-button#generate-btn:hover {
-  background: #1c82c1;
-  box-shadow: 0 6px 20px #1c82c1cc;
-}
-
-/* Download Controls */
-#download-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-/* Advanced controls panel - initially hidden */
-.advanced-controls {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease, padding 0.5s ease;
-  padding: 0 0;
-  background: rgba(255 255 255 / 0.35);
-  border-radius: 16px;
-  margin-top: 1rem;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255 255 255 / 0.2);
-}
-
-/* Advanced controls visible */
-.advanced-controls.open {
-  max-height: 600px; /* enough height to show content */
-  padding: 1rem 1.5rem;
 }
