@@ -9,46 +9,40 @@ nav {
   animation: fadeIn 0.8s ease-out both;
 }
 
-/* Glassmorphism pill nav links */
+/* Base nav link styling */
 nav a {
   display: inline-block;
-  padding: 0.5rem 1.2rem;
-  background: rgba(255, 255, 255, 0.25);
+  padding: 0.4rem 1rem;
+  background-color: #fff;
   border-radius: 9999px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 0.9rem;
-  color: #1d1d1f;
+  font-size: 0.85rem;
+  color: #333;
   text-decoration: none;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: saturate(180%) blur(10px);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
-/* Hover state */
 nav a:hover {
-  background: rgba(255, 255, 255, 0.4);
-  border-color: rgba(255, 255, 255, 0.5);
+  background-color: #eaeaea;
+  border-color: rgba(0, 0, 0, 0.15);
   color: #2d9cdb;
   text-decoration: none;
 }
 
-/* Focus (keyboard/tab) state */
 nav a:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(45, 156, 219, 0.5);
+  box-shadow: 0 0 0 2px rgba(45, 156, 219, 0.4);
 }
 
-/* Active link (for current page) */
 nav a.active {
-  background: rgba(255, 255, 255, 0.55);
-  font-weight: 700;
-  border-color: rgba(45, 156, 219, 0.7);
-  color: #1a73e8;
+  background-color: #d0d0d5;
+  font-weight: 600;
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Fade-in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -89,131 +83,217 @@ body {
   }
 }
 
-/* Main container tile */
+/* Main container */
 main {
-  max-width: 960px;
+  max-width: 440px;
   margin: auto;
-  padding: 2rem 1rem 3rem;
-  margin-top: 4rem;
-  background: #ffffff;           /* White tile */
+  background: #ffffff;
+  padding: 2rem;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  color: #1d1d1f;
+  margin-top: 4rem;
 }
 
-/* Remove tile background on home */
-main.no-tile {
-  background: transparent !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-}
-
-/* Heading */
-h1 {
-  font-weight: 700;
-  font-size: 2.25rem;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-/* Description */
-p.description {
-  font-size: 1.15rem;
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto 3rem auto;
-  color: #444;
-}
-
-/* Tools grid layout: 3 columns wide */
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-}
-
-/* Tool card link */
-.tool-link {
-  display: block;
-  width: 100%;
-  height: 100%;
-  color: inherit;
-  text-decoration: none;
-}
-
-/* Tool tile card */
-.tool-tile {
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-  padding: 2rem 1.5rem;
-  cursor: pointer;
+/* Input + Button group */
+.input-group {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  height: 300px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-align: center;
+  gap: 0.75rem;
 }
 
-.tool-tile:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-}
-
-/* Tool icon */
-.tool-icon {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  color: #2d9cdb;
-}
-
-/* Tool name */
-.tool-name {
-  font-weight: 700;
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: #1d1d1f;
-}
-
-/* Tool description */
-.tool-desc {
-  flex-grow: 1;
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.4;
-  margin: 0;
-}
-
-/* Password strength bar styles */
-
-.bar {
+.input-group input#qr-input {
   width: 100%;
-  height: 14px;
-  background: #ddd;
-  border-radius: 7px;
-  overflow: hidden;
-  margin-top: 0.4rem;
+  max-width: 100%;
 }
 
-.fill {
-  height: 100%;
-  width: 0%;
+.input-group button#generate-btn {
+  width: auto;
+  min-width: 160px;
+  align-self: center;
+}
+
+/* Input field */
+input#qr-input {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  margin: 1rem 0 0 0;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  transition: border 0.2s ease;
+}
+
+input#qr-input:focus {
+  border-color: #2d9cdb;
+  outline: none;
+}
+
+/* Generate button */
+button#generate-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
   background: #2d9cdb;
-  transition: width 0.3s ease, background-color 0.3s ease;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.bar-label {
-  margin-top: 1.5rem;
+button#generate-btn:hover {
+  background: #1c82c1;
+}
+
+/* Error message */
+#error-msg {
+  color: #d32f2f;
+  margin-top: 1rem;
   font-weight: 600;
 }
 
-/* Footer */
-footer {
-  margin-top: auto;
-  padding: 1.5rem 1rem;
-  text-align: center;
-  font-size: 0.875rem;
-  color: #555;
+/* QR wrapper and scaling */
+#qr-wrapper {
+  width: 160px;
+  height: 160px;
+  margin: 2rem auto 1rem;
+  transform-origin: top left;
+}
+
+/* QR container */
+#qr-code {
+  width: 160px;
+  height: 160px;
+}
+
+#qr-code canvas,
+#qr-code svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Download controls */
+#download-controls {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Format dropdown */
+#format-select {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Download link button */
+a#download-link {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background: #27ae60;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+a#download-link:hover {
+  background: #219150;
+}
+
+/* Advanced controls slide toggle */
+.advanced-controls {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  margin-top: 0;
+  transition: max-height 0.5s ease, opacity 0.5s ease, margin-top 0.5s ease;
+  display: flex;
+  align-items: center;
+}
+
+/* When active show */
+.advanced-controls.active {
+  max-height: 100px; /* adjust as needed */
+  opacity: 1;
+  margin-top: 1.5rem;
+}
+
+/* Dark mode toggle switch styling */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+  background-color: #2d9cdb;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* Dark mode styles */
+body.dark-mode {
+  background: linear-gradient(135deg, #1e1e2f, #27293d, #3a3f58);
+  color: #ddd;
+}
+
+body.dark-mode main {
+  background: #222633;
+  color: #ddd;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode button {
+  background-color: #333844;
+  color: #ddd;
+  border-color: #555;
+}
+
+body.dark-mode a#download-link {
+  background: #3a9bdc;
+}
+
+body.dark-mode a#download-link:hover {
+  background: #2a80c9;
 }
