@@ -121,13 +121,13 @@ body {
 
 /* Correct guess */
 .map-container path.correct {
-  fill: #a8df8e;
+  fill: #a8df8e !important;
   pointer-events: none;
 }
 
 /* Partial correct */
 .map-container path.partial {
-  fill: #fdfd96;
+  fill: #fdfd96 !important;
   pointer-events: none;
 }
 
@@ -141,13 +141,13 @@ body {
 
 /* Fail */
 .map-container path.fail {
-  fill: #ff6666;
+  fill: #ff6666 !important;
   animation: pulseRed 1.5s infinite alternate;
 }
 
 /* Given up */
 .map-container path.given-up {
-  fill: #8b0000;
+  fill: #8b0000 !important;
   pointer-events: none;
 }
 
