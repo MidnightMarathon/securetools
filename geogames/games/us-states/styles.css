@@ -1,6 +1,5 @@
-/* Base styles from SecureTools */
+/* Base styles */
 
-/* Animate gradient background */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -11,7 +10,7 @@ body {
   margin: 0;
   padding: 2rem 1rem;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
@@ -28,57 +27,101 @@ body {
   }
 }
 
-/* Main container styling from SecureTools */
+/* Frosted glass tile container */
 #game-container {
   width: 85vw;
-  max-width: 1200px;
-  margin: 4rem auto 2rem auto;
-  padding: 2.5rem;
+  max-width: 900px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: saturate(180%) blur(15px);
+  -webkit-backdrop-filter: saturate(180%) blur(15px);
   border-radius: 20px;
-
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  padding: 2rem 2.5rem 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
 }
 
+/* Info bar styling */
+#info-bar {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
 
-/* Your map styles adapted inside the container */
+/* Sections inside info bar */
+.info-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
 
+/* Title + instructions grouping */
+.info-section.title {
+  flex-grow: 1;
+  min-width: 250px;
+  gap: 1rem;
+}
+
+.info-section.title h1 {
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin: 0;
+  color: #1d1d1f;
+}
+
+.instruction {
+  font-size: 1rem;
+  color: #555;
+  font-weight: 500;
+}
+
+/* Label styling */
+.label {
+  font-weight: 600;
+  color: #444;
+}
+
+/* Target state styling */
 #target-state {
-  font-size: 1.8em;
-  font-weight: bold;
-  color: #28a745; /* Green for active target */
-  margin-bottom: 25px;
-  min-height: 1.8em; /* Prevent layout shift */
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #28a745; /* green */
 }
 
+/* Score styling */
+#score, #total-states, #percentage {
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+/* Map container */
 #map-container {
   width: 100%;
-  max-width: 1000px;
-  height: auto;
+  max-width: 900px;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
+/* SVG styles */
 #map-container svg {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
 /* SVG path default */
 .map-container path {
-  fill: #cfd8dc; /* Light blue-grey */
-  stroke: #607d8b; /* Darker blue-grey */
+  fill: #cfd8dc;
+  stroke: #607d8b;
   stroke-width: 1px;
   transition: filter 0.3s ease, transform 0.3s ease, fill 0.3s ease;
   cursor: pointer;
@@ -151,91 +194,4 @@ body {
     transform: scale(1) translateY(0);
     filter: drop-shadow(0 4px 6px rgba(72, 187, 120, 0.3));
   }
-}
-
-/* Optional nav styling from SecureTools for pills navigation */
-nav {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  z-index: 10;
-  animation: fadeIn 0.8s ease-out both;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0.4rem 1rem;
-  background-color: #fff;
-  border-radius: 9999px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 0.85rem;
-  color: #333;
-  text-decoration: none;
-  font-weight: 600;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
-}
-
-nav a:hover {
-  background-color: #eaeaea;
-  border-color: rgba(0, 0, 0, 0.15);
-  color: #2d9cdb;
-  text-decoration: none;
-}
-
-nav a:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(45, 156, 219, 0.4);
-}
-
-nav a.active {
-  background-color: #d0d0d5;
-  font-weight: 600;
-  border-color: rgba(0, 0, 0, 0.2);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-#info-bar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  width: 100%;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 1rem;
-}
-
-#info-bar h1 {
-  font-size: 1.6rem;
-  margin: 0;
-  flex: 1;
-  text-align: left;
-}
-
-.info-section {
-  display: flex;
-  gap: 0.4rem;
-  align-items: center;
-  font-size: 1rem;
-  flex-shrink: 0;
-  color: #222;
-}
-
-.label {
-  font-weight: 600;
-  color: #007bff;
 }
