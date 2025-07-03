@@ -51,7 +51,9 @@ function pickNewTarget() {
 
 function updateScoreDisplay() {
   const percentage = (total > 0) ? ((score / total) * 100).toFixed(1) : 0;
-  document.getElementById("score").textContent = `${score} / ${total} (${percentage}%)`;
+  document.getElementById("score").textContent = score;
+  document.getElementById("total-states").textContent = total;
+  document.getElementById("percentage").textContent = `${percentage}%`;
 }
 
 function handleStateClick(clickedId) {
