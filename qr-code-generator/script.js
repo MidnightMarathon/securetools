@@ -1,107 +1,146 @@
-// script.js
+document.addEventListener('DOMContentLoaded', () => {
+  const qrInput = document.getElementById('qr-input');
+  const generateBtn = document.getElementById('generate-btn');
+  const qrWrapper = document.getElementById('qr-wrapper');
+  const qrCodeContainer = document.getElementById('qr-code');
+  const downloadControls = document.getElementById('download-controls');
+  const formatSelect = document.getElementById('format-select');
+  const downloadLink = document.getElementById('download-link');
+  const errorMsg = document.getElementById('error-msg');
+  const advancedToggle = document.getElementById('advanced-toggle');
+  const advControls = document.querySelector('.advanced-controls');
+  const darkModeToggle = document.getElementById('dark-mode-toggle');
+  const copyBtn = document.getElementById('copy-btn');
 
-// On-screen QR code instance (300x300)
-const qrCode = new QRCodeStyling({
-  width: 300,
-  height: 300,
-  data: "",
-  dotsOptions: {
-    color: "#000",
-    type: "square",
-  },
-  backgroundOptions: {
-    color: "#ffffff",
-  },
-  imageOptions: {
-    crossOrigin: "anonymous",
-    margin: 5,
-  },
-});
+  let qrCode = null;
 
-const qrCodeContainer = document.getElementById("qr-code");
-qrCode.append(qrCodeContainer);
-
-const inputEl = document.getElementById("qr-input");
-const generateBtn = document.getElementById("generate-btn");
-const qrWrapper = document.getElementById("qr-wrapper");
-const errorMsg = document.getElementById("error-msg");
-const downloadControls = document.getElementById("download-controls");
-const formatSelect = document.getElementById("format-select");
-const downloadLink = document.getElementById("download-link");
-
-function showError(msg) {
-  errorMsg.textContent = msg;
-  errorMsg.style.display = "block";
-}
-
-function hideError() {
-  errorMsg.textContent = "";
-  errorMsg.style.display = "none";
-}
-
-function isValidInput(text) {
-  return text.trim().length > 0;
-}
-
-// Generate QR on button click
-generateBtn.addEventListener("click", () => {
-  const inputValue = inputEl.value.trim();
-
-  if (!isValidInput(inputValue)) {
-    showError("Please enter a valid URL or text.");
-    qrWrapper.style.display = "none";
-    downloadControls.style.display = "none";
-    return;
+  // Function to validate URL (basic)
+  function isValidUrl(url) {
+    try {
+      const _ = new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
-  hideError();
+  // Create QRCodeStyling instance
+  function createQRCode(data) {
+    if (qrCode) {
+      qrCode.update({ data });
+    } else {
+      qrCode = new QRCodeStyling({
+        width: 160,
+        height: 160,
+        data: data,
+        image: "", // no logo for now
+        dotsOptions: {
+          color: "#000",
+          type: "rounded"
+        },
+        backgroundOptions: {
+          color: "transparent"
+        },
+        imageOptions: {
+          crossOrigin: "anonymous",
+          margin: 5
+        }
+      });
+      qrCode.append(qrCodeContainer);
+    }
+  }
 
-  // Update on-screen QR code
-  qrCode.update({
-    data: inputValue,
-  });
+  // Generate button click handler
+  generateBtn.addEventListener('click', () => {
+    const url = qrInput.value.trim();
+    if (!url) {
+      errorMsg.style.display = "block";
+      errorMsg.textContent = "Please enter a URL.";
+      qrWrapper.style.display = "none";
+      downloadControls.style.display = "none";
+      return;
+    }
+    if (!isValidUrl(url)) {
+      errorMsg.style.display = "block";
+      errorMsg.textContent = "Invalid URL format.";
+      qrWrapper.style.display = "none";
+      downloadControls.style.display = "none";
+      return;
+    }
 
-  qrWrapper.style.display = "block";
-  downloadControls.style.display = "block";
-
-  // Update download link for current input & selected format
-  updateDownloadLink();
-});
-
-// Update download link for the selected format & input value
-function updateDownloadLink() {
-  const format = formatSelect.value;
-  const inputValue = inputEl.value.trim();
-
-  // Create a temporary QR code instance at 1080x1080 for high-res download
-  const qrDownload = new QRCodeStyling({
-    width: 1080,
-    height: 1080,
-    data: inputValue,
-    dotsOptions: {
-      color: "#000000",
-      type: "rounded",
-    },
-    backgroundOptions: {
-      color: "#ffffff",
-    },
-    imageOptions: {
-      crossOrigin: "anonymous",
-      margin: 5,
-    },
-  });
-
-  qrDownload.getRawData(format).then((blob) => {
-    const url = URL.createObjectURL(blob);
-    downloadLink.href = url;
-    downloadLink.download = `securetools-qr.${format}`;
-  });
-}
-
-// Update download link if user changes format selection
-formatSelect.addEventListener("change", () => {
-  if (qrWrapper.style.display === "block") {
+    errorMsg.style.display = "none";
+    createQRCode(url);
+    qrWrapper.style.display = "block";
+    downloadControls.style.display = "flex";
     updateDownloadLink();
-  }
-});
+  });
 
+  // Update download link based on selected format
+  function updateDownloadLink() {
+    const format = formatSelect.value;
+    if (!qrCode) return;
+    qrCode.getRawData(format).then(blob => {
+      const url = URL.createObjectURL(blob);
+      downloadLink.href = url;
+      downloadLink.download = `qr-code.${format}`;
+    });
+  }
+
+  formatSelect.addEventListener('change', updateDownloadLink);
+
+  // Advanced controls toggle slide
+  advancedToggle.addEventListener('change', () => {
+    if (advancedToggle.checked) {
+      advControls.classList.add('active');
+      advControls.setAttribute('aria-hidden', 'false');
+    } else {
+      advControls.classList.remove('active');
+      advControls.setAttribute('aria-hidden', 'true');
+    }
+  });
+
+  // Dark mode toggle
+  darkModeToggle.addEventListener('change', () => {
+    if (darkModeToggle.checked) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  });
+
+  // Copy QR code button
+  copyBtn.addEventListener('click', async () => {
+    try {
+      const qrCanvas = document.querySelector('#qr-code canvas');
+      if (!qrCanvas) {
+        alert('Please generate a QR code first.');
+        return;
+      }
+      qrCanvas.toBlob(async (blob) => {
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+          alert('QR code copied to clipboard!');
+        } catch {
+          alert('Copy failed, please try downloading instead.');
+        }
+      });
+    } catch (err) {
+      alert('Copy not supported on this browser.');
+    }
+  });
+
+  // Optional: live update QR on input change (remove comment to enable)
+  /*
+  qrInput.addEventListener('input', () => {
+    if (qrInput.value.trim() !== "") {
+      generateBtn.click();
+    } else {
+      qrWrapper.style.display = "none";
+      downloadControls.style.display = "none";
+      errorMsg.style.display = "none";
+    }
+  });
+  */
+});
