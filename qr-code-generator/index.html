@@ -4,95 +4,79 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SecureTools – Free QR Code Generator</title>
-  <meta name="description" content="Generate QR codes instantly. No watermark. No signup required." />
   <link rel="stylesheet" href="qr-styles.css" />
-  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
-  <script defer src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js" defer></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <main>
-    <h1>Free QR Code Generator</h1>
-    <p>Create QR codes instantly. No watermark. No signup required.</p>
+  <main class="container">
+    <section class="main-tile">
+      <h1>Free QR Code Generator</h1>
+      <p>Create QR codes instantly. No watermark. No signup required.</p>
+      <div class="input-group">
+        <input id="qr-input" type="text" placeholder="https://example.com" aria-label="Enter the URL" />
+        <button id="generate-btn" aria-label="Generate QR Code">Generate QR</button>
+      </div>
+      <div class="advanced-toggle-wrapper" style="margin-top: 1.5rem;">
+        <label for="advanced-toggle" style="cursor: pointer; user-select: none;">
+          <input type="checkbox" id="advanced-toggle" />
+          <span style="margin-left: 0.5rem; font-weight: 600; color: #2d9cdb;">Advanced mode</span>
+        </label>
+      </div>
+      <div id="qr-wrapper" aria-live="polite" style="margin-top: 2rem; display:none;">
+        <div id="qr-code" aria-label="Generated QR code"></div>
+      </div>
+      <div id="download-controls" style="display:none; margin-top: 1rem;">
+        <label for="format-select">Download format:</label>
+        <select id="format-select" aria-label="Select QR code download format">
+          <option value="png">PNG</option>
+          <option value="svg">SVG</option>
+          <option value="jpeg">JPEG</option>
+        </select>
+        <a id="download-link" href="#" aria-label="Download QR code">Download</a>
+      </div>
+      <p id="error-msg" style="display:none; color:#d32f2f; margin-top:1rem;" role="alert"></p>
+    </section>
 
-    <div class="input-group">
-      <input id="qr-input" type="text" placeholder="https://example.com" />
-      <button id="generate-btn">Generate</button>
-    </div>
-
-    <div class="advanced-toggle-wrapper">
-      <label>
-        <input type="checkbox" id="advanced-toggle" />
-        <span>Advanced Mode</span>
-      </label>
-    </div>
-
-    <!-- QR Display -->
-    <div id="qr-wrapper" style="display:none;">
-      <div id="qr-code"></div>
-    </div>
-
-    <!-- Format & Download -->
-    <div id="download-controls" style="display:none;">
-      <label for="format-select">Download format:</label>
-      <select id="format-select">
-        <option value="png">PNG</option>
-        <option value="svg">SVG</option>
-        <option value="jpeg">JPEG</option>
+    <section class="sidebar-panel">
+      <h2>QR Style Options</h2>
+      <label for="dot-style">Dot style:</label>
+      <select id="dot-style" aria-label="Select dot style">
+        <option value="dots">Dots</option>
+        <option value="rounded" selected>Rounded</option>
+        <option value="classy">Classy</option>
+        <option value="classy-rounded">Classy Rounded</option>
+        <option value="square">Square</option>
       </select>
-      <a id="download-link" href="#">Download</a>
-    </div>
 
-    <!-- Error Message -->
-    <p id="error-msg" style="display:none;"></p>
+      <label for="corner-style" style="margin-top:1rem;">Corner style:</label>
+      <select id="corner-style" aria-label="Select corner style">
+        <option value="dot" selected>Dot</option>
+        <option value="square">Square</option>
+        <option value="extra-rounded">Extra Rounded</option>
+      </select>
 
-    <!-- Slide-out: Right Panel -->
-    <div class="advanced-controls-panel">
-      <h3>QR Style Options</h3>
-      <label>Dot Style:
-        <select id="dot-style">
-          <option value="rounded">Rounded</option>
-          <option value="dots">Dots</option>
-          <option value="square">Square</option>
-        </select>
-      </label>
+      <label for="eye-color" style="margin-top:1rem;">Eye color:</label>
+      <input type="color" id="eye-color" value="#000000" aria-label="Select eye color" />
 
-      <label>Corner Style:
-        <select id="corner-style">
-          <option value="extra-rounded">Extra Rounded</option>
-          <option value="dot">Dot</option>
-          <option value="square">Square</option>
-        </select>
-      </label>
+      <label for="eye-radius" style="margin-top:1rem;">Eye radius (px):</label>
+      <input type="range" id="eye-radius" min="0" max="20" value="8" aria-label="Select eye radius" />
 
-      <label>Eye Radius:
-        <input type="range" id="eye-radius" min="0" max="25" step="1" value="10" />
-      </label>
+      <label for="bg-color" style="margin-top:1rem;">Background color:</label>
+      <input type="color" id="bg-color" value="#ffffff" aria-label="Select background color" />
+    </section>
 
-      <label>Background Color:
-        <input type="color" id="bg-color" value="#ffffff" />
-      </label>
+    <section class="logo-panel">
+      <h2>Logo Options</h2>
+      <label for="logo-upload">Upload Logo:</label>
+      <input type="file" id="logo-upload" accept="image/*" aria-label="Upload logo image" />
 
-      <label>Eye Color:
-        <input type="color" id="eye-color" value="#000000" />
-      </label>
-    </div>
+      <label for="logo-size" style="margin-top:1rem;">Logo size (%):</label>
+      <input type="range" id="logo-size" min="0" max="50" value="15" aria-label="Select logo size percentage" />
 
-    <!-- Slide-out: Bottom Panel -->
-    <div class="logo-panel">
-      <h3>Logo Settings</h3>
-
-      <label>Upload Logo:
-        <input type="file" id="logo-upload" accept="image/*" />
-      </label>
-
-      <label>Logo Size:
-        <input type="range" id="logo-size" min="0" max="1" step="0.05" value="0.15" />
-      </label>
-
-      <label>Logo Opacity:
-        <input type="range" id="logo-opacity" min="0" max="1" step="0.05" value="1" />
-      </label>
-    </div>
+      <label for="logo-opacity" style="margin-top:1rem;">Logo opacity:</label>
+      <input type="range" id="logo-opacity" min="0" max="1" step="0.01" value="1" aria-label="Select logo opacity" />
+    </section>
   </main>
 </body>
 </html>
