@@ -1,168 +1,169 @@
-/* Starting page setup - (rest of your body, nav, main, h1, instruction are fine) */
+/* General body and container styling */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background: #f0f4f8;
-  color: #1d1d1f;
-  margin: 0;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-nav {
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-}
-
-nav a {
-  text-decoration: none;
-  color: #2d9cdb;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-main {
-  margin-top: 3rem;
-  max-width: 960px;
-  width: 100%;
-  text-align: center;
+#game-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 h1 {
-  font-weight: 700;
-  font-size: 2.25rem;
-  margin-bottom: 0.5rem;
+    color: #333;
+    margin-bottom: 20px;
 }
 
-.instruction {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
+.info-panel {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+    color: #555;
 }
 
-/* Responsive map container */
-.map-container {
-  max-width: 800px;
-  width: 100%;
-  margin: 0 auto;
-  user-select: none;
+.info-item span {
+    font-weight: bold;
+    color: #007bff;
 }
 
-/* Make SVG scale smoothly */
-svg {
-  width: 100%;
-  height: auto;
-  display: block;
+#target-state {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #28a745;
+    margin-bottom: 25px;
+    min-height: 1.8em;
 }
 
-/* Style SVG paths (states) */
-path {
-  fill: #cfd8dc;
-  stroke: #607d8b;
-  stroke-width: 1;
-  transition: fill 0.3s ease, filter 0.3s ease, transform 0.3s ease; /* Added transform to transition */
-  cursor: pointer;
+/* Map Container Styling */
+#map-container {
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
-/* Hover effect - lighter blue */
-path:hover:not(.correct):not(.incorrect-temp):not(.fail):not(.given-up):not(.partial) {
-  fill: #a0c4ff !important;
-  filter: drop-shadow(0 0 5px #a0c4ff);
+#map-container svg {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
-/* Correct state - permanent green */
-.correct {
-  fill: #4caf50 !important;
-  animation: pop-up 0.4s ease forwards;
-  filter: drop-shadow(0 0 8px #4caf50);
-  pointer-events: none; /* Make correct states non-clickable */
-  cursor: default;
+/* SVG Path Styling */
+.map-container path {
+    fill: #cfd8dc;
+    stroke: #607d8b;
+    stroke-width: 1px;
+    transition: filter 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
 }
 
-/* Partial correct (after misses) - yellow */
-.partial {
-  fill: #ffeb3b !important;
-  animation: pop-up 0.4s ease forwards;
-  filter: drop-shadow(0 0 6px #ffeb3b);
-  pointer-events: none; /* Make partial states non-clickable */
-  cursor: default;
+/* Hover effect for clickable states */
+.map-container path.hover-state {
+    fill: #a0c4ff !important;
+    stroke-width: 2px;
+    filter: drop-shadow(0 0 5px rgba(160, 196, 255, 0.8));
 }
 
-/* Fail state - red (current target after 5 misses) */
-.fail {
-  fill: #f44336 !important;
-  filter: drop-shadow(0 0 8px #f44336);
-  cursor: pointer; /* Remains clickable for acknowledgment */
-  animation: pulse-red 1s infinite alternate; /* Added pulsing for fail state */
+/* State Feedback Classes */
+.map-container path.correct {
+    fill: #a8df8e;
+    pointer-events: none;
 }
 
-/* Given up - permanent fail (darker red) */
-.given-up {
-  fill: #b71c1c !important;
-  stroke: #7f0000 !important;
-  stroke-width: 2;
-  filter: drop-shadow(0 0 8px #7f0000);
-  cursor: default;
-  pointer-events: none; /* No longer clickable */
-  animation: none; /* Stop pulsing if it was failing */
+.map-container path.partial {
+    fill: #fdfd96;
+    pointer-events: none;
 }
 
-/* Incorrect temporary state - animated red flash */
-.incorrect-temp {
-  fill: #f44336 !important; /* <--- ADD THIS LINE! Sets initial red color */
-  animation: fade-red 0.8s forwards; /* Match animation duration to JS timeout for smoothness */
-  pointer-events: none; /* Disable clicks during the flash */
-  cursor: default; /* Change cursor during flash */
-  filter: drop-shadow(0 0 6px #f44336); /* Initial glow */
+.map-container path.incorrect-temp {
+    fill: #ff6666 !important;
+    stroke: #ff0000 !important;
+    stroke-width: 3px !important;
+    animation: none !important;
 }
 
-/* Pop animation for correct/partial */
-@keyframes pop-up {
-  0% {
-    transform: scale(1) translateY(0);
-  }
-  50% {
-    transform: scale(1.05) translateY(-4px); /* Slightly reduced pop for smoother feel */
-  }
-  100% {
-    transform: scale(1) translateY(0);
-  }
+.map-container path.fail {
+    fill: #ff6666;
+    animation: pulseRed 1.5s infinite alternate;
 }
 
-/* Fade out incorrect red */
-@keyframes fade-red {
-  0% {
-    /* fill: #f44336; -- Removed, as it's set directly on .incorrect-temp */
-    filter: drop-shadow(0 0 6px #f44336);
-  }
-  100% {
-    fill: #cfd8dc; /* Fades back to default color */
-    filter: none;
-  }
+.map-container path.given-up {
+    fill: #8b0000;
+    pointer-events: none;
 }
 
-/* New animation for pulsing fail state */
-@keyframes pulse-red {
+/* Keyframes for animations */
+@keyframes flashRed {
     0% {
-        filter: drop-shadow(0 0 8px #f44336);
+        fill: #ff6666 !important;
+        stroke: #ff0000 !important;
+        stroke-width: 3px !important;
     }
     100% {
-        filter: drop-shadow(0 0 15px #f44336) brightness(1.2);
+        fill: #cfd8dc;
+        stroke: #607d8b;
+        stroke-width: 1px;
     }
 }
+
+@keyframes pulseRed {
+    0% { fill: #ff6666; }
+    100% { fill: #cc0000; }
+}
+
 @keyframes riseAndFall {
-  0% {
-    transform: scale(1) translateY(0);
-  }
-  30% {
-    transform: scale(1.2) translateY(-10px);
-    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.3));
-  }
-  100% {
-    transform: scale(1) translateY(0);
-    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
-  }
+    0% {
+        transform: scale(1) translateY(0);
+        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+    }
+    30% {
+        transform: scale(1.2) translateY(-10px);
+        filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.3));
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+    }
+}
+
+
+.map-container path.correct.pop,
+.map-container path.partial.pop {
+    animation: riseAndFall 0.5s ease-out;
+    transform-origin: center;
+    cursor: default;
+}
+
+.map-container path.correct,
+.map-container path.correct.pop {
+    fill: #a8df8e !important;
+    pointer-events: none;
+}
+
+.map-container path.partial,
+.map-container path.partial.pop {
+    fill: #fdfd96 !important;
+    pointer-events: none;
+
 }
