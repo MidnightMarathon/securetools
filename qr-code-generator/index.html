@@ -25,31 +25,21 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
   <link rel="manifest" href="/assets/site.webmanifest" />
 
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "SecureTools QR Code Generator",
-    "url": "https://securetools.dev/qr-code-generator/",
-    "applicationCategory": "WebApplication",
-    "description": "Free QR Code Generator — create QR codes instantly with no watermark or signup.",
-    "operatingSystem": "All",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
-  }
-  </script>
+  <!-- Shared CSS -->
+  <link rel="stylesheet" href="../assets/styles.css" />
+  <!-- QR-specific CSS -->
+  <link rel="stylesheet" href="qr-style.css" />
 
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- Load QRCodeStyling library before your script -->
+  <!-- QR Code Styling library -->
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js" defer></script>
+  <!-- Your JS -->
   <script src="script.js" defer></script>
 </head>
 <body>
+
+  <nav>
+    <a href="/" aria-label="SecureTools Home" class="active">← SecureTools Home</a>
+  </nav>
 
   <main>
     <h1>Free QR Code Generator</h1>
@@ -68,18 +58,67 @@
         </label>
       </div>
 
-      <div class="advanced-controls" aria-hidden="true">
-        <!-- Dark Mode Toggle -->
-        <label class="switch" style="margin-right: 2rem;">
-          <input type="checkbox" id="dark-mode-toggle" />
-          <span class="slider"></span>
-        </label>
-        <span style="font-weight: 600; color: #2d9cdb;">Dark Mode</span>
+      <div class="advanced-controls" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease;">
+        <!-- Advanced controls slide down here -->
+        <div class="input-group" style="margin-top: 1rem;">
+          <label for="qr-dots-style">Dot Style:</label>
+          <select id="qr-dots-style" aria-label="Select QR code dots style">
+            <option value="dots">Dots</option>
+            <option value="rounded">Rounded</option>
+            <option value="classy">Classy</option>
+            <option value="classy-rounded">Classy Rounded</option>
+            <option value="square">Square</option>
+          </select>
+        </div>
 
-        <!-- Copy to Clipboard Button -->
-        <button id="copy-btn" type="button" style="margin-left: 2rem; padding: 0.4rem 1rem; border-radius: 8px; background:#2d9cdb; color:#fff; border:none; cursor:pointer;">
-          Copy QR Code
-        </button>
+        <div class="input-group">
+          <label for="qr-corners-style">Corner Style:</label>
+          <select id="qr-corners-style" aria-label="Select QR code corners style">
+            <option value="dots">Dots</option>
+            <option value="rounded">Rounded</option>
+            <option value="square">Square</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="qr-color">Dot Color:</label>
+          <input type="color" id="qr-color" aria-label="Select QR code dot color" value="#000000" />
+        </div>
+
+        <div class="input-group">
+          <label for="qr-bg-color">Background Color:</label>
+          <input type="color" id="qr-bg-color" aria-label="Select QR code background color" value="#ffffff" />
+        </div>
+
+        <div class="input-group">
+          <label for="logo-upload">Upload Logo:</label>
+          <input type="file" id="logo-upload" accept="image/*" aria-label="Upload a logo for QR code" />
+        </div>
+
+        <div class="input-group">
+          <label for="qr-logo-size">Logo Size (% of QR):</label>
+          <input type="range" id="qr-logo-size" min="0" max="30" step="1" value="15" aria-label="Adjust logo size percentage" />
+        </div>
+
+        <div class="input-group">
+          <label for="qr-logo-opacity">Logo Opacity:</label>
+          <input type="range" id="qr-logo-opacity" min="0" max="1" step="0.05" value="1" aria-label="Adjust logo opacity" />
+        </div>
+
+        <div class="input-group">
+          <label for="qr-eyes-color">Eye Color:</label>
+          <input type="color" id="qr-eyes-color" aria-label="Select QR code eyes color" value="#000000" />
+        </div>
+
+        <div class="input-group">
+          <label for="qr-eye-radius">Eye Radius:</label>
+          <input type="range" id="qr-eye-radius" min="0" max="50" step="1" value="10" aria-label="Adjust eye radius" />
+        </div>
+
+        <div class="input-group">
+          <button id="copy-btn" aria-label="Copy QR code as PNG">Copy QR Code to Clipboard</button>
+          <button id="toggle-darkmode" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
+        </div>
       </div>
 
       <div id="qr-wrapper" style="display:none;" aria-live="polite">
