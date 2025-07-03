@@ -7,16 +7,21 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main>
-    <h1>U.S. States Quiz</h1>
-    <p class="instruction">Click the state shown below on the map.</p>
-    <div id="target-container">
-      <strong>Find:</strong> <span id="target-state">Loading...</span>
+  <main id="game-container">
+    <div id="top-info-bar">
+      <div id="title-instructions">
+        <h1>U.S. States Quiz</h1>
+        <span class="instruction">Click the correct state on the map.</span>
+      </div>
+      <div id="target-container">
+        <span>Find:</span> <strong id="target-state">Loading...</strong>
+      </div>
+      <div id="score-container">
+          Score: <span id="score">0</span> / <span id="total-states">0</span> (<span id="percentage">0%</span>)
+      </div>
     </div>
-    <div id="score-container" style="margin-top: 1rem;">
-      Score: <span id="score">0</span> / <span id="total-states">0</span> (<span id="percentage">0%</span>)
-    </div>
-    <div id="map-container" class="map-container" style="margin-top: 2rem;">
+
+    <div id="map-container" class="map-container">
       <!-- SVG map will be loaded here -->
     </div>
   </main>
