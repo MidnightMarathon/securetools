@@ -1,72 +1,225 @@
-/* QR Code Generator Specific Styles */
+/* Base styles and layout */
 
-/* Advanced side panel (slide-out right) */
-.advanced-controls-panel {
-  max-width: 360px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  padding: 1.5rem;
-  margin-top: 2rem;
-  margin-left: auto;
-  margin-right: auto;
-  display: none;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
+  background-size: 300% 300%;
+  animation: gradientFlow 15s ease infinite;
+  color: #1d1d1f;
+  margin: 0;
+  padding: 2rem 1rem;
+  display: flex;
   flex-direction: column;
-  gap: 1rem;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  align-items: center;
+  min-height: 100vh;
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Main container */
+main {
+  max-width: 440px;
+  margin: auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  margin-top: 4rem;
+  position: relative;
+}
+
+/* Input group */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+input#qr-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  transition: border 0.2s ease;
+}
+
+input#qr-input:focus {
+  border-color: #2d9cdb;
+  outline: none;
+}
+
+button#generate-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background: #2d9cdb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button#generate-btn:hover {
+  background: #1c82c1;
+}
+
+/* Error message */
+#error-msg {
+  color: #d32f2f;
+  margin-top: 1rem;
+  font-weight: 600;
+  display: none;
+  text-align: center;
+}
+
+/* QR code wrapper */
+#qr-wrapper {
+  margin: 2rem auto 1rem;
+  display: none;
+  text-align: center;
+}
+
+#qr-code {
+  width: 240px;
+  height: 240px;
+  margin: 0 auto;
+}
+
+/* Download controls */
+#download-controls {
+  margin-top: 1.5rem;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+#format-select {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+a#download-link {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background: #27ae60;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+a#download-link:hover {
+  background: #219150;
+}
+
+/* Advanced mode toggle */
+.advanced-toggle-wrapper {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.advanced-toggle-wrapper label {
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  color: #2d9cdb;
+}
+
+/* Advanced controls panel sliding out right */
+.advanced-controls-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+  margin-top: 1rem;
+  background: #f9f9fb;
+  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(45, 156, 219, 0.15);
+  position: absolute;
+  top: 4rem;
+  right: -320px;
+  width: 300px;
 }
 
 .advanced-controls-panel.show {
-  display: flex;
+  max-height: 1000px; /* large enough */
+  opacity: 1;
+  right: -320px;
+  transform: translateX(-320px);
+  transition: transform 0.5s ease, max-height 0.5s ease, opacity 0.5s ease;
 }
 
-.advanced-controls-panel label {
+/* Logo panel sliding down */
+.logo-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+  margin-top: 1rem;
+  background: #f9f9fb;
+  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(45, 156, 219, 0.15);
+  width: 100%;
+}
+
+.logo-panel.show {
+  max-height: 600px; /* enough to fit content */
+  opacity: 1;
+}
+
+/* Advanced controls individual inputs */
+.advanced-controls-panel label,
+.logo-panel label {
+  display: block;
+  margin-bottom: 0.4rem;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  color: #2d9cdb;
 }
 
 .advanced-controls-panel select,
 .advanced-controls-panel input[type="color"],
-.advanced-controls-panel input[type="range"] {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: #f2f2f7;
-  font-family: inherit;
-}
-
-/* Logo tile (below QR) */
-.logo-panel {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  padding: 1.5rem;
-  margin-top: 2rem;
-  max-width: 440px;
-  width: 100%;
-  display: none;
-  flex-direction: column;
-  gap: 1rem;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.logo-panel.show {
-  display: flex;
-}
-
-.logo-panel label {
-  font-weight: 600;
-}
-
-.logo-panel input[type="file"] {
-  background: #f2f2f7;
-  padding: 0.75rem;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
+.advanced-controls-panel input[type="range"],
+.logo-panel input[type="file"],
 .logo-panel input[type="range"] {
   width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  padding: 0.3rem 0.5rem;
+  box-sizing: border-box;
+}
+
+/* Responsive tweaks */
+@media (min-width: 900px) {
+  main {
+    max-width: 760px;
+  }
+  .advanced-controls-panel {
+    position: absolute;
+    top: 4rem;
+    right: -320px;
+    width: 320px;
+  }
 }
