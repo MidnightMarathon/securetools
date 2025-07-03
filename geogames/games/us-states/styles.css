@@ -75,7 +75,10 @@ h1 {
     fill: #cfd8dc; /* Light blue-grey for default states */
     stroke: #607d8b; /* Darker blue-grey for borders */
     stroke-width: 1px;
-    transition: fill 0.3s ease, filter 0.3s ease, transform 0.3s ease, stroke-width 0.3s ease;
+    /* ******************************************************************* */
+    /* *** MODIFIED LINE BELOW: Removed 'fill' and 'stroke-width' from transition *** */
+    transition: filter 0.3s ease, transform 0.3s ease; 
+    /* ******************************************************************* */
     cursor: pointer;
 }
 
