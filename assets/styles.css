@@ -7,38 +7,43 @@ nav {
   gap: 0.5rem;
   z-index: 10;
   animation: fadeIn 0.8s ease-out both;
-  backdrop-filter: blur(12px);
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
 }
 
 /* Base nav link styling */
 nav a {
   display: inline-block;
   padding: 0.4rem 1rem;
-  background: transparent;
+  background-color: #fff; /* White pills */
+  border-radius: 9999px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 0.85rem;
-  color: #ffffffcc;
+  color: #333;
   text-decoration: none;
-  font-weight: 600;
-  border: none;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-  text-shadow: 0 0 5px rgba(0,0,0,0.3);
+  font-weight: 600;  /* Bold all the time */
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
-nav a:hover,
+/* Hover state */
+nav a:hover {
+  background-color: #eaeaea;
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #2d9cdb;
+  text-decoration: none; /* No underline */
+}
+
+/* Focus (keyboard/tab) state */
 nav a:focus {
-  color: #ffffff;
-  text-shadow: 0 0 10px #60a5fa, 0 0 20px #60a5fa;
   outline: none;
+  box-shadow: 0 0 0 2px rgba(45, 156, 219, 0.4);
 }
 
+/* Active link (for current page) */
 nav a.active {
-  color: #60a5fa;
-  text-shadow: 0 0 15px #60a5fa;
+  background-color: #d0d0d5;
+  font-weight: 600;
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
 /* Fade-in animation */
@@ -53,24 +58,23 @@ nav a.active {
   }
 }
 
-/* Body & background */
+/* Base styles */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background: linear-gradient(135deg, #7f7fd5, #86a8e7, #91eae4);
+  background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
   background-size: 300% 300%;
-  animation: gradientFlow 20s ease infinite;
-  color: #fff;
+  animation: gradientFlow 15s ease infinite;
+  color: #1d1d1f;
   margin: 0;
   padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Optional animated background */
 @keyframes gradientFlow {
   0% {
     background-position: 0% 50%;
@@ -83,45 +87,50 @@ body {
   }
 }
 
-/* Main container - transparent, no background or blur */
+/* Main container tile */
 main {
   max-width: 960px;
   margin: auto;
   padding: 2rem 1rem 3rem;
   margin-top: 4rem;
-  background: transparent;
-  box-shadow: none;
-  border-radius: 0;
-  color: #1d1d1f; /* dark text for content inside main */
+  background: #ffffff;           /* White tile */
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  color: #1d1d1f;
 }
 
-/* Title and description styling */
+/* Remove tile background on home */
+main.no-tile {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* Heading */
 h1 {
   font-weight: 700;
   font-size: 2.25rem;
   margin-bottom: 1rem;
   text-align: center;
-  color: #fff;
-  text-shadow: 0 0 8px rgba(0,0,0,0.25);
 }
 
+/* Description */
 p.description {
   font-size: 1.15rem;
   text-align: center;
   max-width: 600px;
   margin: 0 auto 3rem auto;
-  color: #e1e1e1;
-  text-shadow: 0 0 6px rgba(0,0,0,0.2);
+  color: #444;
 }
 
-/* Tools grid: 3 columns */
+/* Tools grid layout: 3 columns wide */
 .tools-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 
-/* Tool link block */
+/* Tool card link */
 .tool-link {
   display: block;
   width: 100%;
@@ -130,7 +139,7 @@ p.description {
   text-decoration: none;
 }
 
-/* Tool card styling */
+/* Tool tile card */
 .tool-tile {
   background: #fff;
   border-radius: 20px;
@@ -144,7 +153,6 @@ p.description {
   height: 300px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-align: center;
-  color: #1d1d1f;
 }
 
 .tool-tile:hover {
@@ -164,6 +172,7 @@ p.description {
   font-weight: 700;
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
+  color: #1d1d1f;
 }
 
 /* Tool description */
@@ -181,7 +190,5 @@ footer {
   padding: 1.5rem 1rem;
   text-align: center;
   font-size: 0.875rem;
-  color: #ddd;
-  text-shadow: 0 0 5px rgba(0,0,0,0.3);
+  color: #555;
 }
-
