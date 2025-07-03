@@ -51,9 +51,7 @@ function pickNewTarget() {
 
 function updateScoreDisplay() {
   const percentage = (total > 0) ? ((score / total) * 100).toFixed(1) : 0;
-  document.getElementById("score").textContent = score;
-  document.getElementById("total-states").textContent = total;
-  document.getElementById("percentage").textContent = `${percentage}%`;
+  document.getElementById("score").textContent = `${score} / ${total} (${percentage}%)`;
 }
 
 function handleStateClick(clickedId) {
@@ -71,7 +69,7 @@ function handleStateClick(clickedId) {
   // --- Scenario 1: Failed state waiting for acknowledgment ---
   if (currentTargetEl && currentTargetEl.classList.contains("fail")) {
     if (clickedId === currentTarget) {
-      currentTargetEl.classList.remove("fail");
+      currentTargetEl.classList.remove("fail", "hover-state");
       currentTargetEl.classList.add("given-up");
       failedStates.add(currentTarget);
       pickNewTarget();
@@ -98,6 +96,7 @@ function handleStateClick(clickedId) {
 
     if (attempts[currentTarget] >= 5) {
       if (currentTargetEl) {
+        currentTargetEl.classList.remove("hover-state");
         currentTargetEl.classList.add("fail");
       }
     }
@@ -106,6 +105,7 @@ function handleStateClick(clickedId) {
     const wrongGuessesCount = attempts[currentTarget];
 
     if (currentTargetEl) {
+      currentTargetEl.classList.remove("hover-state");  // Remove hover blue fill
       if (wrongGuessesCount === 0) {
         currentTargetEl.classList.add("correct");
       } else {
