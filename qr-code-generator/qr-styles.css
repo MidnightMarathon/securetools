@@ -1,68 +1,100 @@
-/* Base styles and layout */
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
-  background-size: 300% 300%;
-  animation: gradientFlow 15s ease infinite;
-  color: #1d1d1f;
-  margin: 0;
-  padding: 2rem 1rem;
+/* Container holds main tile and side panels */
+.container {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-}
-
-@keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Main container */
-main {
   max-width: 440px;
-  margin: auto;
-  background: #fff;
+  margin: 2rem auto;
+  gap: 1rem;
+  transition: max-width 0.5s ease, flex-direction 0.5s ease;
+}
+
+/* Main tile styling */
+.main-tile {
+  background: #ffffff;
+  border-radius: 16px;
   padding: 2rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+/* Sidebar panel starts hidden below */
+.sidebar-panel {
+  background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  margin-top: 4rem;
-  position: relative;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  padding: 0 2rem; /* horizontal padding, vertical hidden */
 }
 
-/* Input group */
+/* Logo panel styling (below main tile but same slide out) */
+.logo-panel {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  padding: 0 2rem;
+  margin-top: 0.75rem;
+}
+
+/* When advanced toggled */
+.container.advanced {
+  flex-direction: row;
+  max-width: 900px;
+}
+
+/* Show sidebar panel: slide down (max-height) */
+.container.advanced .sidebar-panel {
+  max-height: 600px; /* adjust if needed */
+  padding: 1.5rem 2rem;
+  width: 320px;
+  margin-left: 1rem;
+  transition: max-height 0.5s ease, width 0.5s ease, padding 0.5s ease;
+}
+
+/* Show logo panel: slide down */
+.container.advanced .logo-panel {
+  max-height: 250px;
+  padding: 1.5rem 2rem;
+  margin-left: 1rem;
+  width: 320px;
+  transition: max-height 0.5s ease, width 0.5s ease, padding 0.5s ease;
+}
+
+/* Main tile grows to fill remaining space when advanced */
+.container.advanced .main-tile {
+  flex: 1;
+}
+
+/* Input group styling */
 .input-group {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 0.75rem;
+  margin-top: 1rem;
 }
 
-input#qr-input {
-  width: 100%;
+input[type="text"] {
   padding: 0.75rem 1rem;
   font-size: 1rem;
   border-radius: 10px;
   border: 1px solid #ccc;
-  box-sizing: border-box;
-  transition: border 0.2s ease;
-}
-
-input#qr-input:focus {
-  border-color: #2d9cdb;
   outline: none;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-button#generate-btn {
+input[type="text"]:focus {
+  border-color: #2d9cdb;
+}
+
+/* Buttons */
+button {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   background: #2d9cdb;
@@ -71,155 +103,59 @@ button#generate-btn {
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.3s ease;
+  width: fit-content;
 }
 
-button#generate-btn:hover {
+button:hover {
   background: #1c82c1;
 }
 
-/* Error message */
-#error-msg {
-  color: #d32f2f;
+/* Labels and inputs in sidebar */
+.sidebar-panel label,
+.logo-panel label {
+  display: block;
   margin-top: 1rem;
   font-weight: 600;
-  display: none;
-  text-align: center;
+  color: #333;
 }
 
-/* QR code wrapper */
-#qr-wrapper {
-  margin: 2rem auto 1rem;
-  display: none;
-  text-align: center;
-}
-
-#qr-code {
-  width: 240px;
-  height: 240px;
-  margin: 0 auto;
+.sidebar-panel select,
+.logo-panel input[type="color"],
+.logo-panel input[type="range"],
+.sidebar-panel input[type="color"],
+.sidebar-panel input[type="range"] {
+  width: 100%;
+  margin-top: 0.25rem;
+  cursor: pointer;
 }
 
 /* Download controls */
 #download-controls {
-  margin-top: 1.5rem;
-  display: none;
-  justify-content: center;
+  margin-top: 1rem;
+  display: flex;
   align-items: center;
   gap: 0.75rem;
-  flex-wrap: wrap;
 }
 
-#format-select {
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  cursor: pointer;
+#download-controls select {
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
 }
 
-a#download-link {
-  display: inline-block;
-  padding: 0.5rem 1.25rem;
-  background: #27ae60;
-  color: white;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-a#download-link:hover {
-  background: #219150;
-}
-
-/* Advanced mode toggle */
-.advanced-toggle-wrapper {
+/* QR code wrapper */
+#qr-wrapper {
   margin-top: 1.5rem;
-  text-align: center;
 }
 
-.advanced-toggle-wrapper label {
-  cursor: pointer;
+/* Error message */
+#error-msg {
+  font-weight: 600;
+}
+
+/* Advanced toggle wrapper */
+.advanced-toggle-wrapper {
   user-select: none;
   font-weight: 600;
   color: #2d9cdb;
-}
-
-/* Advanced controls panel sliding out right */
-.advanced-controls-panel {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease, opacity 0.5s ease;
-  opacity: 0;
-  margin-top: 1rem;
-  background: #f9f9fb;
-  padding: 1rem;
-  border-radius: 16px;
-  box-shadow: 0 0 10px rgba(45, 156, 219, 0.15);
-  position: absolute;
-  top: 4rem;
-  right: -320px;
-  width: 300px;
-}
-
-.advanced-controls-panel.show {
-  max-height: 1000px; /* large enough */
-  opacity: 1;
-  right: -320px;
-  transform: translateX(-320px);
-  transition: transform 0.5s ease, max-height 0.5s ease, opacity 0.5s ease;
-}
-
-/* Logo panel sliding down */
-.logo-panel {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease, opacity 0.5s ease;
-  opacity: 0;
-  margin-top: 1rem;
-  background: #f9f9fb;
-  padding: 1rem;
-  border-radius: 16px;
-  box-shadow: 0 0 10px rgba(45, 156, 219, 0.15);
-  width: 100%;
-}
-
-.logo-panel.show {
-  max-height: 600px; /* enough to fit content */
-  opacity: 1;
-}
-
-/* Advanced controls individual inputs */
-.advanced-controls-panel label,
-.logo-panel label {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-weight: 600;
-  color: #2d9cdb;
-}
-
-.advanced-controls-panel select,
-.advanced-controls-panel input[type="color"],
-.advanced-controls-panel input[type="range"],
-.logo-panel input[type="file"],
-.logo-panel input[type="range"] {
-  width: 100%;
-  margin-bottom: 1rem;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  padding: 0.3rem 0.5rem;
-  box-sizing: border-box;
-}
-
-/* Responsive tweaks */
-@media (min-width: 900px) {
-  main {
-    max-width: 760px;
-  }
-  .advanced-controls-panel {
-    position: absolute;
-    top: 4rem;
-    right: -320px;
-    width: 320px;
-  }
+  cursor: pointer;
 }
