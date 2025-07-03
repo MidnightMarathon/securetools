@@ -101,7 +101,7 @@ h1 {
 }
 
 .map-container path.incorrect-temp {
-    animation: flashRed 0.8s ease-out forwards;
+    animation: flashRed 0.8s ease-out;
 }
 
 
