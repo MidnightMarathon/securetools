@@ -104,7 +104,7 @@ h1 {
     animation: flashRed 0.8s ease-out forwards;
 }
 
-}
+
 
 .map-container path.fail {
     fill: #ff6666; /* Red for failed states */
