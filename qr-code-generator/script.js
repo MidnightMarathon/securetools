@@ -1,125 +1,129 @@
-// qr-code-generator/script.js
+document.addEventListener("DOMContentLoaded", () => {
+  const qrInput = document.getElementById("qr-input");
+  const generateBtn = document.getElementById("generate-btn");
+  const qrWrapper = document.getElementById("qr-wrapper");
+  const qrCodeContainer = document.getElementById("qr-code");
+  const downloadLink = document.getElementById("download-link");
+  const formatSelect = document.getElementById("format-select");
+  const errorMsg = document.getElementById("error-msg");
+  const advancedToggle = document.getElementById("advanced-toggle");
+  const container = document.querySelector(".container");
+  const sidebarPanel = document.querySelector(".sidebar-panel");
+  const logoPanel = document.querySelector(".logo-panel");
 
-const qrInput = document.getElementById("qr-input");
-const generateBtn = document.getElementById("generate-btn");
-const qrWrapper = document.getElementById("qr-wrapper");
-const qrCodeContainer = document.getElementById("qr-code");
-const downloadLink = document.getElementById("download-link");
-const formatSelect = document.getElementById("format-select");
-const errorMsg = document.getElementById("error-msg");
-const advancedToggle = document.getElementById("advanced-toggle");
-const advancedPanel = document.querySelector(".advanced-controls-panel");
-const logoPanel = document.querySelector(".logo-panel");
+  // QR code instance with defaults
+  const qrCode = new QRCodeStyling({
+    width: 320,
+    height: 320,
+    data: "",
+    dotsOptions: { color: "#000", type: "rounded" },
+    cornersSquareOptions: { type: "dot", color: "#000" },
+    backgroundOptions: { color: "#fff" },
+    imageOptions: { crossOrigin: "anonymous", margin: 5, imageSize: 0.15, opacity: 1 },
+  });
 
-let currentQR = null;
-
-const qrCode = new QRCodeStyling({
-  width: 1080,
-  height: 1080,
-  type: "canvas",
-  data: "",
-  image: "",
-  dotsOptions: {
-    color: "#000",
-    type: "rounded"
-  },
-  cornersSquareOptions: {
-    type: "extra-rounded"
-  },
-  cornersDotOptions: {
-    type: "dot"
-  },
-  backgroundOptions: {
-    color: "#ffffff"
-  }
-});
-
-function generateQRCode() {
-  const url = qrInput.value.trim();
-  if (!url) {
-    errorMsg.style.display = "block";
-    errorMsg.textContent = "Please enter a valid URL.";
-    qrWrapper.style.display = "none";
-    downloadLink.style.display = "none";
-    return;
-  }
-
-  errorMsg.style.display = "none";
-  qrCode.update({ data: url });
-
-  qrCodeContainer.innerHTML = "";
   qrCode.append(qrCodeContainer);
-  qrWrapper.style.display = "block";
-  document.getElementById("download-controls").style.display = "flex";
-}
 
-generateBtn.addEventListener("click", generateQRCode);
-qrInput.addEventListener("input", generateQRCode);
+  function isValidUrl(str) {
+    try {
+      new URL(str);
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
-formatSelect.addEventListener("change", () => {
-  downloadLink.download = `qr-code.${formatSelect.value}`;
-});
+  function generateQRCode() {
+    const url = qrInput.value.trim();
+    if (!url) {
+      errorMsg.style.display = "block";
+      errorMsg.textContent = "Please enter a URL or text to generate QR code.";
+      qrWrapper.style.display = "none";
+      downloadLink.style.display = "none";
+      return;
+    }
+    if (!isValidUrl(url)) {
+      errorMsg.style.display = "block";
+      errorMsg.textContent = "Please enter a valid URL.";
+      qrWrapper.style.display = "none";
+      downloadLink.style.display = "none";
+      return;
+    }
 
-downloadLink.addEventListener("click", () => {
-  qrCode.download({ name: "qr-code", extension: formatSelect.value });
-});
+    errorMsg.style.display = "none";
 
-// Toggle advanced mode panel
-advancedToggle.addEventListener("change", () => {
-  advancedPanel.classList.toggle("show", advancedToggle.checked);
-  logoPanel.classList.toggle("show", advancedToggle.checked);
-});
+    qrCode.update({ data: url });
 
-// Update dot style
-const dotSelect = document.getElementById("dot-style");
-dotSelect.addEventListener("change", () => {
-  qrCode.update({ dotsOptions: { type: dotSelect.value } });
-});
+    qrWrapper.style.display = "block";
+    downloadLink.style.display = "inline-block";
+  }
 
-// Update corner style
-const cornerSelect = document.getElementById("corner-style");
-cornerSelect.addEventListener("change", () => {
-  qrCode.update({ cornersSquareOptions: { type: cornerSelect.value } });
-});
+  generateBtn.addEventListener("click", generateQRCode);
+  qrInput.addEventListener("keypress", e => {
+    if (e.key === "Enter") generateQRCode();
+  });
 
-// Update eye radius
-const eyeRadius = document.getElementById("eye-radius");
-eyeRadius.addEventListener("input", () => {
-  qrCode.update({ cornersDotOptions: { type: eyeRadius.value } });
-});
+  formatSelect.addEventListener("change", () => {
+    downloadLink.download = `qr-code.${formatSelect.value}`;
+  });
 
-// Background color
-const bgColorPicker = document.getElementById("bg-color");
-bgColorPicker.addEventListener("input", () => {
-  qrCode.update({ backgroundOptions: { color: bgColorPicker.value } });
-});
+  downloadLink.addEventListener("click", e => {
+    e.preventDefault();
+    qrCode.download({ extension: formatSelect.value });
+  });
 
-// Eye color
-const eyeColorPicker = document.getElementById("eye-color");
-eyeColorPicker.addEventListener("input", () => {
-  qrCode.update({ cornersSquareOptions: { color: eyeColorPicker.value } });
-});
+  // Advanced toggle toggles 'advanced' class on container
+  advancedToggle.addEventListener("change", () => {
+    if (advancedToggle.checked) {
+      container.classList.add("advanced");
+    } else {
+      container.classList.remove("advanced");
+    }
+  });
 
-// Logo upload
-const logoInput = document.getElementById("logo-upload");
-logoInput.addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    qrCode.update({ image: e.target.result });
-  };
-  reader.readAsDataURL(file);
-});
+  // Advanced controls
+  const dotStyleSelect = document.getElementById("dot-style");
+  const cornerStyleSelect = document.getElementById("corner-style");
+  const eyeColorPicker = document.getElementById("eye-color");
+  const eyeRadiusRange = document.getElementById("eye-radius");
+  const bgColorPicker = document.getElementById("bg-color");
+  const logoUpload = document.getElementById("logo-upload");
+  const logoSizeSlider = document.getElementById("logo-size");
+  const logoOpacitySlider = document.getElementById("logo-opacity");
 
-// Logo size
-const logoSizeSlider = document.getElementById("logo-size");
-logoSizeSlider.addEventListener("input", () => {
-  qrCode.update({ imageOptions: { imageSize: Number(logoSizeSlider.value) } });
-});
+  function updateQR() {
+    qrCode.update({
+      dotsOptions: { type: dotStyleSelect.value },
+      cornersSquareOptions: { type: cornerStyleSelect.value, color: eyeColorPicker.value },
+      cornersDotOptions: { type: cornerStyleSelect.value },
+      backgroundOptions: { color: bgColorPicker.value },
+      imageOptions: {
+        imageSize: logoSizeSlider.value / 100,
+        opacity: Number(logoOpacitySlider.value),
+        crossOrigin: "anonymous",
+        margin: 5,
+      },
+    });
+  }
 
-// Logo opacity
-const logoOpacitySlider = document.getElementById("logo-opacity");
-logoOpacitySlider.addEventListener("input", () => {
-  qrCode.update({ imageOptions: { crossOrigin: "anonymous", margin: 0, hideBackgroundDots: false, imageSize: Number(logoSizeSlider.value), opacity: Number(logoOpacitySlider.value) } });
+  dotStyleSelect.addEventListener("change", updateQR);
+  cornerStyleSelect.addEventListener("change", updateQR);
+  eyeColorPicker.addEventListener("input", updateQR);
+  eyeRadiusRange.addEventListener("input", updateQR);
+  bgColorPicker.addEventListener("input", updateQR);
+  logoSizeSlider.addEventListener("input", updateQR);
+  logoOpacitySlider.addEventListener("input", updateQR);
+
+  logoUpload.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      qrCode.update({ image: "" });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      qrCode.update({ image: ev.target.result });
+    };
+    reader.readAsDataURL(file);
+  });
 });
