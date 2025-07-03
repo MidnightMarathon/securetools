@@ -31,6 +31,23 @@ function pickNewTarget() {
                !failedStates.has(id);
     });
 
+    if (currentTargetEl) {
+  if (wrongGuessesCount === 0) {
+    currentTargetEl.classList.add("correct");
+  } else {
+    currentTargetEl.classList.add("partial");
+  }
+  
+  // Bring to front in SVG
+  currentTargetEl.parentNode.appendChild(currentTargetEl);
+  
+  // Add pop effect
+  currentTargetEl.classList.add("pop");
+  setTimeout(() => {
+    currentTargetEl.classList.remove("pop");
+  }, 500);
+}
+
     // Reset the 'fail' class on the *previous* current target if it was there
     if (currentTarget) {
         const prevTargetEl = document.getElementById(currentTarget);
@@ -56,6 +73,8 @@ function updateScoreDisplay() {
     const percentage = (total > 0) ? ((score / total) * 100).toFixed(1) : 0;
     document.getElementById("score").textContent = `${score} / ${total} (${percentage}%)`;
 }
+
+
 
 function handleStateClick(clickedId) {
   // Clear all lingering red flashes immediately on any new click
