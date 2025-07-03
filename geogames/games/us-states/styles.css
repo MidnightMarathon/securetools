@@ -207,3 +207,35 @@ nav a.active {
     transform: translateY(0);
   }
 }
+#info-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 1rem;
+}
+
+#info-bar h1 {
+  font-size: 1.6rem;
+  margin: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.info-section {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  color: #222;
+}
+
+.label {
+  font-weight: 600;
+  color: #007bff;
+}
