@@ -43,7 +43,7 @@
   }
   </script>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="styles.css" />
 
   <!-- Load QRCodeStyling library before your script -->
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js" defer></script>
@@ -68,8 +68,18 @@
         </label>
       </div>
 
-      <div class="advanced-controls">
-        <!-- Advanced controls will slide down here -->
+      <div class="advanced-controls" aria-hidden="true">
+        <!-- Dark Mode Toggle -->
+        <label class="switch" style="margin-right: 2rem;">
+          <input type="checkbox" id="dark-mode-toggle" />
+          <span class="slider"></span>
+        </label>
+        <span style="font-weight: 600; color: #2d9cdb;">Dark Mode</span>
+
+        <!-- Copy to Clipboard Button -->
+        <button id="copy-btn" type="button" style="margin-left: 2rem; padding: 0.4rem 1rem; border-radius: 8px; background:#2d9cdb; color:#fff; border:none; cursor:pointer;">
+          Copy QR Code
+        </button>
       </div>
 
       <div id="qr-wrapper" style="display:none;" aria-live="polite">
