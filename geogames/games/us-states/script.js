@@ -58,32 +58,36 @@ function updateScoreDisplay() {
 }
 
 function handleStateClick(clickedId) {
-    if (!currentTarget) return;
+  // Clear all lingering red flashes immediately on any new click
+  states.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('incorrect-temp');
+  });
 
-    const clickedEl = document.getElementById(clickedId);
-    const currentTargetEl = document.getElementById(currentTarget);
+  if (!currentTarget) return;
 
-    // --- SCENARIO 1: Current target is marked 'fail' (red), user *must* click it to acknowledge ---
-    if (currentTargetEl && currentTargetEl.classList.contains("fail")) {
-        if (clickedId === currentTarget) {
-            // User clicked the correct failed target state
-            currentTargetEl.classList.remove("fail");
-            currentTargetEl.classList.add("given-up");
-            failedStates.add(currentTarget);
-            pickNewTarget();
-        } else {
-            // User clicked a wrong state while a target was failed and waiting for acknowledgment
-            if (clickedEl) {
-                clickedEl.classList.remove("incorrect-temp");
-                void clickedEl.offsetWidth; // Force reflow
-                clickedEl.classList.add("incorrect-temp");
-                setTimeout(() => {
-                    clickedEl.classList.remove("incorrect-temp");
-                }, 800);
-            }
-        }
-        return;
+  const clickedEl = document.getElementById(clickedId);
+  const currentTargetEl = document.getElementById(currentTarget);
+
+  // SCENARIO 1: current target is fail, waiting for acknowledgment
+  if (currentTargetEl && currentTargetEl.classList.contains("fail")) {
+    if (clickedId === currentTarget) {
+      currentTargetEl.classList.remove("fail");
+      currentTargetEl.classList.add("given-up");
+      failedStates.add(currentTarget);
+      pickNewTarget();
+    } else {
+      // Apply red flash to wrong clicked state (already cleared above)
+      if (clickedEl) {
+        clickedEl.classList.add("incorrect-temp");
+        setTimeout(() => {
+          clickedEl.classList.remove("incorrect-temp");
+        }, 800);
+      }
     }
+    return;
+  }
+
 
     // --- SCENARIO 2: Normal gameplay ---
     if (clickedId !== currentTarget) {
