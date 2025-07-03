@@ -112,3 +112,38 @@
   margin-top: 0 !important;
   border: none !important;
 }
+
+.qr-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.qr-main-tile,
+.qr-options-tile {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* On wide screens, make them side by side */
+@media (min-width: 768px) {
+  .qr-section {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .qr-main-tile,
+  .qr-options-tile {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+.qr-options-tile h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
