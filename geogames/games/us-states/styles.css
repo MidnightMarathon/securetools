@@ -137,4 +137,12 @@ h1 {
 @keyframes pulseRed {
     0% { fill: #ff6666; } /* Brighter red */
     100% { fill: #cc0000; } /* Darker red */
+}n
+.correct.pop {
+  transform-origin: center;
+  transform: scale(1.1) translateZ(20px);
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: default;
 }
+
