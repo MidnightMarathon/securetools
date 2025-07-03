@@ -7,17 +7,15 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Home pill nav -->
-  <nav>
-    <a href="/">← Home</a>
-  </nav>
-
-  <!-- Main game card -->
-  <div id="game-container">
+  <main id="game-container">
     <div id="info-bar">
-      <h1>U.S. States Quiz</h1>
+      <div class="info-section title">
+        <h1>U.S. States Quiz</h1>
+        <span class="instruction">Click the correct state on the map.</span>
+      </div>
       <div class="info-section">
-        <span class="label">Find:</span> <span id="target-state">Loading...</span>
+        <span class="label">Find:</span>
+        <span id="target-state">Loading...</span>
       </div>
       <div class="info-section">
         <span class="label">Score:</span>
@@ -25,11 +23,10 @@
       </div>
     </div>
 
-    <div id="map-container" class="map-container" style="margin-top: 2rem;">
+    <div id="map-container" class="map-container">
       <!-- SVG map will be loaded here -->
     </div>
-  </div>
-
+  </main>
   <script src="script.js"></script>
 </body>
 </html>
