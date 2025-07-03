@@ -1,41 +1,48 @@
-/* General body and container styling */
+/* ---------------------------
+   Body & Background
+---------------------------- */
 body {
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    background-color: #f0f2f5;
-    margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
+    background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
 }
 
+/* ---------------------------
+   Game Container (Card)
+---------------------------- */
 #game-container {
     background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    text-align: center;
-    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    padding: 40px;
     max-width: 1200px;
+    width: 95%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
 }
 
+/* ---------------------------
+   Header & Info
+---------------------------- */
 h1 {
+    font-size: 2rem;
     color: #333;
-    margin-bottom: 20px;
+    margin: 0;
 }
 
 .info-panel {
     display: flex;
-    justify-content: space-around;
-    width: 100%;
-    max-width: 600px;
-    margin-bottom: 30px;
+    justify-content: space-between;
+    gap: 30px;
+    flex-wrap: wrap;
     font-size: 1.1em;
     color: #555;
 }
@@ -49,27 +56,30 @@ h1 {
     font-size: 1.8em;
     font-weight: bold;
     color: #28a745;
-    margin-bottom: 25px;
-    min-height: 1.8em;
+    min-height: 2em;
 }
 
-/* Map Container Styling */
+/* ---------------------------
+   Map Container
+---------------------------- */
 #map-container {
     width: 100%;
     max-width: 1000px;
     height: auto;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
     overflow: hidden;
 }
 
 #map-container svg {
-    display: block;
     width: 100%;
     height: 100%;
+    display: block;
 }
 
-/* SVG Path Styling */
+/* ---------------------------
+   State Styles
+---------------------------- */
 .map-container path {
     fill: #cfd8dc;
     stroke: #607d8b;
@@ -78,21 +88,19 @@ h1 {
     cursor: pointer;
 }
 
-/* Hover effect for clickable states */
 .map-container path.hover-state {
     fill: #a0c4ff !important;
     stroke-width: 2px;
     filter: drop-shadow(0 0 5px rgba(160, 196, 255, 0.8));
 }
 
-/* State Feedback Classes */
 .map-container path.correct {
-    fill: #a8df8e;
+    fill: #a8df8e !important;
     pointer-events: none;
 }
 
 .map-container path.partial {
-    fill: #fdfd96;
+    fill: #fdfd96 !important;
     pointer-events: none;
 }
 
@@ -113,7 +121,33 @@ h1 {
     pointer-events: none;
 }
 
-/* Keyframes for animations */
+/* ---------------------------
+   Pop Animation
+---------------------------- */
+@keyframes riseAndFall {
+  0% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 0 0 rgba(0,0,0,0));
+  }
+  50% {
+    transform: scale(1.1) translateY(-6px);
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    filter: none;
+  }
+}
+
+.map-container path.correct.pop,
+.map-container path.partial.pop {
+  animation: riseAndFall 0.4s ease;
+  transform-origin: center;
+}
+
+/* ---------------------------
+   Animations
+---------------------------- */
 @keyframes flashRed {
     0% {
         fill: #ff6666 !important;
@@ -130,40 +164,4 @@ h1 {
 @keyframes pulseRed {
     0% { fill: #ff6666; }
     100% { fill: #cc0000; }
-}
-
-@keyframes riseAndFall {
-    0% {
-        transform: scale(1) translateY(0);
-        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
-    }
-    30% {
-        transform: scale(1.2) translateY(-10px);
-        filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.3));
-    }
-    100% {
-        transform: scale(1) translateY(0);
-        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
-    }
-}
-
-
-.map-container path.correct.pop,
-.map-container path.partial.pop {
-    animation: riseAndFall 0.5s ease-out;
-    transform-origin: center;
-    cursor: default;
-}
-
-.map-container path.correct,
-.map-container path.correct.pop {
-    fill: #a8df8e !important;
-    pointer-events: none;
-}
-
-.map-container path.partial,
-.map-container path.partial.pop {
-    fill: #fdfd96 !important;
-    pointer-events: none;
-
 }
