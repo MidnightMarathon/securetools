@@ -14,15 +14,15 @@
 
   <!-- Main game card -->
   <div id="game-container">
-    <h1>U.S. States Quiz</h1>
-    <p class="instruction">Click the state shown below on the map.</p>
-
-    <div id="target-container">
-      <strong>Find:</strong> <span id="target-state">Loading...</span>
-    </div>
-
-    <div id="score-container" style="margin-top: 1rem;">
-      Score: <span id="score">0</span> / <span id="total-states">0</span> (<span id="percentage">0%</span>)
+    <div id="info-bar">
+      <h1>U.S. States Quiz</h1>
+      <div class="info-section">
+        <span class="label">Find:</span> <span id="target-state">Loading...</span>
+      </div>
+      <div class="info-section">
+        <span class="label">Score:</span>
+        <span id="score">0</span> / <span id="total-states">0</span> (<span id="percentage">0%</span>)
+      </div>
     </div>
 
     <div id="map-container" class="map-container" style="margin-top: 2rem;">
