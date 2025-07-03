@@ -144,5 +144,27 @@ h1 {
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
   transition: transform 0.3s ease, filter 0.3s ease;
   cursor: default;
+}+
+
+.map-container path.correct.pop,
+.map-container path.partial.pop {
+  transform-origin: center;
+  transform: scale(1.1) translateZ(20px);
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: default;
 }
+
+.map-container path.correct,
+.map-container path.correct.pop {
+  fill: #a8df8e !important;
+  pointer-events: none;
+}
+
+.map-container path.partial,
+.map-container path.partial.pop {
+  fill: #fdfd96 !important;
+  pointer-events: none;
+}
+
 
