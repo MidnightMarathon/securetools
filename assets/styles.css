@@ -90,47 +90,57 @@ body {
 /* Main container */
 main {
   max-width: 960px;
-  margin: 4rem auto 2rem;
+  margin: auto;
+  margin-top: 4rem; /* push main down so pills don't overlap */
   width: 100%;
   padding: 0 1rem;
 }
 
-/* Section titles */
-.section-title {
-  font-size: 1.75rem;
+/* Section heading */
+h1 {
   font-weight: 700;
-  margin: 2rem 0 1rem;
-  color: #1d1d1f;
+  font-size: 2.25rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
 
-/* Carousel wrapper and layout */
+p.description {
+  font-size: 1.15rem;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 3rem auto;
+  color: #444;
+}
+
+/* Carousel wrapper and container */
 .carousel-wrapper {
   position: relative;
-  width: 100%;
+  width: 100vw;
   overflow: hidden;
-  margin-bottom: 3rem;
-  display: flex;
-  align-items: center;
+  margin: 2rem 0;
 }
 
-/* Carousel container: horizontal scroll area */
 .carousel {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   overflow-x: auto;
   scroll-behavior: smooth;
-  padding: 1rem 0;
-  scrollbar-width: none; /* Firefox */
+  padding: 0 2rem;
 }
 
-/* Hide scrollbar for WebKit browsers */
+/* Hide default scrollbar */
 .carousel::-webkit-scrollbar {
   display: none;
 }
+.carousel {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 
-/* Carousel card styles */
-.carousel-card {
+/* Tool tile styling for carousel */
+.tool-tile {
+  flex: 0 0 40vw;  /* fixed width for 2.5 tiles per viewport */
+  max-width: 40vw;
   background: #fff;
   border-radius: 20px;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
@@ -140,29 +150,22 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height: 300px;  /* fixed height to keep consistent */
-  min-width: 240px;
-  max-width: 280px;
-  text-align: center;
-  color: inherit;
-  text-decoration: none;
+  height: 300px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
 }
 
-.carousel-card:hover {
+.tool-tile:hover {
   transform: translateY(-6px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
-/* Tool icon */
 .tool-icon {
   font-size: 3.5rem;
   margin-bottom: 1rem;
   color: #2d9cdb;
 }
 
-/* Tool name */
-.carousel-card h3,
 .tool-name {
   font-weight: 700;
   font-size: 1.25rem;
@@ -170,205 +173,12 @@ main {
   color: #1d1d1f;
 }
 
-/* Tool description */
-.carousel-card p,
 .tool-desc {
   flex-grow: 1;
   font-size: 1rem;
   color: #666;
   line-height: 1.4;
   margin: 0;
-}
-
-/* Carousel buttons - left & right arrows */
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255 255 255 / 0.3);
-  border: none;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
-  z-index: 10;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.carousel-btn:hover {
-  background: rgba(255 255 255 / 0.7);
-}
-
-.carousel-btn svg {
-  stroke: #333;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  width: 24px;
-  height: 24px;
-  pointer-events: none;
-}
-
-.carousel-btn.left {
-  left: 8px;
-}
-
-.carousel-btn.right {
-  right: 8px;
-}
-
-/* Footer */
-footer {
-  margin-top: auto;
-  padding: 1.5rem 1rem;
-  text-align: center;
-  font-size: 0.875rem;
-  color: #555;
-  width: 100%;
-  max-width: 960px;
-}
-
-/* --- Keep your QR input and other styles unchanged below this line --- */
-/* Input + Button group */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.input-group input#qr-input {
-  width: 100%;
-  max-width: 100%;
-}
-
-.input-group button#generate-btn {
-  width: auto;
-  min-width: 160px;
-  align-self: center;
-}
-
-/* Input field */
-input#qr-input {
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  margin: 1rem 0 0 0;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  transition: border 0.2s ease;
-}
-
-input#qr-input:focus {
-  border-color: #2d9cdb;
-  outline: none;
-}
-
-/* Generate button */
-button#generate-btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background: #2d9cdb;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-button#generate-btn:hover {
-  background: #1c82c1;
-}
-
-/* Error message */
-#error-msg {
-  color: #d32f2f;
-  margin-top: 1rem;
-  font-weight: 600;
-}
-
-/* QR wrapper and scaling */
-#qr-wrapper {
-  width: 160px;
-  height: 160px;
-  margin: 2rem auto 1rem;
-  transform: scale(0.14);
-  transform-origin: top left;
-}
-
-/* QR container */
-#qr-code {
-  width: 1080px;
-  height: 1080px;
-}
-
-#qr-code canvas,
-#qr-code svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* Download controls */
-#download-controls {
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-/* Format dropdown */
-#format-select {
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-/* Download link button */
-a#download-link {
-  display: inline-block;
-  padding: 0.5rem 1.25rem;
-  background: #27ae60;
-  color: white;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-a#download-link:hover {
-  background: #219150;
-}
-
-/* Password strength bar styles */
-
-.bar {
-  width: 100%;
-  height: 14px;
-  background: #ddd;
-  border-radius: 7px;
-  overflow: hidden;
-  margin-top: 0.4rem;
-}
-
-.fill {
-  height: 100%;
-  width: 0%;
-  background: #2d9cdb;
-  transition: width 0.3s ease, background-color 0.3s ease;
-}
-
-.bar-label {
-  margin-top: 1.5rem;
-  font-weight: 600;
 }
 
 /* Apple-style textarea and text input */
