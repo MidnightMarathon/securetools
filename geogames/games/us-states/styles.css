@@ -19,7 +19,7 @@ body {
     padding: 30px;
     text-align: center;
     width: 100%;
-    max-width: 1200px; /* Adjust max-width as needed for your layout */
+    max-width: 1200px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -48,123 +48,120 @@ h1 {
 #target-state {
     font-size: 1.8em;
     font-weight: bold;
-    color: #28a745; /* Green for active target */
+    color: #28a745;
     margin-bottom: 25px;
-    min-height: 1.8em; /* Prevent layout shift when text changes */
+    min-height: 1.8em;
 }
 
 /* Map Container Styling */
 #map-container {
     width: 100%;
-    max-width: 1000px; /* SVG viewBox width */
-    height: auto; /* Maintain aspect ratio */
+    max-width: 1000px;
+    height: auto;
     border: 1px solid #ddd;
     border-radius: 5px;
-    overflow: hidden; /* Ensures any overflow from the SVG is hidden */
+    overflow: hidden;
 }
 
 #map-container svg {
-    display: block; /* Remove extra space below SVG */
+    display: block;
     width: 100%;
     height: 100%;
 }
 
-/* SVG Path Styling (default for all states) */
-/* The fill/stroke properties set here will be the default for states not affected by special classes */
+/* SVG Path Styling */
 .map-container path {
-    fill: #cfd8dc; /* Light blue-grey for default states */
-    stroke: #607d8b; /* Darker blue-grey for borders */
+    fill: #cfd8dc;
+    stroke: #607d8b;
     stroke-width: 1px;
-    /* ******************************************************************* */
-    /* *** MODIFIED LINE BELOW: Removed 'fill' and 'stroke-width' from transition *** */
-    transition: filter 0.3s ease, transform 0.3s ease; 
-    /* ******************************************************************* */
+    transition: filter 0.3s ease, transform 0.3s ease;
     cursor: pointer;
 }
 
 /* Hover effect for clickable states */
 .map-container path.hover-state {
-    fill: #a0c4ff !important; /* Lighter blue on hover */
-    stroke-width: 2px; /* Make the border thicker on hover */
-    filter: drop-shadow(0 0 5px rgba(160, 196, 255, 0.8)); /* Subtle glow */
+    fill: #a0c4ff !important;
+    stroke-width: 2px;
+    filter: drop-shadow(0 0 5px rgba(160, 196, 255, 0.8));
 }
 
 /* State Feedback Classes */
 .map-container path.correct {
-    fill: #a8df8e; /* Light green for correct guess */
-    pointer-events: none; /* No clicks after correct */
+    fill: #a8df8e;
+    pointer-events: none;
 }
 
 .map-container path.partial {
-    fill: #fdfd96; /* Light yellow for correct after misses */
-    pointer-events: none; /* No clicks after correct */
+    fill: #fdfd96;
+    pointer-events: none;
 }
 
-/* State Feedback Classes */
 .map-container path.incorrect-temp {
-    fill: #ff6666 !important;     /* Force red fill directly */
-    stroke: #ff0000 !important;   /* Force red border directly */
-    stroke-width: 3px !important; /* Force thicker border directly */
-    animation: none !important;   /* Disable any conflicting animation for this test */
+    fill: #ff6666 !important;
+    stroke: #ff0000 !important;
+    stroke-width: 3px !important;
+    animation: none !important;
 }
-
-
 
 .map-container path.fail {
-    fill: #ff6666; /* Red for failed states */
-    animation: pulseRed 1.5s infinite alternate; /* Pulsating effect */
+    fill: #ff6666;
+    animation: pulseRed 1.5s infinite alternate;
 }
 
 .map-container path.given-up {
-    fill: #8b0000; /* Darker red for given up states */
-    pointer-events: none; /* No clicks after given up */
+    fill: #8b0000;
+    pointer-events: none;
 }
 
 /* Keyframes for animations */
 @keyframes flashRed {
     0% {
-        fill: #ff6666 !important; /* Start red and FORCE it to override other fills */
-        stroke: #ff0000 !important; /* Also flash the border red */
-        stroke-width: 3px !important; /* Make border thicker */
+        fill: #ff6666 !important;
+        stroke: #ff0000 !important;
+        stroke-width: 3px !important;
     }
     100% {
-        fill: #cfd8dc; /* End at default state color */
-        stroke: #607d8b; /* End at default border color */
-        stroke-width: 1px; /* End at default border width */
+        fill: #cfd8dc;
+        stroke: #607d8b;
+        stroke-width: 1px;
     }
 }
 
 @keyframes pulseRed {
-    0% { fill: #ff6666; } /* Brighter red */
-    100% { fill: #cc0000; } /* Darker red */
-}n
-.correct.pop {
-  transform-origin: center;
-  transform: scale(1.1) translateZ(20px);
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-  transition: transform 0.3s ease, filter 0.3s ease;
-  cursor: default;
-}+
+    0% { fill: #ff6666; }
+    100% { fill: #cc0000; }
+}
+
+@keyframes riseAndFall {
+    0% {
+        transform: scale(1) translateY(0);
+        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+    }
+    30% {
+        transform: scale(1.2) translateY(-10px);
+        filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.3));
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+    }
+}
 
 .map-container path.correct.pop,
 .map-container path.partial.pop {
-  transform-origin: center;
-  transform: scale(1.1) translateZ(20px);
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-  transition: transform 0.3s ease, filter 0.3s ease;
-  cursor: default;
+    animation: riseAndFall 0.5s ease-out;
+    transform-origin: center;
+    cursor: default;
 }
 
 .map-container path.correct,
 .map-container path.correct.pop {
-  fill: #a8df8e !important;
-  pointer-events: none;
+    fill: #a8df8e !important;
+    pointer-events: none;
 }
 
 .map-container path.partial,
 .map-container path.partial.pop {
-  fill: #fdfd96 !important;
-  pointer-events: none;
+    fill: #fdfd96 !important;
+    pointer-events: none;
 }
-
-
