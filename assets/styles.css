@@ -9,46 +9,39 @@ nav {
   animation: fadeIn 0.8s ease-out both;
 }
 
-/* Glassmorphism pill nav links */
 nav a {
   display: inline-block;
-  padding: 0.5rem 1.2rem;
-  background: rgba(255, 255, 255, 0.25);
+  padding: 0.4rem 1rem;
+  background-color: #fff; /* White pills */
   border-radius: 9999px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 0.9rem;
-  color: #1d1d1f;
+  font-size: 0.85rem;
+  color: #333;
   text-decoration: none;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: saturate(180%) blur(10px);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
-/* Hover state */
 nav a:hover {
-  background: rgba(255, 255, 255, 0.4);
-  border-color: rgba(255, 255, 255, 0.5);
+  background-color: #eaeaea;
+  border-color: rgba(0, 0, 0, 0.15);
   color: #2d9cdb;
   text-decoration: none;
 }
 
-/* Focus (keyboard/tab) state */
 nav a:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(45, 156, 219, 0.5);
+  box-shadow: 0 0 0 2px rgba(45, 156, 219, 0.4);
 }
 
-/* Active link (for current page) */
 nav a.active {
-  background: rgba(255, 255, 255, 0.55);
-  font-weight: 700;
-  border-color: rgba(45, 156, 219, 0.7);
-  color: #1a73e8;
+  background-color: #d0d0d5;
+  font-weight: 600;
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Fade-in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -76,7 +69,6 @@ body {
   min-height: 100vh;
 }
 
-/* Optional animated background */
 @keyframes gradientFlow {
   0% {
     background-position: 0% 50%;
@@ -89,50 +81,75 @@ body {
   }
 }
 
-/* Main container tile */
 main {
-  max-width: 960px;
+  max-width: 440px;
   margin: auto;
-  padding: 2rem 1rem 3rem;
-  margin-top: 4rem;
-  background: #ffffff;           /* White tile */
+  background: #ffffff;
+  padding: 2rem;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  color: #1d1d1f;
+  margin-top: 4rem;
 }
 
-/* Remove tile background on home */
-main.no-tile {
-  background: transparent !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
+/* Input groups - general */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-/* Heading */
-h1 {
-  font-weight: 700;
-  font-size: 2.25rem;
-  margin-bottom: 1rem;
-  text-align: center;
+textarea,
+input[type="text"],
+input[type="file"],
+textarea[readonly] {
+  width: 100%;
+  min-height: 120px;
+  padding: 1rem 1.25rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #1c1c1e;
+  background-color: #f2f2f7;
+  border: 1px solid #d2d2d7;
+  border-radius: 12px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  resize: vertical;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  outline: none;
+  box-sizing: border-box;
 }
 
-/* Description */
-p.description {
-  font-size: 1.15rem;
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto 3rem auto;
-  color: #444;
+textarea:focus,
+input[type="text"]:focus,
+input[type="file"]:focus,
+textarea[readonly]:focus {
+  border-color: #007aff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+  background-color: #fff;
+  color: #000;
+  outline: none;
 }
 
-/* Tools grid layout: 3 columns wide */
+input[type="text"] {
+  min-height: 2.5rem;
+  padding: 0.5rem 1rem;
+}
+
+textarea[readonly] {
+  background-color: #ececec;
+  color: #555;
+  cursor: text;
+}
+
+/* Tools grid and cards — shared with other pages */
 .tools-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 2rem;
 }
 
-/* Tool card link */
 .tool-link {
   display: block;
   width: 100%;
@@ -141,7 +158,6 @@ p.description {
   text-decoration: none;
 }
 
-/* Tool tile card */
 .tool-tile {
   background: #fff;
   border-radius: 20px;
@@ -157,19 +173,12 @@ p.description {
   text-align: center;
 }
 
-.tool-tile:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-}
-
-/* Tool icon */
 .tool-icon {
   font-size: 3.5rem;
   margin-bottom: 1rem;
   color: #2d9cdb;
 }
 
-/* Tool name */
 .tool-name {
   font-weight: 700;
   font-size: 1.25rem;
@@ -177,43 +186,10 @@ p.description {
   color: #1d1d1f;
 }
 
-/* Tool description */
 .tool-desc {
   flex-grow: 1;
   font-size: 1rem;
   color: #666;
   line-height: 1.4;
   margin: 0;
-}
-
-/* Password strength bar styles */
-
-.bar {
-  width: 100%;
-  height: 14px;
-  background: #ddd;
-  border-radius: 7px;
-  overflow: hidden;
-  margin-top: 0.4rem;
-}
-
-.fill {
-  height: 100%;
-  width: 0%;
-  background: #2d9cdb;
-  transition: width 0.3s ease, background-color 0.3s ease;
-}
-
-.bar-label {
-  margin-top: 1.5rem;
-  font-weight: 600;
-}
-
-/* Footer */
-footer {
-  margin-top: auto;
-  padding: 1.5rem 1rem;
-  text-align: center;
-  font-size: 0.875rem;
-  color: #555;
 }
