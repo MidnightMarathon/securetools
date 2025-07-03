@@ -1,156 +1,162 @@
-/* Container holds main tile + logo + sidebar */
-.container {
-  position: relative;
+/* Apple-style pill nav */
+nav {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
   display: flex;
-  flex-direction: column;
-  max-width: 440px;
-  margin: 2rem auto;
-  gap: 1rem;
-  transition: max-width 0.5s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+nav a {
+  padding: 0.4rem 1rem;
+  background-color: #fff;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #333;
+  text-decoration: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+nav a.active {
+  background-color: #d0d0d5;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
   background-size: 300% 300%;
   animation: gradientFlow 15s ease infinite;
   color: #1d1d1f;
-  padding: 1rem;
-  border-radius: 16px;
+  margin: 0;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
 
-/* Gradient background animation */
 @keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-/* When advanced is toggled on, expand layout */
-.container.advanced {
-  flex-direction: row;
-  max-width: 900px;
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
 }
 
-/* Wrapper to stack main tile and logo panel vertically */
-.main-and-logo-wrapper {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: 1rem;
-}
-
-/* Main tile styles */
-.main-tile {
-  background: #fff;
-  border-radius: 16px;
+main {
+  background: #ffffff;
   padding: 2rem;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-}
-
-/* Sidebar panel - slides out horizontally */
-.sidebar-panel {
-  background: #fff;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  width: 0;
-  overflow: hidden;
-  padding: 0;
-  margin-left: 1rem;
-  transition: width 0.5s ease, padding 0.5s ease;
-  flex-shrink: 0;
+  max-width: 440px;
 }
 
-/* Show sidebar when advanced is toggled */
-.container.advanced .sidebar-panel {
-  width: 320px;
-  padding: 1.5rem 2rem;
-}
-
-/* Logo panel - slides vertically below main tile */
-.logo-panel {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  max-height: 0;
-  overflow: hidden;
-  padding: 0 2rem;
-  margin-top: 0;
+input[type="text"] {
   width: 100%;
-  transition: max-height 0.5s ease, padding 0.5s ease;
-}
-
-/* Show logo panel with delay, sliding down */
-.logo-panel.show {
-  max-height: 250px; /* adjust height as needed */
-  padding: 1.5rem 2rem;
-  margin-top: 0.75rem;
-  transition-delay: 0.3s;
-}
-
-/* Input groups */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-input[type="text"],
-select,
-input[type="range"],
-input[type="file"],
-input[type="color"] {
-  width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem;
   font-size: 1rem;
+  border-radius: 10px;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box;
+  margin: 1rem 0;
 }
 
-/* Buttons */
 button {
-  padding: 0.6rem 1.2rem;
+  padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  background-color: #2d9cdb;
-  color: #fff;
+  background: #2d9cdb;
+  color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
 }
 
 button:hover {
-  background-color: #238bc9;
+  background: #1c82c1;
 }
 
-/* Download controls */
-#download-controls select,
-#download-controls a {
-  font-size: 0.95rem;
+.toggle-wrapper {
+  margin-top: 1rem;
 }
 
-/* Error message */
+#qr-wrapper {
+  margin: 2rem auto;
+  text-align: center;
+}
+
+#download-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+#download-link {
+  background: #27ae60;
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+#download-link:hover {
+  background: #219150;
+}
+
 .error-message {
-  color: red;
-  font-weight: bold;
+  color: #d32f2f;
+  margin-top: 1rem;
+  font-weight: 600;
 }
 
-/* Responsive tweaks */
-@media (max-width: 640px) {
-  .container.advanced {
-    flex-direction: column;
-  }
+/* Sidebar panel for advanced options */
+.sidebar-panel {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  width: 280px;
+  background: #ffffffcc;
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  display: none;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+}
 
-  .sidebar-panel {
-    margin-left: 0;
-    width: 100%;
-    padding: 1rem;
-  }
+.container.advanced .sidebar-panel {
+  display: flex;
+}
+
+.sidebar-panel h2 {
+  font-size: 1rem;
+  margin: 1rem 0 0.5rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.25rem;
+}
+
+.sidebar-panel label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.sidebar-panel select,
+.sidebar-panel input[type="range"],
+.sidebar-panel input[type="color"],
+.sidebar-panel input[type="file"] {
+  width: 100%;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
 }
