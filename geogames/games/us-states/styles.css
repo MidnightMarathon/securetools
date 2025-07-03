@@ -101,11 +101,9 @@ h1 {
 }
 
 /* State Feedback Classes */
-.map-container path.incorrect-temp {
-    fill: #ff6666 !important;     /* Force red fill directly */
-    stroke: #ff0000 !important;   /* Force red border directly */
-    stroke-width: 3px !important; /* Force thicker border directly */
-    animation: none !important;   /* Disable any conflicting animation for this test */
+..map-container path.incorrect-temp {
+    animation: flashRed 0.8s ease-out forwards; /* Flash red animation */
+
 }
 
 
