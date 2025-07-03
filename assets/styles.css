@@ -83,67 +83,45 @@ body {
   }
 }
 
-/* Main container with glass effect */
+/* Main container - transparent, no background or blur */
 main {
   max-width: 960px;
   margin: auto;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: saturate(180%) blur(20px);
-  border-radius: 24px;
-  box-shadow:
-    0 8px 32px rgba(31, 38, 135, 0.37),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
-  padding: 2rem 3rem 3rem;
+  padding: 2rem 1rem 3rem;
   margin-top: 4rem;
-  width: 100%;
-  color: #e0e7ff;
-  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  color: #1d1d1f; /* dark text for content inside main */
 }
 
-/* Section headings */
-main section {
-  margin-bottom: 3rem;
-}
-
-main section h2 {
+/* Title and description styling */
+h1 {
   font-weight: 700;
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #dbeafe;
+  font-size: 2.25rem;
+  margin-bottom: 1rem;
   text-align: center;
-  text-shadow: 0 0 8px rgba(96, 165, 250, 0.8);
+  color: #fff;
+  text-shadow: 0 0 8px rgba(0,0,0,0.25);
 }
 
-/* Description paragraph */
 p.description {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   text-align: center;
   max-width: 600px;
   margin: 0 auto 3rem auto;
-  color: #cbd5e1dd;
+  color: #e1e1e1;
   text-shadow: 0 0 6px rgba(0,0,0,0.2);
 }
 
-/* Tools grid */
+/* Tools grid: 3 columns */
 .tools-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns desktop */
-  gap: 2.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
 }
 
-@media (max-width: 960px) {
-  .tools-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .tools-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Tool link wrapper */
+/* Tool link block */
 .tool-link {
   display: block;
   width: 100%;
@@ -152,62 +130,49 @@ p.description {
   text-decoration: none;
 }
 
-/* Tool tile with glass morphism */
+/* Tool card styling */
 .tool-tile {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 24px;
-  box-shadow:
-    0 8px 32px rgba(31, 38, 135, 0.37),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-  padding: 2rem 1.75rem;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  padding: 2rem 1.5rem;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   height: 300px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-align: center;
-  color: #e0e7ff;
-  backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid rgba(255,255,255,0.3);
+  color: #1d1d1f;
 }
 
 .tool-tile:hover {
-  transform: translateY(-8px);
-  box-shadow:
-    0 12px 48px rgba(96, 165, 250, 0.7),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
-/* Tool icon with subtle glow */
+/* Tool icon */
 .tool-icon {
-  font-size: 4rem;
-  margin-bottom: 1.2rem;
-  color: #60a5fa;
-  text-shadow:
-    0 0 6px #60a5fa88,
-    0 0 12px #60a5fa66;
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: #2d9cdb;
 }
 
 /* Tool name */
 .tool-name {
   font-weight: 700;
-  font-size: 1.4rem;
-  margin-bottom: 0.75rem;
-  color: #e0e7ff;
-  text-shadow: 0 0 5px rgba(96, 165, 250, 0.8);
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
 }
 
 /* Tool description */
 .tool-desc {
   flex-grow: 1;
   font-size: 1rem;
-  color: #cbd5e1cc;
-  line-height: 1.5;
+  color: #666;
+  line-height: 1.4;
   margin: 0;
-  text-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
 }
 
 /* Footer */
@@ -216,12 +181,7 @@ footer {
   padding: 1.5rem 1rem;
   text-align: center;
   font-size: 0.875rem;
-  color: #a0aec0dd;
-  text-shadow: 0 0 3px rgba(0,0,0,0.15);
+  color: #ddd;
+  text-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
-/* Accessibility: focus outlines */
-.tool-tile:focus-visible {
-  outline: 3px solid #60a5fa;
-  outline-offset: 4px;
-}
