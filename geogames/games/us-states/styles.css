@@ -1,180 +1,202 @@
-/* General body and container styling */
+/* Base styles from SecureTools */
+
+/* Animate gradient background */
 body {
-    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: linear-gradient(135deg, #000000, #0f0f1a, #1a1a2e);
-    background-size: 400% 400%;
-    animation: gradientMove 30s ease infinite;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    color: #ffffff;
-    margin: 0;
-    box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
+  background-size: 300% 300%;
+  animation: gradientFlow 15s ease infinite;
+  color: #1d1d1f;
+  margin: 0;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
 
-/* Animate the background gradient smoothly */
-@keyframes gradientMove {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-/* Tile container to hold the game UI with glassmorphism effect */
+/* Main container styling from SecureTools */
 #game-container {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    padding: 40px 60px;
-    max-width: 1100px;
-    width: 100%;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  max-width: 440px;
+  margin: auto;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  margin-top: 4rem; /* push down to avoid nav overlap */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Headings */
-h1 {
-    color: #ffffff;
-    margin-bottom: 1.5rem;
-    font-weight: 700;
-    font-size: 2.8rem;
-    text-shadow: 0 0 8px rgba(0, 123, 255, 0.7);
-}
+/* Your map styles adapted inside the container */
 
-/* Info panel styling */
-.info-panel {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    max-width: 650px;
-    margin-bottom: 2.5rem;
-    font-size: 1.2rem;
-    color: #b0c4de;
-    font-weight: 600;
-}
-
-.info-item span {
-    font-weight: 700;
-    color: #57a0ff;
-}
-
-/* Target state display */
 #target-state {
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: #6ef442; /* Neon green for active target */
-    margin-bottom: 2rem;
-    min-height: 2.4rem;
-    text-shadow: 0 0 12px #6ef442aa;
-    transition: color 0.3s ease;
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #28a745; /* Green for active target */
+  margin-bottom: 25px;
+  min-height: 1.8em; /* Prevent layout shift */
 }
 
-/* Map Container Styling */
 #map-container {
-    width: 100%;
-    max-width: 1000px;
-    height: auto;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255,255,255,0.15);
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
-/* Ensure SVG fills container */
 #map-container svg {
-    display: block;
-    width: 100%;
-    height: 100%;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-/* Default styling for all states */
+/* SVG path default */
 .map-container path {
-    fill: #a0aec0; /* Soft blue-grey */
-    stroke: #718096; /* Medium grey border */
-    stroke-width: 1.5px;
-    transition: filter 0.3s ease, transform 0.3s ease, fill 0.3s ease;
-    cursor: pointer;
+  fill: #cfd8dc; /* Light blue-grey */
+  stroke: #607d8b; /* Darker blue-grey */
+  stroke-width: 1px;
+  transition: filter 0.3s ease, transform 0.3s ease, fill 0.3s ease;
+  cursor: pointer;
 }
 
-/* Hover effect for states */
+/* Hover effect */
 .map-container path.hover-state {
-    fill: #4299e1 !important; /* Bright blue on hover */
-    stroke-width: 2.5px;
-    filter: drop-shadow(0 0 6px rgba(66, 153, 225, 0.8));
+  fill: #a0c4ff !important;
+  stroke-width: 2px;
+  filter: drop-shadow(0 0 5px rgba(160, 196, 255, 0.8));
 }
 
-/* Correct guess styling */
+/* Correct guess */
 .map-container path.correct {
-    fill: #48bb78 !important; /* Emerald green */
-    pointer-events: none;
-    filter: drop-shadow(0 4px 8px rgba(72, 187, 120, 0.7));
+  fill: #a8df8e;
+  pointer-events: none;
 }
 
-/* Partial correct guess */
+/* Partial correct */
 .map-container path.partial {
-    fill: #faf089 !important; /* Soft yellow */
-    pointer-events: none;
-    filter: drop-shadow(0 4px 8px rgba(250, 240, 137, 0.7));
+  fill: #fdfd96;
+  pointer-events: none;
 }
 
-/* Incorrect temporary flash */
+/* Incorrect flash */
 .map-container path.incorrect-temp {
-    fill: #f56565 !important; /* Soft red */
-    stroke: #e53e3e !important;
-    stroke-width: 3px !important;
-    animation: none !important;
+  fill: #ff6666 !important;
+  stroke: #ff0000 !important;
+  stroke-width: 3px !important;
+  animation: none !important;
 }
 
-/* Fail state */
+/* Fail */
 .map-container path.fail {
-    fill: #e53e3e;
-    animation: pulseRed 1.5s infinite alternate;
+  fill: #ff6666;
+  animation: pulseRed 1.5s infinite alternate;
 }
 
-/* Given up state */
+/* Given up */
 .map-container path.given-up {
-    fill: #822727;
-    pointer-events: none;
+  fill: #8b0000;
+  pointer-events: none;
 }
 
-/* Pop animation for correct/partial */
+/* Pulsing red animation */
+@keyframes pulseRed {
+  0% { fill: #ff6666; }
+  100% { fill: #cc0000; }
+}
+
+/* Pop animation */
 .map-container path.correct.pop,
 .map-container path.partial.pop {
-    transform-origin: center;
-    animation: popUpDown 0.6s ease forwards;
-    filter: drop-shadow(0 6px 10px rgba(72, 187, 120, 0.7));
-    cursor: default;
+  transform-origin: center;
+  animation: popUpDown 0.6s ease forwards;
+  filter: drop-shadow(0 6px 10px rgba(72, 187, 120, 0.7));
+  cursor: default;
 }
 
-/* Keyframe for pulsing red */
-@keyframes pulseRed {
-    0% { fill: #e53e3e; }
-    100% { fill: #9b2c2c; }
-}
-
-/* Pop up then back down animation */
 @keyframes popUpDown {
-    0% {
-        transform: scale(1) translateY(0);
-        filter: drop-shadow(0 4px 6px rgba(72, 187, 120, 0.3));
-    }
-    50% {
-        transform: scale(1.15) translateY(-20px);
-        filter: drop-shadow(0 10px 15px rgba(72, 187, 120, 0.8));
-    }
-    100% {
-        transform: scale(1) translateY(0);
-        filter: drop-shadow(0 4px 6px rgba(72, 187, 120, 0.3));
-    }
+  0% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 4px 6px rgba(72, 187, 120, 0.3));
+  }
+  50% {
+    transform: scale(1.15) translateY(-20px);
+    filter: drop-shadow(0 10px 15px rgba(72, 187, 120, 0.8));
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 4px 6px rgba(72, 187, 120, 0.3));
+  }
+}
+
+/* Optional nav styling from SecureTools for pills navigation */
+nav {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+  animation: fadeIn 0.8s ease-out both;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background-color: #fff;
+  border-radius: 9999px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.85rem;
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+nav a:hover {
+  background-color: #eaeaea;
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #2d9cdb;
+  text-decoration: none;
+}
+
+nav a:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(45, 156, 219, 0.4);
+}
+
+nav a.active {
+  background-color: #d0d0d5;
+  font-weight: 600;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
