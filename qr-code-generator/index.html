@@ -7,20 +7,18 @@
   <meta name="description" content="Generate unlimited QR codes with no watermarks, no branding, and no sign-ups. 100% free and privacy-first — works instantly on any device." />
   <link rel="canonical" href="https://securetools.dev/qr-code-generator/" />
 
-  <!-- Open Graph -->
+  <!-- Open Graph & Twitter -->
   <meta property="og:title" content="SecureTools – Free QR Code Generator" />
   <meta property="og:description" content="Create QR codes instantly with no watermarks, no signups, and no tracking. 100% free and private." />
   <meta property="og:image" content="https://securetools.dev/assets/qr-preview.png" />
   <meta property="og:url" content="https://securetools.dev/qr-code-generator/" />
   <meta property="og:type" content="website" />
-
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="SecureTools – Free QR Code Generator" />
   <meta name="twitter:description" content="Create QR codes instantly with no watermarks, no signups, and no tracking." />
   <meta name="twitter:image" content="https://securetools.dev/assets/qr-preview.png" />
 
-  <!-- Favicon -->
+  <!-- Icons & Manifest -->
   <link rel="icon" href="../assets/favicon-32x32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
   <link rel="manifest" href="../assets/site.webmanifest" />
@@ -43,13 +41,8 @@
   }
   </script>
 
-  <!-- Your CSS -->
   <link rel="stylesheet" href="../assets/styles.css" />
-
-  <!-- QR Code Styling library -->
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
-
-  <!-- Your JS -->
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -63,7 +56,7 @@
 
     <section class="qr-tile">
       <div class="input-group">
-        <input id="qr-input" type="text" placeholder="https://example.com" aria-label="Enter the URL to generate QR code" />
+        <input id="qr-input" type="text" placeholder="https://example.com" aria-label="Enter URL" />
         <button id="generate-btn" aria-label="Generate QR Code">Generate QR</button>
       </div>
 
