@@ -89,15 +89,150 @@ body {
 
 /* Main container */
 main {
-  max-width: 440px;
-  margin: auto;
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  margin-top: 4rem; /* push main down so pills don't overlap */
+  max-width: 960px;
+  margin: 4rem auto 2rem;
+  width: 100%;
+  padding: 0 1rem;
 }
 
+/* Section titles */
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 2rem 0 1rem;
+  color: #1d1d1f;
+  text-align: center;
+}
+
+/* Carousel wrapper and layout */
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 3rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Carousel container: horizontal scroll area */
+.carousel {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for WebKit browsers */
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Carousel card styles */
+.carousel-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  padding: 2rem 1.5rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 300px;  /* fixed height to keep consistent */
+  min-width: 240px;
+  max-width: 280px;
+  text-align: center;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.carousel-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Tool icon */
+.tool-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: #2d9cdb;
+}
+
+/* Tool name */
+.carousel-card h3,
+.tool-name {
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #1d1d1f;
+}
+
+/* Tool description */
+.carousel-card p,
+.tool-desc {
+  flex-grow: 1;
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Carousel buttons - left & right arrows */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255 255 255 / 0.3);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.carousel-btn:hover {
+  background: rgba(255 255 255 / 0.7);
+}
+
+.carousel-btn svg {
+  stroke: #333;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+
+.carousel-btn.left {
+  left: 8px;
+}
+
+.carousel-btn.right {
+  right: 8px;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #555;
+  width: 100%;
+  max-width: 960px;
+}
+
+/* --- Keep your QR input and other styles unchanged below this line --- */
 /* Input + Button group */
 .input-group {
   display: flex;
@@ -234,56 +369,6 @@ a#download-link:hover {
 .bar-label {
   margin-top: 1.5rem;
   font-weight: 600;
-}
-
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 2rem;
-}
-
-.tool-link {
-  display: block;
-  width: 100%;
-  height: 100%;
-  color: inherit;
-  text-decoration: none;
-}
-
-.tool-tile {
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-  padding: 2rem 1.5rem;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  height: 300px;  /* fixed height */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-align: center;
-}
-
-.tool-icon {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  color: #2d9cdb;
-}
-
-.tool-name {
-  font-weight: 700;
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: #1d1d1f;
-}
-
-.tool-desc {
-  flex-grow: 1;
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.4;
-  margin: 0;
 }
 
 /* Apple-style textarea and text input */
