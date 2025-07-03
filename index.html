@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SecureTools – Free Privacy-First Web Tools</title>
-<meta name="description" content="SecureTools offers free, privacy-first web tools including QR code generator, password generator, UUID generator, and more." />
-<link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
-<link rel="stylesheet" href="assets/styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SecureTools – Free Privacy-First Web Tools</title>
+  <meta name="description" content="SecureTools offers free, privacy-first web tools including QR code generator, password generator, UUID generator, and more." />
+  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
   <nav>
@@ -20,95 +20,86 @@
       Your privacy-first source for free online tools — no signups, no tracking.
     </p>
 
-    <!-- Everyone Section -->
+    <!-- Everyone Tools Carousel -->
     <section>
-      <h2 class="section-title">Everyone</h2>
+      <h2>For Everyone</h2>
       <div class="carousel-wrapper">
-        <button class="carousel-btn left" aria-label="Scroll left">
-          <!-- Left arrow SVG -->
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-        <div class="carousel">
+        <div class="carousel" id="everyone-carousel">
           <a href="/qr-code-generator/index.html" class="tool-link" aria-label="QR Code Generator">
             <article class="tool-tile" role="button" tabindex="0">
               <div class="tool-icon">🔳</div>
-              <h2 class="tool-name">QR Code Generator</h2>
+              <h3 class="tool-name">QR Code Generator</h3>
               <p class="tool-desc">Create custom QR codes instantly, no watermark, no signup.</p>
             </article>
           </a>
+
           <a href="/password-generator/index.html" class="tool-link" aria-label="Password Generator">
             <article class="tool-tile" role="button" tabindex="0">
               <div class="tool-icon">🔑</div>
-              <h2 class="tool-name">Password Generator</h2>
+              <h3 class="tool-name">Password Generator</h3>
               <p class="tool-desc">Generate strong, random passwords securely in your browser.</p>
             </article>
           </a>
+
           <a href="/rng-generator/index.html" class="tool-link" aria-label="Random Number Generator">
             <article class="tool-tile" role="button" tabindex="0">
               <div class="tool-icon">🎲</div>
-              <h2 class="tool-name">Random Number Generator</h2>
+              <h3 class="tool-name">Random Number Generator</h3>
               <p class="tool-desc">Securely pick a random number between any two values.</p>
             </article>
           </a>
+
           <a href="/favicon-generator/index.html" class="tool-link" aria-label="Favicon Generator">
             <article class="tool-tile" role="button" tabindex="0">
               <div class="tool-icon">🖼️</div>
-              <h2 class="tool-name">Favicon Generator</h2>
+              <h3 class="tool-name">Favicon Generator</h3>
               <p class="tool-desc">Create favicons instantly, no upload, no tracking.</p>
             </article>
           </a>
-        </div>
-        <button class="carousel-btn right" aria-label="Scroll right">
-          <!-- Right arrow SVG -->
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </div>
-    </section>
 
-    <!-- Developers Section -->
-    <section>
-      <h2 class="section-title">Developers</h2>
-      <div class="carousel-wrapper">
-        <button class="carousel-btn left" aria-label="Scroll left">
-          <!-- Left arrow SVG -->
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-        <div class="carousel">
-          <a href="/uuid-generator/index.html" class="tool-link" aria-label="UUID Generator">
-            <article class="tool-tile" role="button" tabindex="0">
-              <div class="tool-icon">🆔</div>
-              <h2 class="tool-name">UUID Generator</h2>
-              <p class="tool-desc">Generate universally unique identifiers (UUIDs) instantly.</p>
-            </article>
-          </a>
           <a href="/geogames/index.html" class="tool-link" aria-label="US States Map Quiz">
             <article class="tool-tile" role="button" tabindex="0">
               <div class="tool-icon">🗺️</div>
-              <h2 class="tool-name">US States Map Quiz</h2>
+              <h3 class="tool-name">US States Map Quiz</h3>
               <p class="tool-desc">Test your knowledge of US states by clicking the correct state on the map.</p>
             </article>
           </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Developers Tools Carousel -->
+    <section>
+      <h2>For Developers</h2>
+      <div class="carousel-wrapper">
+        <div class="carousel" id="developers-carousel">
+          <a href="/uuid-generator/index.html" class="tool-link" aria-label="UUID Generator">
+            <article class="tool-tile" role="button" tabindex="0">
+              <div class="tool-icon">🆔</div>
+              <h3 class="tool-name">UUID Generator</h3>
+              <p class="tool-desc">Generate universally unique identifiers (UUIDs) instantly.</p>
+            </article>
+          </a>
+
           <a href="./base64-tool/index.html" class="tool-link" aria-label="Base64 Encoder & Decoder">
             <article class="tool-tile" role="button" tabindex="0">
               <div class="tool-icon">🔤</div>
-              <h2 class="tool-name">Base64 Encoder & Decoder</h2>
+              <h3 class="tool-name">Base64 Encoder & Decoder</h3>
               <p class="tool-desc">Encode and decode Base64 text securely in your browser.</p>
             </article>
           </a>
+
           <a href="/url-encoder-decoder/index.html" class="tool-link" aria-label="URL Encoder & Decoder">
             <article class="tool-tile" role="button" tabindex="0">
               <div class="tool-icon">🔗</div>
-              <h2 class="tool-name">URL Encoder & Decoder</h2>
+              <h3 class="tool-name">URL Encoder & Decoder</h3>
               <p class="tool-desc">Safely encode or decode URLs in your browser. No tracking, no data sent to a server.</p>
             </article>
           </a>
         </div>
-        <button class="carousel-btn right" aria-label="Scroll right">
-          <!-- Right arrow SVG -->
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
       </div>
     </section>
+
   </main>
 
   <footer>
