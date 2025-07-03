@@ -1,204 +1,125 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // QR Code styling options defaults
-  const qrCode = new QRCodeStyling({
-    width: 240,
-    height: 240,
-    data: "",
-    dotsOptions: {
-      color: "#000",
-      type: "dots"
-    },
-    cornersSquareOptions: {
-      type: "dots",
-      color: "#000"
-    },
-    backgroundOptions: {
-      color: "#fff"
-    },
-    imageOptions: {
-      crossOrigin: "anonymous",
-      margin: 5,
-      imageSize: 0.15,
-      opacity: 1
-    }
-  });
+// qr-code-generator/script.js
 
-  // DOM elements
-  const qrInput = document.getElementById("qr-input");
-  const generateBtn = document.getElementById("generate-btn");
-  const qrWrapper = document.getElementById("qr-wrapper");
-  const qrCodeContainer = document.getElementById("qr-code");
-  const downloadControls = document.getElementById("download-controls");
-  const formatSelect = document.getElementById("format-select");
-  const downloadLink = document.getElementById("download-link");
-  const errorMsg = document.getElementById("error-msg");
-  const advancedToggle = document.getElementById("advanced-toggle");
-  const advancedControls = document.querySelector(".advanced-controls");
-  const copyBtn = document.getElementById("copy-btn");
-  const darkModeToggle = document.getElementById("toggle-darkmode");
-  const logoUpload = document.getElementById("logo-upload");
-  const logoSizeInput = document.getElementById("qr-logo-size");
-  const logoOpacityInput = document.getElementById("qr-logo-opacity");
-  const dotsStyleSelect = document.getElementById("qr-dots-style");
-  const cornersStyleSelect = document.getElementById("qr-corners-style");
-  const dotColorInput = document.getElementById("qr-color");
-  const bgColorInput = document.getElementById("qr-bg-color");
-  const eyesColorInput = document.getElementById("qr-eyes-color");
-  const eyeRadiusInput = document.getElementById("qr-eye-radius");
+const qrInput = document.getElementById("qr-input");
+const generateBtn = document.getElementById("generate-btn");
+const qrWrapper = document.getElementById("qr-wrapper");
+const qrCodeContainer = document.getElementById("qr-code");
+const downloadLink = document.getElementById("download-link");
+const formatSelect = document.getElementById("format-select");
+const errorMsg = document.getElementById("error-msg");
+const advancedToggle = document.getElementById("advanced-toggle");
+const advancedPanel = document.querySelector(".advanced-controls-panel");
+const logoPanel = document.querySelector(".logo-panel");
 
-  let currentLogoDataUrl = null;
+let currentQR = null;
 
-  // Append QR code to container
+const qrCode = new QRCodeStyling({
+  width: 1080,
+  height: 1080,
+  type: "canvas",
+  data: "",
+  image: "",
+  dotsOptions: {
+    color: "#000",
+    type: "rounded"
+  },
+  cornersSquareOptions: {
+    type: "extra-rounded"
+  },
+  cornersDotOptions: {
+    type: "dot"
+  },
+  backgroundOptions: {
+    color: "#ffffff"
+  }
+});
+
+function generateQRCode() {
+  const url = qrInput.value.trim();
+  if (!url) {
+    errorMsg.style.display = "block";
+    errorMsg.textContent = "Please enter a valid URL.";
+    qrWrapper.style.display = "none";
+    downloadLink.style.display = "none";
+    return;
+  }
+
+  errorMsg.style.display = "none";
+  qrCode.update({ data: url });
+
+  qrCodeContainer.innerHTML = "";
   qrCode.append(qrCodeContainer);
+  qrWrapper.style.display = "block";
+  document.getElementById("download-controls").style.display = "flex";
+}
 
-  // Helper: Validate URL (basic)
-  function isValidUrl(string) {
-    try {
-      new URL(string);
-      return true;
-    } catch {
-      return false;
-    }
-  }
+generateBtn.addEventListener("click", generateQRCode);
+qrInput.addEventListener("input", generateQRCode);
 
-  // Generate QR code with current options
-  function generateQr() {
-    const data = qrInput.value.trim();
-    if (!data) {
-      errorMsg.textContent = "Please enter a URL or text to generate QR code.";
-      errorMsg.style.display = "block";
-      qrWrapper.style.display = "none";
-      downloadControls.style.display = "none";
-      return;
-    }
+formatSelect.addEventListener("change", () => {
+  downloadLink.download = `qr-code.${formatSelect.value}`;
+});
 
-    if (!isValidUrl(data)) {
-      errorMsg.textContent = "Please enter a valid URL.";
-      errorMsg.style.display = "block";
-      qrWrapper.style.display = "none";
-      downloadControls.style.display = "none";
-      return;
-    }
+downloadLink.addEventListener("click", () => {
+  qrCode.download({ name: "qr-code", extension: formatSelect.value });
+});
 
-    errorMsg.style.display = "none";
+// Toggle advanced mode panel
+advancedToggle.addEventListener("change", () => {
+  advancedPanel.classList.toggle("show", advancedToggle.checked);
+  logoPanel.classList.toggle("show", advancedToggle.checked);
+});
 
-    qrCode.update({
-      data,
-      dotsOptions: {
-        color: dotColorInput.value,
-        type: dotsStyleSelect.value
-      },
-      cornersSquareOptions: {
-        type: cornersStyleSelect.value,
-        color: eyesColorInput.value,
-        // radius not supported natively on this option, workaround below
-      },
-      backgroundOptions: {
-        color: bgColorInput.value
-      },
-      image: currentLogoDataUrl,
-      imageOptions: {
-        crossOrigin: "anonymous",
-        margin: 5,
-        imageSize: logoSizeInput.value / 100,
-        opacity: logoOpacityInput.value
-      }
-    });
+// Update dot style
+const dotSelect = document.getElementById("dot-style");
+dotSelect.addEventListener("change", () => {
+  qrCode.update({ dotsOptions: { type: dotSelect.value } });
+});
 
-    // Handle corner eye radius (workaround)
-    // QRCodeStyling doesn't support eye radius directly, so we override SVG after generation
-    setTimeout(() => {
-      const svgs = qrCodeContainer.querySelectorAll("svg path, svg rect");
-      svgs.forEach(el => {
-        if (el.style.fill === eyesColorInput.value) {
-          el.style.rx = `${eyeRadiusInput.value}px`;
-          el.style.ry = `${eyeRadiusInput.value}px`;
-        }
-      });
-    }, 100);
+// Update corner style
+const cornerSelect = document.getElementById("corner-style");
+cornerSelect.addEventListener("change", () => {
+  qrCode.update({ cornersSquareOptions: { type: cornerSelect.value } });
+});
 
-    qrWrapper.style.display = "block";
-    downloadControls.style.display = "flex";
-  }
+// Update eye radius
+const eyeRadius = document.getElementById("eye-radius");
+eyeRadius.addEventListener("input", () => {
+  qrCode.update({ cornersDotOptions: { type: eyeRadius.value } });
+});
 
-  // Event listeners
-  generateBtn.addEventListener("click", generateQr);
-  qrInput.addEventListener("keypress", e => {
-    if (e.key === "Enter") generateQr();
-  });
+// Background color
+const bgColorPicker = document.getElementById("bg-color");
+bgColorPicker.addEventListener("input", () => {
+  qrCode.update({ backgroundOptions: { color: bgColorPicker.value } });
+});
 
-  formatSelect.addEventListener("change", () => {
-    const format = formatSelect.value;
-    qrCode.download({ extension: format });
-  });
+// Eye color
+const eyeColorPicker = document.getElementById("eye-color");
+eyeColorPicker.addEventListener("input", () => {
+  qrCode.update({ cornersSquareOptions: { color: eyeColorPicker.value } });
+});
 
-  downloadLink.addEventListener("click", e => {
-    e.preventDefault();
-    const format = formatSelect.value;
-    qrCode.download({ extension: format });
-  });
+// Logo upload
+const logoInput = document.getElementById("logo-upload");
+logoInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    qrCode.update({ image: e.target.result });
+  };
+  reader.readAsDataURL(file);
+});
 
-  // Advanced toggle sliding effect
-  advancedToggle.addEventListener("change", () => {
-    if (advancedToggle.checked) {
-      advancedControls.style.maxHeight = advancedControls.scrollHeight + "px";
-    } else {
-      advancedControls.style.maxHeight = "0";
-    }
-  });
+// Logo size
+const logoSizeSlider = document.getElementById("logo-size");
+logoSizeSlider.addEventListener("input", () => {
+  qrCode.update({ imageOptions: { imageSize: Number(logoSizeSlider.value) } });
+});
 
-  // Logo upload
-  logoUpload.addEventListener("change", () => {
-    const file = logoUpload.files[0];
-    if (!file) {
-      currentLogoDataUrl = null;
-      generateQr();
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      currentLogoDataUrl = reader.result;
-      generateQr();
-    };
-    reader.readAsDataURL(file);
-  });
-
-  // All controls that should trigger QR regenerate
-  const controls = [
-    dotsStyleSelect,
-    cornersStyleSelect,
-    dotColorInput,
-    bgColorInput,
-    logoSizeInput,
-    logoOpacityInput,
-    eyesColorInput,
-    eyeRadiusInput
-  ];
-  controls.forEach(ctrl => {
-    ctrl.addEventListener("input", generateQr);
-  });
-
-  // Copy QR code to clipboard as PNG
-  copyBtn.addEventListener("click", async () => {
-    try {
-      const blob = await qrCode.getRawData("png");
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          "image/png": blob
-        })
-      ]);
-      alert("QR code copied to clipboard!");
-    } catch (err) {
-      alert("Failed to copy QR code. Try downloading instead.");
-    }
-  });
-
-  // Dark mode toggle
-  darkModeToggle.addEventListener("click", () => {
-    document.body.classList.toggle("dark-mode");
-  });
-
-  // Dark mode CSS (dynamically add to body class)
-  // You can add this CSS in shared styles or add here dynamically if you want
-
+// Logo opacity
+const logoOpacitySlider = document.getElementById("logo-opacity");
+logoOpacitySlider.addEventListener("input", () => {
+  qrCode.update({ imageOptions: { crossOrigin: "anonymous", margin: 0, hideBackgroundDots: false, imageSize: Number(logoSizeSlider.value), opacity: Number(logoOpacitySlider.value) } });
 });
