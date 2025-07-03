@@ -147,6 +147,7 @@ h1 {
     }
 }
 
+
 .map-container path.correct.pop,
 .map-container path.partial.pop {
     animation: riseAndFall 0.5s ease-out;
@@ -164,4 +165,5 @@ h1 {
 .map-container path.partial.pop {
     fill: #fdfd96 !important;
     pointer-events: none;
+
 }
