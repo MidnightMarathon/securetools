@@ -23,24 +23,6 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
   <link rel="manifest" href="/assets/site.webmanifest" />
 
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "SecureTools QR Code Generator",
-    "url": "https://securetools.dev/qr-code-generator/",
-    "applicationCategory": "WebApplication",
-    "description": "Free QR Code Generator — create QR codes instantly with no watermark or signup.",
-    "operatingSystem": "All",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
-  }
-  </script>
-
   <!-- Styles -->
   <link rel="stylesheet" href="/assets/styles.css" />
   <link rel="stylesheet" href="./qr-style.css" />
@@ -59,7 +41,6 @@
     <p>Create QR codes instantly. No watermark. No signup required.</p>
 
     <section class="qr-section">
-      <!-- Left tile -->
       <div class="qr-main-tile">
         <div class="input-group">
           <input id="qr-input" type="text" placeholder="https://example.com" aria-label="Enter the URL to generate QR code" />
@@ -78,34 +59,21 @@
             <option value="jpeg">JPEG</option>
           </select>
           <a id="download-link" href="#">Download</a>
-          <button id="copy-btn" aria-label="Copy to clipboard">Copy</button>
-          <button id="dark-toggle" aria-label="Toggle dark mode">🌙</button>
+          <button id="copy-btn">Copy</button>
+          <button id="dark-toggle">🌙</button>
         </div>
 
-        <p id="error-msg" class="error-message" style="display:none;" role="alert"></p>
-
-        <!-- Logo island -->
-        <div class="logo-tile" style="display:none;">
-          <h2>Logo Options</h2>
-          <div class="input-group">
-            <label for="logo-upload">Upload Logo:</label>
-            <input type="file" id="logo-upload" accept="image/*" />
-          </div>
-          <div class="input-group">
-            <label for="logo-size">Logo Size:</label>
-            <input type="range" id="logo-size" min="0" max="1" step="0.05" value="0.3" />
-          </div>
-          <div class="input-group">
-            <label for="logo-opacity">Logo Opacity:</label>
-            <input type="range" id="logo-opacity" min="0" max="1" step="0.05" value="1" />
-          </div>
+        <div class="advanced-toggle-wrapper">
+          <label>
+            <input type="checkbox" id="advanced-toggle" />
+            <span>Advanced mode</span>
+          </label>
         </div>
       </div>
 
-      <!-- Right tile -->
-      <div class="qr-options-tile">
+      <!-- Slide-out right tile -->
+      <div class="qr-options-tile advanced-tile" id="style-options">
         <h2>Customize QR</h2>
-
         <div class="input-group">
           <label for="qr-dots-style">Dot Style:</label>
           <select id="qr-dots-style">
@@ -144,6 +112,23 @@
         <div class="input-group">
           <label for="qr-eye-radius">Eye Radius:</label>
           <input type="range" id="qr-eye-radius" min="0" max="50" step="1" value="10" />
+        </div>
+      </div>
+
+      <!-- Slide-out bottom tile -->
+      <div class="logo-tile advanced-tile" id="logo-options">
+        <h2>Logo Options</h2>
+        <div class="input-group">
+          <label for="logo-upload">Upload Logo:</label>
+          <input type="file" id="logo-upload" accept="image/*" />
+        </div>
+        <div class="input-group">
+          <label for="logo-size">Logo Size:</label>
+          <input type="range" id="logo-size" min="0" max="1" step="0.05" value="0.3" />
+        </div>
+        <div class="input-group">
+          <label for="logo-opacity">Logo Opacity:</label>
+          <input type="range" id="logo-opacity" min="0" max="1" step="0.05" value="1" />
         </div>
       </div>
     </section>
