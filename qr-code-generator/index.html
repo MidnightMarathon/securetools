@@ -43,16 +43,13 @@
   }
   </script>
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="style.css" />
 
   <!-- Load QRCodeStyling library before your script -->
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body>
-  <nav>
-    <a href="/" aria-label="SecureTools Home" class="active">← SecureTools Home</a>
-  </nav>
 
   <main>
     <h1>Free QR Code Generator</h1>
@@ -62,6 +59,17 @@
       <div class="input-group">
         <input id="qr-input" type="text" placeholder="https://example.com" aria-label="Enter the URL to generate QR code" />
         <button id="generate-btn" aria-label="Generate QR Code">Generate QR</button>
+      </div>
+
+      <div class="advanced-toggle-wrapper" style="margin-top: 1.5rem; text-align: center;">
+        <label for="advanced-toggle" style="cursor: pointer; user-select: none;">
+          <input type="checkbox" id="advanced-toggle" />
+          <span style="margin-left: 0.5rem; font-weight: 600; color: #2d9cdb;">Advanced mode</span>
+        </label>
+      </div>
+
+      <div class="advanced-controls">
+        <!-- Advanced controls will slide down here -->
       </div>
 
       <div id="qr-wrapper" style="display:none;" aria-live="polite">
@@ -76,48 +84,9 @@
           <option value="jpeg">JPEG</option>
         </select>
         <a id="download-link" href="#" aria-label="Download QR code">Download</a>
-        <button id="copy-btn" aria-label="Copy QR code image to clipboard" title="Copy QR code image">📋 Copy</button>
       </div>
 
       <p id="error-msg" class="error-message" style="display:none;" role="alert"></p>
-
-      <button id="advanced-toggle" aria-expanded="false" aria-controls="advanced-controls" class="advanced-toggle-btn">
-        Show Advanced Options ▼
-      </button>
-
-      <div id="advanced-controls" class="advanced-controls" hidden>
-        <h2>Advanced Options</h2>
-
-        <label for="dot-color">Dot Color:</label>
-        <input type="color" id="dot-color" name="dot-color" value="#000000" />
-
-        <label for="bg-color">Background Color:</label>
-        <input type="color" id="bg-color" name="bg-color" value="#ffffff" />
-
-        <label for="dot-shape">Dot Shape:</label>
-        <select id="dot-shape" name="dot-shape" aria-label="Select dot shape">
-          <option value="square">Square</option>
-          <option value="dots">Dots</option>
-          <option value="rounded">Rounded</option>
-          <option value="classy">Classy</option>
-          <option value="classy-rounded">Classy Rounded</option>
-        </select>
-
-        <label for="eye-shape">Eye Shape:</label>
-        <select id="eye-shape" name="eye-shape" aria-label="Select eye shape">
-          <option value="square">Square</option>
-          <option value="circle">Circle</option>
-          <option value="diamond">Diamond</option>
-        </select>
-
-        <label for="margin">Margin (px):</label>
-        <input type="number" id="margin" name="margin" min="0" max="100" value="10" />
-
-        <label for="logo-upload">Upload Logo (max 100x100px):</label>
-        <input type="file" id="logo-upload" name="logo-upload" accept="image/*" />
-
-        <button id="clear-logo-btn" type="button" style="margin-top: 0.5rem;">Clear Logo</button>
-      </div>
     </section>
   </main>
 
@@ -126,8 +95,6 @@
     <p>No cookies, no tracking, no stored data — generation is done 100% in your browser.</p>
     <p>
       Built with ❤️ using <a href="https://github.com/kozakdenys/qr-code-styling" target="_blank" rel="noopener noreferrer">qr-code-styling</a> (MIT License).
-      &nbsp; | &nbsp;
-      <button id="dark-mode-toggle" aria-pressed="false" aria-label="Toggle dark mode">🌙 Dark Mode</button>
     </p>
   </footer>
 </body>
