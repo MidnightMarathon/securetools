@@ -6,78 +6,56 @@ const attempts = {};
 const failedStates = new Set();
 
 const stateNames = {
-    "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California",
-    "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "FL": "Florida", "GA": "Georgia",
-    "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa",
-    "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland",
-    "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri",
-    "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey",
-    "NM": "New Mexico", "NY": "New York", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio",
-    "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina",
-    "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont",
-    "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"
+  "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California",
+  "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "FL": "Florida", "GA": "Georgia",
+  "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa",
+  "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland",
+  "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri",
+  "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey",
+  "NM": "New Mexico", "NY": "New York", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio",
+  "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina",
+  "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont",
+  "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"
 };
 
 function getFullStateName(abbr) {
-    return stateNames[abbr] || abbr; // Returns full name or abbreviation if not found
+  return stateNames[abbr] || abbr;
 }
 
 function pickNewTarget() {
-    const remaining = states.filter(id => {
-        const el = document.getElementById(id);
-        return el &&
-               !el.classList.contains("correct") &&
-               !el.classList.contains("partial") &&
-               !failedStates.has(id);
-    });
+  const remaining = states.filter(id => {
+    const el = document.getElementById(id);
+    return el &&
+      !el.classList.contains("correct") &&
+      !el.classList.contains("partial") &&
+      !failedStates.has(id);
+  });
 
-    if (currentTargetEl) {
-  if (wrongGuessesCount === 0) {
-    currentTargetEl.classList.add("correct");
-  } else {
-    currentTargetEl.classList.add("partial");
+  if (currentTarget) {
+    const prevTargetEl = document.getElementById(currentTarget);
+    if (prevTargetEl) {
+      prevTargetEl.classList.remove("fail");
+    }
   }
-  
-  // Bring to front in SVG
-  currentTargetEl.parentNode.appendChild(currentTargetEl);
-  
-  // Add pop effect
-  currentTargetEl.classList.add("pop");
-  setTimeout(() => {
-    currentTargetEl.classList.remove("pop");
-  }, 500);
-}
 
-    // Reset the 'fail' class on the *previous* current target if it was there
-    if (currentTarget) {
-        const prevTargetEl = document.getElementById(currentTarget);
-        if (prevTargetEl) {
-            prevTargetEl.classList.remove("fail");
-        }
-    }
+  if (remaining.length === 0) {
+    document.getElementById("target-state").textContent = "All done! 🎉";
+    currentTarget = null;
+    return;
+  }
 
-    if (remaining.length === 0) {
-        document.getElementById("target-state").textContent = "All done! 🎉";
-        currentTarget = null;
-        return;
-    }
-
-    currentTarget = remaining[Math.floor(Math.random() * remaining.length)];
-    attempts[currentTarget] = 0;
-
-    // This is where the full state name is set for the display
-    document.getElementById("target-state").textContent = getFullStateName(currentTarget);
+  currentTarget = remaining[Math.floor(Math.random() * remaining.length)];
+  attempts[currentTarget] = 0;
+  document.getElementById("target-state").textContent = getFullStateName(currentTarget);
 }
 
 function updateScoreDisplay() {
-    const percentage = (total > 0) ? ((score / total) * 100).toFixed(1) : 0;
-    document.getElementById("score").textContent = `${score} / ${total} (${percentage}%)`;
+  const percentage = (total > 0) ? ((score / total) * 100).toFixed(1) : 0;
+  document.getElementById("score").textContent = `${score} / ${total} (${percentage}%)`;
 }
 
-
-
 function handleStateClick(clickedId) {
-  // Clear all lingering red flashes immediately on any new click
+  // Clear all previous incorrect flashes
   states.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.remove('incorrect-temp');
@@ -88,7 +66,7 @@ function handleStateClick(clickedId) {
   const clickedEl = document.getElementById(clickedId);
   const currentTargetEl = document.getElementById(currentTarget);
 
-  // SCENARIO 1: current target is fail, waiting for acknowledgment
+  // --- Scenario 1: Failed state waiting for acknowledgment ---
   if (currentTargetEl && currentTargetEl.classList.contains("fail")) {
     if (clickedId === currentTarget) {
       currentTargetEl.classList.remove("fail");
@@ -96,7 +74,6 @@ function handleStateClick(clickedId) {
       failedStates.add(currentTarget);
       pickNewTarget();
     } else {
-      // Apply red flash to wrong clicked state (already cleared above)
       if (clickedEl) {
         clickedEl.classList.add("incorrect-temp");
         setTimeout(() => {
@@ -107,103 +84,91 @@ function handleStateClick(clickedId) {
     return;
   }
 
-
-    // --- SCENARIO 2: Normal gameplay ---
-    if (clickedId !== currentTarget) {
-        // Incorrect Guess for the current target
-        attempts[currentTarget]++;
-
-        // Apply temporary red flash to the *clicked* element
-        if (clickedEl) {
-            clickedEl.classList.remove("incorrect-temp");
-            void clickedEl.offsetWidth;
-            clickedEl.classList.add("incorrect-temp");
-            setTimeout(() => {
-                clickedEl.classList.remove("incorrect-temp");
-            }, 800);
-        }
-
-        if (attempts[currentTarget] >= 5) {
-            // Current target has exceeded max attempts, mark it as 'fail' (red, pulsating)
-            if (currentTargetEl) {
-                currentTargetEl.classList.add("fail");
-            }
-        }
-
-    } else {
-        // Correct Guess for the current target
-        const wrongGuessesCount = attempts[currentTarget];
-
-        // Apply correct/partial class to the original state element
-        if (currentTargetEl) {
-            if (wrongGuessesCount === 0) {
-                currentTargetEl.classList.add("correct");
-            } else {
-                currentTargetEl.classList.add("partial");
-            }
-        }
-        
-        score++;
-        updateScoreDisplay();
-        pickNewTarget(); // Move to the next state
+  // --- Scenario 2: Normal gameplay ---
+  if (clickedId !== currentTarget) {
+    attempts[currentTarget]++;
+    if (clickedEl) {
+      clickedEl.classList.add("incorrect-temp");
+      setTimeout(() => {
+        clickedEl.classList.remove("incorrect-temp");
+      }, 800);
     }
+
+    if (attempts[currentTarget] >= 5) {
+      if (currentTargetEl) {
+        currentTargetEl.classList.add("fail");
+      }
+    }
+
+  } else {
+    const wrongGuessesCount = attempts[currentTarget];
+
+    if (currentTargetEl) {
+      if (wrongGuessesCount === 0) {
+        currentTargetEl.classList.add("correct");
+      } else {
+        currentTargetEl.classList.add("partial");
+      }
+
+      // Bring to front in SVG
+      currentTargetEl.parentNode.appendChild(currentTargetEl);
+
+      // Add pop effect
+      currentTargetEl.classList.add("pop");
+      setTimeout(() => {
+        currentTargetEl.classList.remove("pop");
+      }, 500);
+    }
+
+    score++;
+    updateScoreDisplay();
+    pickNewTarget();
+  }
 }
 
-
-// --- Main Game Setup on SVG Load ---
+// --- SVG Setup ---
 fetch("us.svg")
-    .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.text();
-    })
-    .then(svg => {
-        document.getElementById("map-container").innerHTML = svg;
+  .then(res => {
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    return res.text();
+  })
+  .then(svg => {
+    document.getElementById("map-container").innerHTML = svg;
 
-        states = Array.from(document.querySelectorAll("#map-container path[id]"))
-                      .map(p => p.id)
-                      // Filter out any IDs that are not 2 characters or not in stateNames
-                      // This effectively excludes "DC" and other non-state paths
-                      .filter(id => id.length === 2 && stateNames[id]);
+    states = Array.from(document.querySelectorAll("#map-container path[id]"))
+      .map(p => p.id)
+      .filter(id => id.length === 2 && stateNames[id]);
 
-        total = states.length;
+    total = states.length;
+    document.getElementById("total-states").textContent = total;
+    updateScoreDisplay();
 
-        document.getElementById("total-states").textContent = total;
-        updateScoreDisplay();
+    states.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.removeAttribute("style");
+        el.removeAttribute("fill");
 
-        // Loop through all states to set up event listeners
-        states.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.removeAttribute("style"); // Clear inline styles from SVG
-                el.removeAttribute("fill");   // Clear inline fills from SVG
-
-                // Mouseover (hover) event listener
-                el.addEventListener('mouseover', function() {
-                    // Only apply hover if it's not already a "final" state
-                    if (!this.classList.contains("correct") &&
-                        !this.classList.contains("partial") &&
-                        !this.classList.contains("fail") &&
-                        !this.classList.contains("given-up") &&
-                        !this.classList.contains("incorrect-temp")) { // Exclude if it's flashing red
-                        this.classList.add("hover-state");
-                    }
-                });
-
-                // Mouseout (unhover) event listener
-                el.addEventListener('mouseout', function() {
-                    this.classList.remove("hover-state");
-                });
-
-                // Click event listener
-                el.addEventListener("click", () => {
-                    handleStateClick(id);
-                });
-            } else {
-                console.warn(`Element with ID "${id}" not found in the SVG. Check your SVG or selector.`);
-            }
+        el.addEventListener('mouseover', function () {
+          if (!this.classList.contains("correct") &&
+            !this.classList.contains("partial") &&
+            !this.classList.contains("fail") &&
+            !this.classList.contains("given-up") &&
+            !this.classList.contains("incorrect-temp")) {
+            this.classList.add("hover-state");
+          }
         });
 
-        // Start the first round of the game
-        pickNewTarget();
-    })
-    .catch(err => console.error("Failed to load SVG:", err));
+        el.addEventListener('mouseout', function () {
+          this.classList.remove("hover-state");
+        });
+
+        el.addEventListener("click", () => {
+          handleStateClick(id);
+        });
+      }
+    });
+
+    pickNewTarget();
+  })
+  .catch(err => console.error("Failed to load SVG:", err));
