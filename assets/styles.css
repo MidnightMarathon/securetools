@@ -216,10 +216,13 @@ textarea[readonly] {
   font-weight: 600;
 }
 
-/* Wide screen support */
-
 @media (min-width: 900px) {
   main {
-    max-width: 720px;
+    max-width: 960px;
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
+
