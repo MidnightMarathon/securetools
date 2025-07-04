@@ -5,21 +5,31 @@ let total = 0;
 const attempts = {};
 const failedStates = new Set();
 
-const stateNames = {
-  "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California",
-  "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "FL": "Florida", "GA": "Georgia",
-  "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa",
-  "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland",
-  "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri",
-  "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey",
-  "NM": "New Mexico", "NY": "New York", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio",
-  "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina",
-  "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont",
-  "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"
-};
+const stateNames = new Set([
+  // States in 1861
+  "Alabama", "Arkansas", "California", "Connecticut", "Delaware",
+  "Florida", "Georgia", "Illinois", "Indiana", "Iowa",
+  "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",
+  "Michigan", "Minnesota", "Mississippi", "Missouri", "New Hampshire",
+  "New Jersey", "New York", "North Carolina", "Ohio", "Oregon",
+  "Pennsylvania", "Rhode Island", "South Carolina", "Tennessee", "Texas",
+  "Vermont", "Virginia", "Wisconsin",
+  
+  // Territories in 1861
+  "Washington Territory",
+  "Nebraska Territory",
+  "Utah Territory",
+  "New Mexico Territory",
+  "Kansas Territory",
+  "Nevada Territory",
+  "Dakota Territory",
+  "Indian Territory",
+  // Add any other relevant territories for 1861 here
+]);
 
-function getFullStateName(abbr) {
-  return stateNames[abbr] || abbr;
+function getFullStateName(name) {
+  // Since IDs are full names, just return name
+  return name;
 }
 
 function pickNewTarget() {
@@ -129,7 +139,7 @@ function handleStateClick(clickedId) {
 }
 
 // --- SVG Setup ---
-fetch("us.svg")
+fetch("Historical_blank_US_map_1861.svg")
   .then(res => {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     return res.text();
@@ -137,9 +147,10 @@ fetch("us.svg")
   .then(svg => {
     document.getElementById("map-container").innerHTML = svg;
 
+    // Grab all paths with an ID that matches a known state/territory name
     states = Array.from(document.querySelectorAll("#map-container path[id]"))
       .map(p => p.id)
-      .filter(id => id.length === 2 && stateNames[id]);
+      .filter(id => stateNames.has(id));
 
     total = states.length;
     document.getElementById("total-states").textContent = total;
