@@ -23,6 +23,7 @@ const stateNames = new Set([
   "Nevada Territory",
   "Dakota Territory",
   "Indian Territory"
+  "Colorado Territory"
 ]);
 
 function getFullStateName(name) {
