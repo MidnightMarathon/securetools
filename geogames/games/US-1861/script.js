@@ -6,23 +6,18 @@ const attempts = {};
 const failedStates = new Set();
 
 const stateNames = new Set([
-  // States (33 in 1861)
-  "Alabama", "Arkansas", "California", "Connecticut", "Delaware",
-  "Florida", "Georgia", "Illinois", "Indiana", "Iowa",
-  "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",
-  "Michigan", "Minnesota", "Mississippi", "Missouri", "New Hampshire",
-  "New Jersey", "New York", "North Carolina", "Ohio", "Oregon",
+  "Alabama", "Arkansas", "California", "Colorado Territory", "Connecticut",
+  "Dakota Territory", "Delaware", "Florida", "Georgia", "Illinois", "Indian Territory",
+  "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
+  "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri",
+  "Nebraska Territory", "Nevada Territory", "New Hampshire", "New Jersey",
+  "New Mexico Territory", "New York", "North Carolina", "Ohio", "Oregon",
   "Pennsylvania", "Rhode Island", "South Carolina", "Tennessee", "Texas",
-  "Vermont", "Virginia", "Wisconsin",
-
-  // Territories (9)
-  "Washington Territory", "Nebraska Territory", "Utah Territory",
-  "New Mexico Territory", "Kansas Territory", "Nevada Territory",
-  "Dakota Territory", "Indian Territory", "Colorado Territory"
+  "Utah Territory", "Vermont", "Virginia", "Washington Territory", "Wisconsin"
 ]);
 
 function getFullStateName(name) {
-  return name;
+  return name; // IDs in the SVG are full names
 }
 
 function pickNewTarget() {
@@ -54,8 +49,7 @@ function pickNewTarget() {
 
 function updateScoreDisplay() {
   const percentage = (total > 0) ? ((score / total) * 100).toFixed(1) : 0;
-  document.getElementById("score").textContent = `${score}`;
-  document.getElementById("percentage").textContent = `${percentage}%`;
+  document.getElementById("score").textContent = `${score} / ${total} (${percentage}%)`;
 }
 
 function handleStateClick(clickedId) {
@@ -78,7 +72,9 @@ function handleStateClick(clickedId) {
     } else {
       if (clickedEl) {
         clickedEl.classList.add("incorrect-temp");
-        setTimeout(() => clickedEl.classList.remove("incorrect-temp"), 800);
+        setTimeout(() => {
+          clickedEl.classList.remove("incorrect-temp");
+        }, 800);
       }
     }
     return;
@@ -88,28 +84,34 @@ function handleStateClick(clickedId) {
     attempts[currentTarget]++;
     if (clickedEl) {
       clickedEl.classList.add("incorrect-temp");
-      setTimeout(() => clickedEl.classList.remove("incorrect-temp"), 800);
+      setTimeout(() => {
+        clickedEl.classList.remove("incorrect-temp");
+      }, 800);
     }
 
-    if (attempts[currentTarget] >= 5 && currentTargetEl) {
-      currentTargetEl.classList.remove("hover-state");
-      currentTargetEl.classList.add("fail");
+    if (attempts[currentTarget] >= 5) {
+      if (currentTargetEl) {
+        currentTargetEl.classList.remove("hover-state");
+        currentTargetEl.classList.add("fail");
+      }
     }
 
   } else {
-    const wrongGuesses = attempts[currentTarget];
+    const wrongGuessesCount = attempts[currentTarget];
 
     if (currentTargetEl) {
       currentTargetEl.classList.remove("hover-state");
-      if (wrongGuesses === 0) {
+      if (wrongGuessesCount === 0) {
         currentTargetEl.classList.add("correct");
       } else {
         currentTargetEl.classList.add("partial");
       }
 
-      // NO DOM REORDERING (avoids transform bugs)
+      // POP EFFECT WITHOUT DOM REORDERING
       currentTargetEl.classList.add("pop");
-      setTimeout(() => currentTargetEl.classList.remove("pop"), 500);
+      setTimeout(() => {
+        currentTargetEl.classList.remove("pop");
+      }, 500);
     }
 
     score++;
@@ -118,7 +120,6 @@ function handleStateClick(clickedId) {
   }
 }
 
-// --- SVG Setup ---
 fetch("Historical_blank_US_map_1861.svg")
   .then(res => {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
@@ -163,7 +164,4 @@ fetch("Historical_blank_US_map_1861.svg")
 
     pickNewTarget();
   })
-  .catch(err => {
-    console.error("Failed to load SVG:", err);
-    document.getElementById("map-container").innerHTML = `<p style="color:red;">Map failed to load.</p>`;
-  });
+  .catch(err => console.error("Failed to load SVG:", err));
