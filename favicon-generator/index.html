@@ -8,7 +8,7 @@
 </head>
 <body>
 
-  <main class="tool-tile" style="max-width: 480px; margin: 3rem auto; padding: 2rem; display: flex; flex-direction: column;">
+  <main class="tool-tile" style="max-width: 480px; margin: 3rem auto; padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem;">
 
     <header>
       <h1 class="tool-name" style="margin-bottom: 0.25rem;">Favicon Generator</h1>
@@ -17,7 +17,7 @@
       </p>
     </header>
 
-    <section class="input-group" style="margin-top: 1.5rem; margin-bottom: 2rem; align-items: flex-start;">
+    <section class="input-group" style="align-items: flex-start;">
       <label for="upload" style="font-weight: 600; font-size: 1rem; cursor: pointer;">
         Select an image file:
       </label>
@@ -28,11 +28,9 @@
       </button>
     </section>
 
-    <section id="preview" aria-live="polite" aria-label="Image preview"></section>
+    <section id="preview" aria-live="polite" aria-label="Image preview" style="display: flex; justify-content: center;"></section>
 
-    <section id="downloads" aria-live="polite" aria-label="Download links" style="margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.8rem;">
-      <!-- download buttons will appear here -->
-    </section>
+    <section id="downloads" aria-live="polite" aria-label="Download links" style="display: flex; flex-wrap: wrap; gap: 0.8rem;"></section>
 
   </main>
 
