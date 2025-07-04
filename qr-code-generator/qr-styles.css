@@ -25,7 +25,7 @@ nav a.active {
   border-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Base styles */
+/* Gradient background */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -47,92 +47,86 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-/* Container setup */
+/* Container layout */
 .container {
   position: relative;
   display: flex;
-  justify-content: center;
-  padding: 2rem 1rem;
-  max-width: 1000px;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 1rem;
+  max-width: 1200px;
   width: 100%;
 }
 
-/* Main and logo column */
+/* Main and logo wrapper */
 .main-and-logo-wrapper {
-  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
   max-width: 440px;
+  width: 100%;
   background: white;
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  z-index: 2;
+  position: relative;
+  z-index: 1;
 }
 
 /* Main tile */
 .main-tile {
-  position: relative;
-  z-index: 10;
   background: transparent;
 }
 
-/* Sidebar panel — starts underneath main tile */
+/* QR wrapper inside main tile */
+#qr-code canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+}
+
+/* Sidebar panel */
 .sidebar-panel {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
+  flex-shrink: 0;
   width: 280px;
-  height: calc(100% + 120px); /* height of main + logo */
   background: white;
   border-radius: 16px;
-  padding: 1.5rem 2rem;
+  padding: 2rem;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  transform: translateX(0);
+  transform: translateX(20px);
   opacity: 0;
   pointer-events: none;
   transition: transform 0.4s ease, opacity 0.4s ease;
-  z-index: 1;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Advanced mode: sidebar slides out from underneath */
-.container.advanced .sidebar-panel {
-  transform: translateX(calc(100% + 2rem));
-  opacity: 1;
-  pointer-events: auto;
-  z-index: 3;
-}
-
-/* Logo panel slides in from bottom */
+/* Logo panel (included inside sidebar now) */
 .logo-panel {
-  background: white;
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  margin-top: 1.5rem;
-  max-width: 440px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  transform: translateY(-30px);
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  z-index: 1;
+  margin-top: 2rem;
 }
 
-/* Show logo panel after 0.3s */
-.container.advanced .logo-panel {
-  transition-delay: 0.3s;
-  transform: translateY(0);
+/* Advanced toggle activates sidebar + logo options */
+.container.advanced .sidebar-panel {
+  transform: translateX(0);
   opacity: 1;
   pointer-events: auto;
 }
 
 /* Advanced toggle */
 .advanced-toggle-wrapper {
-  position: relative;
-  z-index: 20;
-  margin-top: 1.5rem;
   text-align: center;
+  margin-top: 1.5rem;
+  z-index: 10;
+}
+
+/* Error message */
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 1rem;
 }
 
 /* Responsive layout */
@@ -143,20 +137,14 @@ body {
   }
 
   .sidebar-panel {
-    position: relative;
     width: 100%;
     transform: translateX(0);
     opacity: 1 !important;
     pointer-events: auto !important;
     margin-top: 2rem;
-    height: auto;
-    box-shadow: none;
   }
 
   .logo-panel {
     margin-top: 1.5rem;
-    transform: translateY(0);
-    opacity: 1 !important;
-    pointer-events: auto !important;
   }
 }
