@@ -14,7 +14,7 @@ const stateNames = new Set([
   "New Jersey", "New York", "North Carolina", "Ohio", "Oregon",
   "Pennsylvania", "Rhode Island", "South Carolina", "Tennessee", "Texas",
   "Vermont", "Virginia", "Wisconsin",
-  
+
   // Territories in 1861
   "Washington Territory",
   "Nebraska Territory",
@@ -24,12 +24,11 @@ const stateNames = new Set([
   "Nevada Territory",
   "Dakota Territory",
   "Indian Territory",
-  // Add any other relevant territories for 1861 here
+  // Add any others you need
 ]);
 
 function getFullStateName(name) {
-  // Since IDs are full names, just return name
-  return name;
+  return name; // IDs are full names in the SVG
 }
 
 function pickNewTarget() {
@@ -43,9 +42,7 @@ function pickNewTarget() {
 
   if (currentTarget) {
     const prevTargetEl = document.getElementById(currentTarget);
-    if (prevTargetEl) {
-      prevTargetEl.classList.remove("fail");
-    }
+    if (prevTargetEl) prevTargetEl.classList.remove("fail");
   }
 
   if (remaining.length === 0) {
@@ -60,7 +57,7 @@ function pickNewTarget() {
 }
 
 function updateScoreDisplay() {
-  const percentage = (total > 0) ? ((score / total) * 100).toFixed(1) : 0;
+  const percentage = total > 0 ? ((score / total) * 100).toFixed(1) : 0;
   document.getElementById("score").textContent = `${score} / ${total} (${percentage}%)`;
 }
 
@@ -76,7 +73,7 @@ function handleStateClick(clickedId) {
   const clickedEl = document.getElementById(clickedId);
   const currentTargetEl = document.getElementById(currentTarget);
 
-  // --- Scenario 1: Failed state waiting for acknowledgment ---
+  // Handle failed state acknowledgment
   if (currentTargetEl && currentTargetEl.classList.contains("fail")) {
     if (clickedId === currentTarget) {
       currentTargetEl.classList.remove("fail", "hover-state");
@@ -86,50 +83,41 @@ function handleStateClick(clickedId) {
     } else {
       if (clickedEl) {
         clickedEl.classList.add("incorrect-temp");
-        setTimeout(() => {
-          clickedEl.classList.remove("incorrect-temp");
-        }, 800);
+        setTimeout(() => clickedEl.classList.remove("incorrect-temp"), 800);
       }
     }
     return;
   }
 
-  // --- Scenario 2: Normal gameplay ---
+  // Normal gameplay
   if (clickedId !== currentTarget) {
     attempts[currentTarget]++;
     if (clickedEl) {
       clickedEl.classList.add("incorrect-temp");
-      setTimeout(() => {
-        clickedEl.classList.remove("incorrect-temp");
-      }, 800);
+      setTimeout(() => clickedEl.classList.remove("incorrect-temp"), 800);
     }
 
-    if (attempts[currentTarget] >= 5) {
-      if (currentTargetEl) {
-        currentTargetEl.classList.remove("hover-state");
-        currentTargetEl.classList.add("fail");
-      }
+    if (attempts[currentTarget] >= 5 && currentTargetEl) {
+      currentTargetEl.classList.remove("hover-state");
+      currentTargetEl.classList.add("fail");
     }
-
   } else {
     const wrongGuessesCount = attempts[currentTarget];
 
     if (currentTargetEl) {
-      currentTargetEl.classList.remove("hover-state");  // Remove hover blue fill
+      currentTargetEl.classList.remove("hover-state");
       if (wrongGuessesCount === 0) {
         currentTargetEl.classList.add("correct");
       } else {
         currentTargetEl.classList.add("partial");
       }
 
-      // Bring to front in SVG
+      // Bring the clicked state to front
       currentTargetEl.parentNode.appendChild(currentTargetEl);
 
-      // Add pop effect
+      // Pop animation
       currentTargetEl.classList.add("pop");
-      setTimeout(() => {
-        currentTargetEl.classList.remove("pop");
-      }, 500);
+      setTimeout(() => currentTargetEl.classList.remove("pop"), 500);
     }
 
     score++;
@@ -138,7 +126,7 @@ function handleStateClick(clickedId) {
   }
 }
 
-// --- SVG Setup ---
+// Load SVG and initialize game
 fetch("Historical_blank_US_map_1861.svg")
   .then(res => {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
@@ -147,7 +135,6 @@ fetch("Historical_blank_US_map_1861.svg")
   .then(svg => {
     document.getElementById("map-container").innerHTML = svg;
 
-    // Grab all paths with an ID that matches a known state/territory name
     states = Array.from(document.querySelectorAll("#map-container path[id]"))
       .map(p => p.id)
       .filter(id => stateNames.has(id));
@@ -158,28 +145,26 @@ fetch("Historical_blank_US_map_1861.svg")
 
     states.forEach(id => {
       const el = document.getElementById(id);
-      if (el) {
-        el.removeAttribute("style");
-        el.removeAttribute("fill");
+      if (!el) return;
 
-        el.addEventListener('mouseover', function () {
-          if (!this.classList.contains("correct") &&
-            !this.classList.contains("partial") &&
-            !this.classList.contains("fail") &&
-            !this.classList.contains("given-up") &&
-            !this.classList.contains("incorrect-temp")) {
-            this.classList.add("hover-state");
-          }
-        });
+      el.removeAttribute("style");
+      el.removeAttribute("fill");
 
-        el.addEventListener('mouseout', function () {
-          this.classList.remove("hover-state");
-        });
+      el.addEventListener('mouseover', () => {
+        if (!el.classList.contains("correct") &&
+          !el.classList.contains("partial") &&
+          !el.classList.contains("fail") &&
+          !el.classList.contains("given-up") &&
+          !el.classList.contains("incorrect-temp")) {
+          el.classList.add("hover-state");
+        }
+      });
 
-        el.addEventListener("click", () => {
-          handleStateClick(id);
-        });
-      }
+      el.addEventListener('mouseout', () => {
+        el.classList.remove("hover-state");
+      });
+
+      el.addEventListener("click", () => handleStateClick(id));
     });
 
     pickNewTarget();
