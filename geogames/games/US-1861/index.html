@@ -1,90 +1,31 @@
-// script.js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>U.S. States & Territories Quiz – 1861</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="game-container">
+    <div id="top-info-bar">
+      <div id="title-instructions">
+        <h1>U.S. States & Territories Quiz – 1861</h1>
+        <span class="instruction">Click the correct state or territory on the map.</span>
+      </div>
+      <div id="target-container">
+        <span>Find:</span> <strong id="target-state">Loading...</strong>
+      </div>
+      <div id="score-container">
+        Score: <span id="score">0</span> / <span id="total-states">0</span> (<span id="percentage">0%</span>)
+      </div>
+    </div>
 
-const mapContainer = document.getElementById('map-container');
-const targetStateEl = document.getElementById('target-state');
-const scoreEl = document.getElementById('score');
-const totalStatesEl = document.getElementById('total-states');
-const percentageEl = document.getElementById('percentage');
+    <div id="map-container" class="map-container">
+      <!-- The SVG map will be loaded here -->
+    </div>
+  </main>
 
-let states = []; // Array to hold all state elements from the SVG
-let stateNames = []; // Array of state names or IDs
-let currentTarget = null;
-let score = 0;
-let total = 0;
-
-// Load the SVG map
-fetch('./Historical_blank_US_map_1861.svg')
-  .then(res => res.text())
-  .then(svgText => {
-    mapContainer.innerHTML = svgText;
-
-    // Get the SVG element now inside the container
-    const svg = mapContainer.querySelector('svg');
-
-    // Find all the states inside the SVG by ID or class
-    // You'll need to adjust the selector based on your SVG structure
-    // Example assumes states have IDs like 'AL', 'CA', 'NY', etc.
-    states = Array.from(svg.querySelectorAll('path[id]'));
-
-    // Store state IDs or names
-    stateNames = states.map(s => s.id);
-
-    total = stateNames.length;
-    totalStatesEl.textContent = total;
-
-    // Add click listeners to states
-    states.forEach(state => {
-      state.style.cursor = 'pointer';
-      state.addEventListener('click', () => {
-        if (state.id === currentTarget) {
-          score++;
-          scoreEl.textContent = score;
-          updatePercentage();
-          pickNextState();
-        } else {
-          // maybe add feedback for wrong choice
-          alert(`Wrong! That is ${state.id}`);
-        }
-      });
-    });
-
-    // Start the game by picking a random state
-    pickNextState();
-  })
-  .catch(err => {
-    mapContainer.innerHTML = `<p>Error loading map: ${err}</p>`;
-  });
-
-function pickNextState() {
-  if (score >= total) {
-    targetStateEl.textContent = 'Done!';
-    return;
-  }
-
-  // Pick a random target state not yet scored
-  let next;
-  do {
-    next = stateNames[Math.floor(Math.random() * stateNames.length)];
-  } while (next === currentTarget);
-
-  currentTarget = next;
-  targetStateEl.textContent = currentTarget;
-
-  highlightTarget(currentTarget);
-}
-
-function highlightTarget(stateId) {
-  // Reset all states first
-  states.forEach(s => s.style.fill = '');
-
-  // Highlight the target state
-  const targetEl = states.find(s => s.id === stateId);
-  if (targetEl) {
-    targetEl.style.fill = 'yellow';  // or any highlight color
-  }
-}
-
-function updatePercentage() {
-  const pct = ((score / total) * 100).toFixed(1);
-  percentageEl.textContent = `${pct}%`;
-}
+  <script src="script.js"></script>
+</body>
+</html>
