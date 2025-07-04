@@ -1,36 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Favicon Generator — SecureTools Style</title>
+  <title>Favicon Generator — SecureTools</title>
+  <!-- Global site-wide styles -->
   <link rel="stylesheet" href="../assets/styles.css" />
+  <!-- Local overrides for favicon-generator -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <main class="tool-tile" style="max-width: 480px; margin: 3rem auto; padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem;">
+  <main class="tool-tile">
 
     <header>
-      <h1 class="tool-name" style="margin-bottom: 0.25rem;">Favicon Generator</h1>
-      <p class="tool-desc" style="margin-top: 0; color: #555;">
+      <h1 class="tool-name">Favicon Generator</h1>
+      <p class="tool-desc">
         Upload any image and generate favicons in all popular sizes, plus a favicon.ico file.
       </p>
     </header>
 
-    <section class="input-group" style="align-items: flex-start;">
+    <section class="input-group" style="align-items: flex-start; width: 100%;">
       <label for="upload" style="font-weight: 600; font-size: 1rem; cursor: pointer;">
         Select an image file:
       </label>
-      <input id="upload" type="file" accept="image/*" aria-describedby="file-info" style="margin-top: 0.5rem;" />
+      <input id="upload" type="file" accept="image/*" style="margin-top: 0.5rem; width: 100%;" />
       <div id="file-info" aria-live="polite" style="font-style: italic; color: #666; margin-top: 0.3rem;"></div>
-      <button id="clear" type="button" disabled style="margin-top: 1rem;">
-        Clear
-      </button>
+      <button id="clear" type="button" disabled>Clear</button>
     </section>
 
-    <section id="preview" aria-live="polite" aria-label="Image preview" style="display: flex; justify-content: center;"></section>
+    <section id="preview" aria-live="polite" aria-label="Image preview"></section>
 
-    <section id="downloads" aria-live="polite" aria-label="Download links" style="display: flex; flex-wrap: wrap; gap: 0.8rem;"></section>
+    <section id="downloads" aria-live="polite" aria-label="Download links"></section>
 
   </main>
 
