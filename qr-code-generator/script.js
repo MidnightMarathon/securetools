@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const advancedToggle = document.getElementById("advanced-toggle");
   const container = document.querySelector(".container");
 
+
   // QR CodeStyling instance
   const qrCode = new QRCodeStyling({
     width: 440,
@@ -46,11 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function isValidUrl(string) {
     try {
       new URL(string);
+
       return true;
     } catch {
       return false;
     }
   }
+
 
   // Automatically prepend https:// if missing
   function normalizeUrl(url) {
@@ -64,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function generateQr() {
     let data = qrInput.value.trim();
     if (!data) {
+
       errorMsg.style.display = "block";
       errorMsg.textContent = "Please enter a URL or text to generate QR code.";
       qrWrapper.style.display = "none";
@@ -71,9 +75,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+
     data = normalizeUrl(data);
 
     if (!isValidUrl(data)) {
+
       errorMsg.style.display = "block";
       errorMsg.textContent = "Please enter a valid URL.";
       qrWrapper.style.display = "none";
@@ -83,7 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     errorMsg.style.display = "none";
 
+
     qrCode.update({ data });
+
 
     qrWrapper.style.display = "block";
     downloadLink.style.display = "inline-block";
@@ -148,11 +156,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoInput = document.getElementById("logo-upload");
   logoInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
+
     if (!file) {
       qrCode.update({ image: "" });
       return;
     }
     const reader = new FileReader();
+
     reader.onload = (e) => {
       qrCode.update({ image: e.target.result });
     };
@@ -172,4 +182,5 @@ document.addEventListener("DOMContentLoaded", () => {
     const opacity = Number(logoOpacitySlider.value);
     qrCode.update({ imageOptions: { opacity: opacity } });
   });
+
 });
