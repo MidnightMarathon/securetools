@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>U.S. States & Territories Quiz – 1861</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="game-container">
+    <div id="top-info-bar">
+      <div id="title-instructions">
+        <h1>U.S. States & Territories Quiz – 1861</h1>
+        <span class="instruction">Click the correct state or territory on the map.</span>
+      </div>
+      <div id="target-container">
+        <span>Find:</span> <strong id="target-state">Loading...</strong>
+      </div>
+      <div id="score-container">
+        Score: <span id="score">0</span> / <span id="total-states">0</span> (<span id="percentage">0%</span>)
+      </div>
+    </div>
+
+    <div id="map-container" class="map-container">
+      <!-- The SVG map will be loaded here -->
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
