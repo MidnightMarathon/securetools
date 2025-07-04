@@ -20,81 +20,81 @@
 
     <label for="input">Input:</label>
     <textarea id="input" maxlength="16000" oninput="updateCounts()" placeholder="Enter text or Base64 here..."></textarea>
-    <div style="text-align:right; font-size: 0.9rem;">Input length: <span id="inputCount">0</span></div>
+    <div class="input-meta">Input length: <span id="inputCount" aria-live="polite">0</span></div>
 
-    <div style="margin: 1rem 0;">
-      <label for="stripWhitespace" style="cursor: pointer;">
+    <fieldset>
+      <legend>Options</legend>
+
+      <label for="stripWhitespace">
         <input type="checkbox" id="stripWhitespace" checked />
         Strip whitespace & newlines before decoding
-        <span title="Check if input contains spaces or line breaks.">&#x1F6C8;</span>
-      </label><br/>
+        <span title="Check if input contains spaces or line breaks.">🛈</span>
+      </label>
 
-      <label for="urlSafe" style="cursor: pointer;">
+      <label for="urlSafe">
         <input type="checkbox" id="urlSafe" />
         Use URL-safe Base64 (MIME-safe)
-        <span title="Use URL-safe Base64 variant, replacing + and / with - and _.">&#x1F6C8;</span>
-      </label><br/>
+        <span title="Use URL-safe Base64 variant, replacing + and / with - and _.">🛈</span>
+      </label>
 
-      <label for="formatBase64" style="cursor: pointer;">
+      <label for="formatBase64">
         <input type="checkbox" id="formatBase64" />
         Insert line breaks every 76 characters (MIME format)
-        <span title="Format output with line breaks every 76 characters for email compatibility.">&#x1F6C8;</span>
+        <span title="Format output with line breaks every 76 characters for email compatibility.">🛈</span>
       </label>
-    </div>
+    </fieldset>
 
     <div class="btn-row">
-      <button onclick="handleEncode()">Encode</button>
-      <button onclick="handleDecode()">Decode</button>
+      <button type="button" onclick="handleEncode()">Encode</button>
+      <button type="button" onclick="handleDecode()">Decode</button>
     </div>
 
-    <div class="output-section">
+    <section class="output-section">
       <label for="encoded">Encoded Output:</label>
       <textarea id="encoded" readonly></textarea>
-      <div style="text-align:right; font-size: 0.9rem;">Length: <span id="encodedCount">0</span></div>
-      <button onclick="copyToClipboard('encoded')">Copy Encoded</button>
-    </div>
+      <div class="output-meta">Length: <span id="encodedCount" aria-live="polite">0</span></div>
+      <button type="button" onclick="copyToClipboard('encoded')">Copy Encoded</button>
+    </section>
 
-    <div class="output-section">
+    <section class="output-section">
       <label for="decoded">Decoded Output:</label>
       <textarea id="decoded" readonly></textarea>
-      <div style="text-align:right; font-size: 0.9rem;">Length: <span id="decodedCount">0</span></div>
-      <button onclick="copyToClipboard('decoded')">Copy Decoded</button>
-    </div>
+      <div class="output-meta">Length: <span id="decodedCount" aria-live="polite">0</span></div>
+      <button type="button" onclick="copyToClipboard('decoded')">Copy Decoded</button>
+    </section>
 
-    <div id="error" class="error"></div>
-    <div id="copied" class="copy-note">Copied to clipboard!</div>
+    <div id="error" class="error" role="alert"></div>
+    <div id="copied" class="copy-note" aria-live="assertive">Copied to clipboard!</div>
 
-    <hr style="margin: 3rem 0;" />
+    <hr />
 
     <h2>Convert File to Base64</h2>
     <p>Select a file to instantly convert it to Base64 in your browser.</p>
 
-    <input type="file" id="fileInput" onchange="handleFileUpload()" />
-    <div style="margin: 1rem 0;">
-      <label>
-        <input type="checkbox" id="stripDataPrefix" checked />
-        Strip <code>data:</code> prefix
-      </label>
-    </div>
+    <input type="file" id="fileInput" onchange="handleFileUpload()" autocomplete="off" />
+    <label for="stripDataPrefix">
+      <input type="checkbox" id="stripDataPrefix" checked />
+      Strip <code>data:</code> prefix
+    </label>
 
-    <textarea id="fileOutput" readonly placeholder="Encoded Base64 will appear here..." style="min-height: 180px;"></textarea>
-    <div style="text-align: right; font-size: 0.9rem;">Length: <span id="fileOutputCount">0</span></div>
-    <button onclick="copyToClipboard('fileOutput')">Copy File Base64</button>
+    <textarea id="fileOutput" readonly placeholder="Encoded Base64 will appear here..." class="tall-textarea"></textarea>
+    <div class="output-meta">Length: <span id="fileOutputCount" aria-live="polite">0</span></div>
+    <button type="button" onclick="copyToClipboard('fileOutput')">Copy File Base64</button>
 
-    <hr style="margin: 3rem 0;" />
+    <hr />
 
     <h2>Download Decoded Base64 as File</h2>
     <p>Paste Base64 text below and save it as a file.</p>
 
     <label for="downloadFilename">Filename:</label>
-    <input type="text" id="downloadFilename" placeholder="example.txt" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem;" />
+    <input type="text" id="downloadFilename" placeholder="example.txt" autocomplete="off" />
 
-    <textarea id="downloadBase64Input" placeholder="Paste Base64 here..." style="min-height: 180px;" oninput="updateDownloadCount()"></textarea>
-    <div style="text-align: right; font-size: 0.9rem;">Length: <span id="downloadBase64Count">0</span></div>
+    <label for="downloadBase64Input">Base64 Input:</label>
+    <textarea id="downloadBase64Input" placeholder="Paste Base64 here..." class="tall-textarea" oninput="updateDownloadCount()"></textarea>
+    <div class="output-meta">Length: <span id="downloadBase64Count" aria-live="polite">0</span></div>
 
-    <button onclick="handleBase64Download()">Download File</button>
-
-    <div id="downloadError" class="error"></div>
+    <button type="button" onclick="handleBase64Download()">Download File</button>
+    <div id="downloadError" class="error" role="alert"></div>
 
   </main>
 
