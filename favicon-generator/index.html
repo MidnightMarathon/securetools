@@ -4,25 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Favicon Generator — SecureTools Style</title>
-  <!-- Adjust relative path to CSS -->
   <link rel="stylesheet" href="../assets/styles.css" />
 </head>
 <body>
 
-  <main>
-    <h1>Favicon Generator</h1>
+  <main class="tool-tile" style="max-width: 480px; margin: 3rem auto; padding: 2rem;">
+    <header>
+      <h1 class="tool-name" style="margin-bottom: 0.25rem;">Favicon Generator</h1>
+      <p class="tool-desc" style="margin-top: 0; color: #555;">
+        Upload any image and generate favicons in all popular sizes, plus a favicon.ico file.
+      </p>
+    </header>
 
-    <label for="upload">Upload an image file:</label>
-    <input id="upload" type="file" accept="image/*" aria-describedby="file-info" />
-    <div id="file-info" aria-live="polite"></div>
+    <section class="input-group" style="margin-top: 1.5rem; margin-bottom: 2rem;">
+      <label for="upload" style="font-weight: 600; font-size: 1rem; cursor: pointer;">
+        Select an image file:
+      </label>
+      <input id="upload" type="file" accept="image/*" aria-describedby="file-info" style="margin-top: 0.5rem;" />
+      <div id="file-info" aria-live="polite" style="font-style: italic; color: #666; margin-top: 0.3rem;"></div>
+      <button id="clear" type="button" disabled style="margin-top: 1rem; align-self: flex-start;">
+        Clear
+      </button>
+    </section>
 
-    <button id="clear" type="button" disabled>Clear</button>
+    <section id="preview" aria-live="polite" aria-label="Image preview"></section>
 
-    <div id="preview" aria-live="polite" aria-label="Image preview"></div>
-    <div id="downloads" aria-live="polite" aria-label="Download links"></div>
+    <section id="downloads" aria-live="polite" aria-label="Download links" style="margin-top: 2rem;"></section>
   </main>
 
-  <!-- canvas-to-ico from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-to-ico@1.1.0/dist/canvas-to-ico.min.js"></script>
   <script src="script.js"></script>
 </body>
