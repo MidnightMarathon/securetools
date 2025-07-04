@@ -5,8 +5,8 @@ let total = 0;
 const attempts = {};
 const failedStates = new Set();
 
-// Full state and territory names as they appear in the 1861 SVG's path IDs
 const stateNames = new Set([
+  // States (33 in 1861)
   "Alabama", "Arkansas", "California", "Connecticut", "Delaware",
   "Florida", "Georgia", "Illinois", "Indiana", "Iowa",
   "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",
@@ -15,19 +15,13 @@ const stateNames = new Set([
   "Pennsylvania", "Rhode Island", "South Carolina", "Tennessee", "Texas",
   "Vermont", "Virginia", "Wisconsin",
 
-  "Washington Territory",
-  "Nebraska Territory",
-  "Utah Territory",
-  "New Mexico Territory",
-  "Kansas Territory",
-  "Nevada Territory",
-  "Dakota Territory",
-  "Indian Territory"
-  "Colorado Territory"
+  // Territories (9)
+  "Washington Territory", "Nebraska Territory", "Utah Territory",
+  "New Mexico Territory", "Kansas Territory", "Nevada Territory",
+  "Dakota Territory", "Indian Territory", "Colorado Territory"
 ]);
 
 function getFullStateName(name) {
-  // IDs are full names, so just return directly
   return name;
 }
 
@@ -60,7 +54,8 @@ function pickNewTarget() {
 
 function updateScoreDisplay() {
   const percentage = (total > 0) ? ((score / total) * 100).toFixed(1) : 0;
-  document.getElementById("score").textContent = `${score} / ${total} (${percentage}%)`;
+  document.getElementById("score").textContent = `${score}`;
+  document.getElementById("percentage").textContent = `${percentage}%`;
 }
 
 function handleStateClick(clickedId) {
@@ -83,9 +78,7 @@ function handleStateClick(clickedId) {
     } else {
       if (clickedEl) {
         clickedEl.classList.add("incorrect-temp");
-        setTimeout(() => {
-          clickedEl.classList.remove("incorrect-temp");
-        }, 800);
+        setTimeout(() => clickedEl.classList.remove("incorrect-temp"), 800);
       }
     }
     return;
@@ -95,33 +88,28 @@ function handleStateClick(clickedId) {
     attempts[currentTarget]++;
     if (clickedEl) {
       clickedEl.classList.add("incorrect-temp");
-      setTimeout(() => {
-        clickedEl.classList.remove("incorrect-temp");
-      }, 800);
+      setTimeout(() => clickedEl.classList.remove("incorrect-temp"), 800);
     }
 
-    if (attempts[currentTarget] >= 5) {
-      if (currentTargetEl) {
-        currentTargetEl.classList.remove("hover-state");
-        currentTargetEl.classList.add("fail");
-      }
+    if (attempts[currentTarget] >= 5 && currentTargetEl) {
+      currentTargetEl.classList.remove("hover-state");
+      currentTargetEl.classList.add("fail");
     }
 
   } else {
-    const wrongGuessesCount = attempts[currentTarget];
+    const wrongGuesses = attempts[currentTarget];
 
     if (currentTargetEl) {
       currentTargetEl.classList.remove("hover-state");
-      if (wrongGuessesCount === 0) {
+      if (wrongGuesses === 0) {
         currentTargetEl.classList.add("correct");
       } else {
         currentTargetEl.classList.add("partial");
       }
-      currentTargetEl.parentNode.appendChild(currentTargetEl);
+
+      // NO DOM REORDERING (avoids transform bugs)
       currentTargetEl.classList.add("pop");
-      setTimeout(() => {
-        currentTargetEl.classList.remove("pop");
-      }, 500);
+      setTimeout(() => currentTargetEl.classList.remove("pop"), 500);
     }
 
     score++;
@@ -139,7 +127,6 @@ fetch("Historical_blank_US_map_1861.svg")
   .then(svg => {
     document.getElementById("map-container").innerHTML = svg;
 
-    // Grab all path elements with IDs matching our state/territory names
     states = Array.from(document.querySelectorAll("#map-container path[id]"))
       .map(p => p.id)
       .filter(id => stateNames.has(id));
@@ -176,4 +163,7 @@ fetch("Historical_blank_US_map_1861.svg")
 
     pickNewTarget();
   })
-  .catch(err => console.error("Failed to load SVG:", err));
+  .catch(err => {
+    console.error("Failed to load SVG:", err);
+    document.getElementById("map-container").innerHTML = `<p style="color:red;">Map failed to load.</p>`;
+  });
