@@ -228,4 +228,34 @@ textarea[readonly] {
   }
 }
 
+#downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+#downloads a.download-button {
+  background: #2d9cdb;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  user-select: none;
+  transition: background-color 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+#downloads a.download-button:hover,
+#downloads a.download-button:focus {
+  background: #1b6fbf;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 156, 219, 0.4);
+  cursor: pointer;
+}
 
