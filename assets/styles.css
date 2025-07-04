@@ -9,7 +9,6 @@ nav {
   animation: fadeIn 0.8s ease-out both;
 }
 
-/* Base nav link styling */
 nav a {
   display: inline-block;
   padding: 0.4rem 1rem;
@@ -19,34 +18,30 @@ nav a {
   font-size: 0.85rem;
   color: #333;
   text-decoration: none;
-  font-weight: 600;  /* Bold all the time */
+  font-weight: 600;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
 }
 
-/* Hover state */
 nav a:hover {
   background-color: #eaeaea;
   border-color: rgba(0, 0, 0, 0.15);
   color: #2d9cdb;
-  text-decoration: none; /* No underline */
+  text-decoration: none;
 }
 
-/* Focus (keyboard/tab) state */
 nav a:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(45, 156, 219, 0.4);
 }
 
-/* Active link (for current page) */
 nav a.active {
   background-color: #d0d0d5;
   font-weight: 600;
   border-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Fade-in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -74,7 +69,6 @@ body {
   min-height: 100vh;
 }
 
-/* Optional animated background */
 @keyframes gradientFlow {
   0% {
     background-position: 0% 50%;
@@ -87,7 +81,6 @@ body {
   }
 }
 
-/* Main container */
 main {
   max-width: 440px;
   margin: auto;
@@ -95,177 +88,16 @@ main {
   padding: 2rem;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  margin-top: 4rem; /* push main down so pills don't overlap */
+  margin-top: 4rem;
 }
 
-/* Input + Button group */
+/* Input groups - general */
 .input-group {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
 }
-
-.input-group input#qr-input {
-  width: 100%;
-  max-width: 100%;
-}
-
-.input-group button#generate-btn {
-  width: auto;
-  min-width: 160px;
-  align-self: center;
-}
-
-/* Input field */
-input#qr-input {
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  margin: 1rem 0 0 0;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  transition: border 0.2s ease;
-}
-
-input#qr-input:focus {
-  border-color: #2d9cdb;
-  outline: none;
-}
-
-/* Generate button */
-button#generate-btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background: #2d9cdb;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-button#generate-btn:hover {
-  background: #1c82c1;
-}
-
-/* Error message */
-#error-msg {
-  color: #d32f2f;
-  margin-top: 1rem;
-  font-weight: 600;
-}
-
-
-/* Download controls */
-#download-controls {
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-/* Format dropdown */
-#format-select {
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-/* Download link button */
-a#download-link {
-  display: inline-block;
-  padding: 0.5rem 1.25rem;
-  background: #27ae60;
-  color: white;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-a#download-link:hover {
-  background: #219150;
-}
-
-/* Password strength bar styles */
-
-.bar {
-  width: 100%;
-  height: 14px;
-  background: #ddd;
-  border-radius: 7px;
-  overflow: hidden;
-  margin-top: 0.4rem;
-}
-
-.fill {
-  height: 100%;
-  width: 0%;
-  background: #2d9cdb;
-  transition: width 0.3s ease, background-color 0.3s ease;
-}
-
-.bar-label {
-  margin-top: 1.5rem;
-  font-weight: 600;
-}
-
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 2rem;
-}
-
-.tool-link {
-  display: block;
-  width: 100%;
-  height: 100%;
-  color: inherit;
-  text-decoration: none;
-}
-
-.tool-tile {
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-  padding: 2rem 1.5rem;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  height: 300px;  /* fixed height */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-align: center;
-}
-
-.tool-icon {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  color: #2d9cdb;
-}
-
-.tool-name {
-  font-weight: 700;
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: #1d1d1f;
-}
-
-.tool-desc {
-  flex-grow: 1;
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.4;
-  margin: 0;
-}
-
-/* Apple-style textarea and text input */
 
 textarea,
 input[type="text"],
@@ -300,113 +132,100 @@ textarea[readonly]:focus {
   outline: none;
 }
 
-/* Optional smaller height for inputs like filename or checkboxes */
+
 input[type="text"] {
   min-height: 2.5rem;
   padding: 0.5rem 1rem;
+
 }
 
-/* Make readonly textareas a bit lighter background */
 textarea[readonly] {
   background-color: #ececec;
   color: #555;
   cursor: text;
 }
 
-/* === New QR Code Generator Styles (Glass Morphism + Advanced Panel) === */
-
-.qr-tile {
-  background: rgba(255 255 255 / 0.4);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255 255 255 / 0.18);
-  padding: 2rem 1.5rem;
-  margin: 2rem auto;
-  max-width: 440px;
-  transition: all 0.3s ease;
+/* Tools grid and cards — shared with other pages */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
 }
 
-#qr-wrapper {
-  margin: 2rem auto 1rem;
-  width: 280px;
-  height: 280px;
-}
-
-#qr-code {
+.tool-link {
+  display: block;
   width: 100%;
   height: 100%;
+  color: inherit;
+  text-decoration: none;
 }
 
-.input-group {
+.tool-tile {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  padding: 2rem 1.5rem;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-
-input#qr-input {
-  background: rgba(255 255 255 / 0.75);
-  border-radius: 12px;
-  border: none;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  color: #1d1d1f;
-  box-shadow: 0 4px 30px rgba(31, 38, 135, 0.1);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  transition: box-shadow 0.3s ease;
-}
-
-input#qr-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px #2d9cdbaa;
-}
-
-/* Button */
-button#generate-btn {
-  background: #2d9cdb;
-  color: white;
-  font-weight: 700;
-  border: none;
-  border-radius: 12px;
-  padding: 0.75rem 1.5rem;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  box-shadow: 0 4px 15px #2d9cdbaa;
-}
-
-button#generate-btn:hover {
-  background: #1c82c1;
-  box-shadow: 0 6px 20px #1c82c1cc;
-}
-
-/* Download Controls */
-#download-controls {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  justify-content: space-between;
+  height: 300px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
 }
 
-/* Advanced controls panel - initially hidden */
-.advanced-controls {
-  max-height: 0;
+.tool-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: #2d9cdb;
+}
+
+.tool-name {
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #1d1d1f;
+}
+
+.tool-desc {
+  flex-grow: 1;
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.4;
+  margin: 0;
+}
+/* Password strength bar styles */
+
+.bar {
+  width: 100%;
+  height: 14px;
+  background: #ddd;
+  border-radius: 7px;
   overflow: hidden;
-  transition: max-height 0.5s ease, padding 0.5s ease;
-  padding: 0 0;
-  background: rgba(255 255 255 / 0.35);
-  border-radius: 16px;
-  margin-top: 1rem;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255 255 255 / 0.2);
+  margin-top: 0.4rem;
 }
 
-/* Advanced controls visible */
-.advanced-controls.open {
-  max-height: 600px; /* enough height to show content */
-  padding: 1rem 1.5rem;
+.fill {
+  height: 100%;
+  width: 0%;
+  background: #2d9cdb;
+  transition: width 0.3s ease, background-color 0.3s ease;
 }
+
+.bar-label {
+  margin-top: 1.5rem;
+  font-weight: 600;
+}
+
+@media (min-width: 900px) {
+  main {
+    max-width: 960px;
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 

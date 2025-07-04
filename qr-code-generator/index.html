@@ -25,76 +25,133 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
   <link rel="manifest" href="/assets/site.webmanifest" />
 
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "SecureTools QR Code Generator",
-    "url": "https://securetools.dev/qr-code-generator/",
-    "applicationCategory": "WebApplication",
-    "description": "Free QR Code Generator — create QR codes instantly with no watermark or signup.",
-    "operatingSystem": "All",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
-  }
-  </script>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="qr-styles.css" />
 
-  <!-- Load QRCodeStyling library before your script -->
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body>
 
-  <main>
-    <h1>Free QR Code Generator</h1>
-    <p>Create QR codes instantly. No watermark. No signup required.</p>
 
-    <section class="qr-tile">
-      <div class="input-group">
-        <input id="qr-input" type="text" placeholder="https://example.com" aria-label="Enter the URL to generate QR code" />
-        <button id="generate-btn" aria-label="Generate QR Code">Generate QR</button>
+  <main class="container" id="container">
+    <div class="main-and-logo-wrapper">
+      <section class="main-tile" aria-label="QR Code Generator">
+        <h1>Free QR Code Generator</h1>
+        <p>Create QR codes instantly. No watermark. No signup required.</p>
+
+
+        <div class="input-group">
+          <input
+            id="qr-input"
+            type="text"
+            placeholder="https://example.com"
+            aria-label="Enter the URL to generate QR code"
+          />
+          <button id="generate-btn" aria-label="Generate QR Code">Generate QR</button>
+        </div>
+
+        <div class="advanced-toggle-wrapper">
+          <label for="advanced-toggle" style="cursor: pointer; user-select: none;">
+            <input type="checkbox" id="advanced-toggle" />
+            <span style="margin-left: 0.5rem; font-weight: 600; color: #2d9cdb;">Advanced mode</span>
+          </label>
+        </div>
+
+        <div id="qr-wrapper" style="display:none;" aria-live="polite" aria-label="Generated QR code container">
+          <div id="qr-code"></div>
+        </div>
+
+        <div id="download-controls" style="display:none; margin-top: 1rem; justify-content: center; gap: 1rem;">
+          <label for="format-select">Download format:</label>
+          <select id="format-select" aria-label="Select QR code download format">
+            <option value="png">PNG</option>
+            <option value="svg">SVG</option>
+            <option value="jpeg">JPEG</option>
+          </select>
+          <a id="download-link" href="#" aria-label="Download QR code">Download</a>
+        </div>
+
+        <p id="error-msg" class="error-message" style="display:none;" role="alert"></p>
+      </section>
+    </div>
+
+    <section class="sidebar-panel" aria-label="Advanced QR Code Options" aria-hidden="true">
+      <h2>QR Style Options</h2>
+
+      <label for="dot-style">Dot style:</label>
+      <select id="dot-style" aria-label="Select dot style">
+        <option value="rounded">Rounded</option>
+        <option value="dots">Dots</option>
+        <option value="classy">Classy</option>
+        <option value="classy-rounded">Classy Rounded</option>
+        <option value="square">Square</option>
+      </select>
+
+      <label for="corner-style">Corner style:</label>
+      <select id="corner-style" aria-label="Select corner style">
+        <option value="extra-rounded">Extra Rounded</option>
+        <option value="dot">Dot</option>
+        <option value="square">Square</option>
+      </select>
+
+      <label for="eye-radius">Eye radius (px):</label>
+      <input
+        type="range"
+        id="eye-radius"
+        min="0"
+        max="20"
+        step="1"
+        value="10"
+        aria-valuemin="0"
+        aria-valuemax="20"
+        aria-valuenow="10"
+      />
+
+      <label for="bg-color">Background color:</label>
+      <input type="color" id="bg-color" value="#ffffff" />
+
+      <label for="eye-color">Eye color:</label>
+      <input type="color" id="eye-color" value="#000000" />
+
+      <div class="logo-panel">
+        <h2>Logo Options</h2>
+
+        <label for="logo-upload">Upload logo:</label>
+        <input type="file" id="logo-upload" accept="image/*" />
+
+        <label for="logo-size">Logo size:</label>
+        <input
+          type="range"
+          id="logo-size"
+          min="0"
+          max="50"
+          step="1"
+          value="15"
+        />
+
+        <label for="logo-opacity">Logo opacity:</label>
+        <input
+          type="range"
+          id="logo-opacity"
+          min="0"
+          max="1"
+          step="0.01"
+          value="1"
+        />
       </div>
-
-      <div class="advanced-toggle-wrapper" style="margin-top: 1.5rem; text-align: center;">
-        <label for="advanced-toggle" style="cursor: pointer; user-select: none;">
-          <input type="checkbox" id="advanced-toggle" />
-          <span style="margin-left: 0.5rem; font-weight: 600; color: #2d9cdb;">Advanced mode</span>
-        </label>
-      </div>
-
-      <div class="advanced-controls">
-        <!-- Advanced controls will slide down here -->
-      </div>
-
-      <div id="qr-wrapper" style="display:none;" aria-live="polite">
-        <div id="qr-code" aria-label="Generated QR code"></div>
-      </div>
-
-      <div id="download-controls" style="display:none;">
-        <label for="format-select">Download format:</label>
-        <select id="format-select" aria-label="Select QR code download format">
-          <option value="png">PNG</option>
-          <option value="svg">SVG</option>
-          <option value="jpeg">JPEG</option>
-        </select>
-        <a id="download-link" href="#" aria-label="Download QR code">Download</a>
-      </div>
-
-      <p id="error-msg" class="error-message" style="display:none;" role="alert"></p>
     </section>
   </main>
 
-  <footer>
+  <footer style="text-align:center; margin-top: 3rem; font-size: 0.9rem; color: #666;">
     <p><strong>SecureTools</strong> QR Generator is free and privacy-first.</p>
     <p>No cookies, no tracking, no stored data — generation is done 100% in your browser.</p>
     <p>
-      Built with ❤️ using <a href="https://github.com/kozakdenys/qr-code-styling" target="_blank" rel="noopener noreferrer">qr-code-styling</a> (MIT License).
+      Built with ❤️ using
+      <a href="https://github.com/kozakdenys/qr-code-styling" target="_blank" rel="noopener noreferrer"
+        >qr-code-styling</a
+      >
+      (MIT License).
     </p>
   </footer>
 </body>

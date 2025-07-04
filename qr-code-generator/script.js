@@ -8,41 +8,78 @@ document.addEventListener("DOMContentLoaded", () => {
   const errorMsg = document.getElementById("error-msg");
   const advancedToggle = document.getElementById("advanced-toggle");
   const container = document.querySelector(".container");
-  const sidebarPanel = document.querySelector(".sidebar-panel");
-  const logoPanel = document.querySelector(".logo-panel");
 
-  // QR code instance with defaults
+
+  // QR CodeStyling instance
   const qrCode = new QRCodeStyling({
-    width: 320,
-    height: 320,
+    width: 440,
+    height: 440,
+    type: "canvas",
     data: "",
-    dotsOptions: { color: "#000", type: "rounded" },
-    cornersSquareOptions: { type: "dot", color: "#000" },
-    backgroundOptions: { color: "#fff" },
-    imageOptions: { crossOrigin: "anonymous", margin: 5, imageSize: 0.15, opacity: 1 },
+    dotsOptions: {
+      color: "#000",
+      type: "rounded"
+    },
+    cornersSquareOptions: {
+      type: "extra-rounded",
+      color: "#000"
+    },
+    cornersDotOptions: {
+      type: "dot",
+      color: "#000"
+    },
+    backgroundOptions: {
+      color: "#ffffff"
+    },
+    imageOptions: {
+      crossOrigin: "anonymous",
+      margin: 5,
+      imageSize: 0.15,
+      opacity: 1
+    },
+    image: ""
   });
 
+  // Append QR to container
   qrCode.append(qrCodeContainer);
 
-  function isValidUrl(str) {
+  // Basic URL validation helper
+  function isValidUrl(string) {
     try {
-      new URL(str);
+      new URL(string);
+
       return true;
     } catch {
       return false;
     }
   }
 
-  function generateQRCode() {
-    const url = qrInput.value.trim();
-    if (!url) {
+
+  // Automatically prepend https:// if missing
+  function normalizeUrl(url) {
+    if (!url.match(/^https?:\/\//i)) {
+      return "https://" + url;
+    }
+    return url;
+  }
+
+  // Generate QR code function
+  function generateQr() {
+    let data = qrInput.value.trim();
+    if (!data) {
+
       errorMsg.style.display = "block";
       errorMsg.textContent = "Please enter a URL or text to generate QR code.";
       qrWrapper.style.display = "none";
       downloadLink.style.display = "none";
       return;
     }
-    if (!isValidUrl(url)) {
+
+
+    data = normalizeUrl(data);
+
+    if (!isValidUrl(data)) {
+
       errorMsg.style.display = "block";
       errorMsg.textContent = "Please enter a valid URL.";
       qrWrapper.style.display = "none";
@@ -52,27 +89,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
     errorMsg.style.display = "none";
 
-    qrCode.update({ data: url });
+
+    qrCode.update({ data });
+
 
     qrWrapper.style.display = "block";
     downloadLink.style.display = "inline-block";
   }
 
-  generateBtn.addEventListener("click", generateQRCode);
-  qrInput.addEventListener("keypress", e => {
-    if (e.key === "Enter") generateQRCode();
+  generateBtn.addEventListener("click", generateQr);
+  qrInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") generateQr();
   });
 
+  // Download format selection
   formatSelect.addEventListener("change", () => {
     downloadLink.download = `qr-code.${formatSelect.value}`;
   });
 
-  downloadLink.addEventListener("click", e => {
+  downloadLink.addEventListener("click", (e) => {
     e.preventDefault();
-    qrCode.download({ extension: formatSelect.value });
+    qrCode.download({ name: "qr-code", extension: formatSelect.value });
   });
 
-  // Advanced toggle toggles 'advanced' class on container
+  // Advanced mode toggle class on container
   advancedToggle.addEventListener("change", () => {
     if (advancedToggle.checked) {
       container.classList.add("advanced");
@@ -81,49 +121,66 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Advanced controls
-  const dotStyleSelect = document.getElementById("dot-style");
-  const cornerStyleSelect = document.getElementById("corner-style");
-  const eyeColorPicker = document.getElementById("eye-color");
-  const eyeRadiusRange = document.getElementById("eye-radius");
+  // Dot style control
+  const dotSelect = document.getElementById("dot-style");
+  dotSelect.addEventListener("change", () => {
+    qrCode.update({ dotsOptions: { type: dotSelect.value } });
+  });
+
+  // Corner style control
+  const cornerSelect = document.getElementById("corner-style");
+  cornerSelect.addEventListener("change", () => {
+    qrCode.update({ cornersSquareOptions: { type: cornerSelect.value } });
+  });
+
+  // Eye radius control
+  const eyeRadius = document.getElementById("eye-radius");
+  eyeRadius.addEventListener("input", () => {
+    const radius = Number(eyeRadius.value);
+    qrCode.update({ cornersDotOptions: { radius } });
+  });
+
+  // Background color control
   const bgColorPicker = document.getElementById("bg-color");
-  const logoUpload = document.getElementById("logo-upload");
-  const logoSizeSlider = document.getElementById("logo-size");
-  const logoOpacitySlider = document.getElementById("logo-opacity");
+  bgColorPicker.addEventListener("input", () => {
+    qrCode.update({ backgroundOptions: { color: bgColorPicker.value } });
+  });
 
-  function updateQR() {
-    qrCode.update({
-      dotsOptions: { type: dotStyleSelect.value },
-      cornersSquareOptions: { type: cornerStyleSelect.value, color: eyeColorPicker.value },
-      cornersDotOptions: { type: cornerStyleSelect.value },
-      backgroundOptions: { color: bgColorPicker.value },
-      imageOptions: {
-        imageSize: logoSizeSlider.value / 100,
-        opacity: Number(logoOpacitySlider.value),
-        crossOrigin: "anonymous",
-        margin: 5,
-      },
-    });
-  }
+  // Eye color control
+  const eyeColorPicker = document.getElementById("eye-color");
+  eyeColorPicker.addEventListener("input", () => {
+    qrCode.update({ cornersSquareOptions: { color: eyeColorPicker.value } });
+  });
 
-  dotStyleSelect.addEventListener("change", updateQR);
-  cornerStyleSelect.addEventListener("change", updateQR);
-  eyeColorPicker.addEventListener("input", updateQR);
-  eyeRadiusRange.addEventListener("input", updateQR);
-  bgColorPicker.addEventListener("input", updateQR);
-  logoSizeSlider.addEventListener("input", updateQR);
-  logoOpacitySlider.addEventListener("input", updateQR);
+  // Logo upload
+  const logoInput = document.getElementById("logo-upload");
+  logoInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
 
-  logoUpload.addEventListener("change", (e) => {
-    const file = e.target.files[0];
     if (!file) {
       qrCode.update({ image: "" });
       return;
     }
     const reader = new FileReader();
-    reader.onload = (ev) => {
-      qrCode.update({ image: ev.target.result });
+
+    reader.onload = (e) => {
+      qrCode.update({ image: e.target.result });
     };
     reader.readAsDataURL(file);
   });
+
+  // Logo size slider
+  const logoSizeSlider = document.getElementById("logo-size");
+  logoSizeSlider.addEventListener("input", () => {
+    const size = Number(logoSizeSlider.value) / 100;
+    qrCode.update({ imageOptions: { imageSize: size } });
+  });
+
+  // Logo opacity slider
+  const logoOpacitySlider = document.getElementById("logo-opacity");
+  logoOpacitySlider.addEventListener("input", () => {
+    const opacity = Number(logoOpacitySlider.value);
+    qrCode.update({ imageOptions: { opacity: opacity } });
+  });
+
 });

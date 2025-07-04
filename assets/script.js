@@ -1,4 +1,5 @@
 window.addEventListener("load", () => {
+  // --- QR Code Setup ---
   const qrCode = new QRCodeStyling({
     width: 1080,
     height: 1080,
@@ -106,5 +107,27 @@ window.addEventListener("load", () => {
 
     const format = formatSelect.value;
     qrCode.download({ extension: format });
+  });
+
+  // --- Carousel scroll buttons ---
+  // Select all carousel wrappers on the page with buttons
+  document.querySelectorAll(".carousel-wrapper").forEach(wrapper => {
+    const carousel = wrapper.querySelector(".carousel");
+    const btnLeft = wrapper.querySelector(".carousel-btn.left");
+    const btnRight = wrapper.querySelector(".carousel-btn.right");
+
+    const scrollAmount = 300; // pixels to scroll per click
+
+    if (btnLeft) {
+      btnLeft.addEventListener("click", () => {
+        carousel.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      });
+    }
+
+    if (btnRight) {
+      btnRight.addEventListener("click", () => {
+        carousel.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      });
+    }
   });
 });

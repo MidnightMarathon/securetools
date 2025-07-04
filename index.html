@@ -6,140 +6,7 @@
 <title>SecureTools – Free Privacy-First Web Tools</title>
 <meta name="description" content="SecureTools offers free, privacy-first web tools including QR code generator, password generator, UUID generator, and more." />
 <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
-
-<style>
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
-    background-size: 300% 300%;
-    animation: gradientFlow 15s ease infinite;
-    color: #1d1d1f;
-    margin: 0;
-    padding: 2rem 1rem;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    align-items: center;
-  }
-  @keyframes gradientFlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  nav {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    display: flex;
-    gap: 0.5rem;
-    z-index: 10;
-  }
-
-  nav a {
-    display: inline-block;
-    padding: 0.4rem 1rem;
-    background-color: #fff;
-    border-radius: 9999px;
-    font-size: 0.85rem;
-    color: #333;
-    text-decoration: none;
-    font-weight: 600;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease;
-  }
-
-  nav a.active,
-  nav a:hover {
-    background-color: #d0d0d5;
-    color: #2d9cdb;
-    border-color: rgba(0, 0, 0, 0.15);
-  }
-
-  main {
-    max-width: 960px;
-    margin-top: 5rem;
-    width: 100%;
-    padding: 0 1rem;
-  }
-
-  h1 {
-    font-weight: 700;
-    font-size: 2.25rem;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-
-  p.description {
-    font-size: 1.15rem;
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto 3rem auto;
-    color: #444;
-  }
-
-  .tools-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 2rem;
-  }
-
-  .tool-tile {
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-    padding: 2rem 1.5rem;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .tool-tile:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  }
-
-  .tool-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-    color: #2d9cdb;
-  }
-
-  .tool-name {
-    font-weight: 700;
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-    color: #1d1d1f;
-  }
-
-  .tool-desc {
-    font-size: 1rem;
-    color: #666;
-    line-height: 1.4;
-  }
-
-  footer {
-    margin-top: auto;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    font-size: 0.875rem;
-    color: #555;
-  }
-
-  a.tool-link {
-    color: inherit;
-    text-decoration: none;
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-</style>
+<link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
   <nav>
@@ -147,7 +14,7 @@
     <a href="/about.html" aria-label="About SecureTools">About</a>
   </nav>
 
-  <main>
+  <main class="no-tile">
     <h1>Welcome to SecureTools</h1>
     <p class="description">
       Your privacy-first source for free online tools — no signups, no tracking.
@@ -186,7 +53,6 @@
         </article>
       </a>
 
-           
       <a href="/favicon-generator/index.html" class="tool-link" aria-label="Favicon Generator">
         <article class="tool-tile" role="button" tabindex="0">
           <div class="tool-icon">🖼️</div>
@@ -198,35 +64,33 @@
       <a href="/geogames/index.html" class="tool-link" aria-label="US States Map Quiz">
         <article class="tool-tile" role="button" tabindex="0">
           <div class="tool-icon">🗺️</div>
-          <h3 class="tool-name">US States Map Quiz</h3>
+          <h2 class="tool-name">US States Map Quiz</h2>
           <p class="tool-desc">Test your knowledge of US states by clicking the correct state on the map.</p>
         </article>
       </a>
 
-     <a href="./base64-tool/index.html" class="tool-link" aria-label="Base64 Encoder & Decoder">
-  <article class="tool-tile" role="button" tabindex="0">
-    <div class="tool-icon">🔤</div>
-    <h2 class="tool-name">Base64 Encoder & Decoder</h2>
-    <p class="tool-desc">Encode and decode Base64 text securely in your browser.</p>
-  </article>
-</a>
+      <a href="./base64-tool/index.html" class="tool-link" aria-label="Base64 Encoder & Decoder">
+        <article class="tool-tile" role="button" tabindex="0">
+          <div class="tool-icon">🔤</div>
+          <h2 class="tool-name">Base64 Encoder & Decoder</h2>
+          <p class="tool-desc">Encode and decode Base64 text securely in your browser.</p>
+        </article>
+      </a>
 
       <a href="/url-encoder-decoder/index.html" class="tool-link" aria-label="URL Encoder & Decoder">
-  <div class="tool-tile">
-    <div class="tool-icon">🔗</div>
-    <div class="tool-name">URL Encoder & Decoder</div>
-    <p class="tool-desc">Safely encode or decode URLs in your browser. No tracking, no data sent to a server.</p>
-  </div>
-</a>
-
-
-
-      <!-- Add more tools as I build them -->
+        <article class="tool-tile" role="button" tabindex="0">
+          <div class="tool-icon">🔗</div>
+          <h2 class="tool-name">URL Encoder & Decoder</h2>
+          <p class="tool-desc">Safely encode or decode URLs in your browser. No tracking, no data sent to a server.</p>
+        </article>
+      </a>
     </section>
   </main>
 
   <footer>
     <p>© 2025 SecureTools. Privacy-focused and free.</p>
   </footer>
+
+  <script src="assets/script.js"></script>
 </body>
 </html>
