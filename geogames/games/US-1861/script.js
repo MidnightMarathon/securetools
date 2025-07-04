@@ -115,7 +115,7 @@ function handleStateClick(clickedId) {
   }
 }
 
-fetch("Historical_blank_US_map_1861.svg")
+fetch("US-1861.svg")
   .then(res => {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     return res.text();
