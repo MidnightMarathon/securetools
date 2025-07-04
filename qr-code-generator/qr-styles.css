@@ -25,8 +25,7 @@ nav a.active {
   border-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Base styles */
-
+/* Gradient background */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -43,121 +42,94 @@ body {
 }
 
 @keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-/* Container and layout */
-
+/* Container layout */
 .container {
   position: relative;
   display: flex;
-  justify-content: center;
-  padding: 2rem 1rem;
-  gap: 2rem;
-  max-width: 1000px;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 1rem;
+  max-width: 1200px;
   width: 100%;
 }
 
-/* Main and logo wrapper stacked vertically */
-
+/* Main and logo wrapper */
 .main-and-logo-wrapper {
-  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
   max-width: 440px;
+  width: 100%;
   background: white;
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  overflow: visible;
+  position: relative;
   z-index: 1;
 }
 
-/* Main tile styles */
-
+/* Main tile */
 .main-tile {
-  position: relative;
-  z-index: 10;
-  background: transparent; /* Transparent so panels behind can show */
-  width: 100%;
-  box-sizing: border-box;
+  background: transparent;
 }
 
-/* Logo panel (logo options) initially hidden below main tile */
-
-.logo-panel {
-  background: white;
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  margin-top: 1.5rem;
-  max-width: 440px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  transform: translateY(-30px);
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  z-index: 3;
+/* QR wrapper inside main tile */
+#qr-code canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
 }
 
-/* Sidebar panel (QR style options) initially hidden behind main tile */
-
+/* Sidebar panel */
 .sidebar-panel {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
+  flex-shrink: 0;
   width: 280px;
-  height: calc(100% + 80px); /* Tall enough to cover main tile + logo panel */
   background: white;
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  transform: translateX(0) translateY(0);
+  transform: translateX(20px);
   opacity: 0;
   pointer-events: none;
   transition: transform 0.4s ease, opacity 0.4s ease;
   z-index: 2;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
-/* Advanced mode - slide out sidebar to right from behind main tile */
+/* Logo panel (included inside sidebar now) */
+.logo-panel {
+  margin-top: 2rem;
+}
 
+/* Advanced toggle activates sidebar + logo options */
 .container.advanced .sidebar-panel {
-  transform: translateX(calc(100% + 2rem)); /* slide right by main tile width + gap */
+  transform: translateX(0);
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Advanced mode - delayed show logo panel sliding down */
-
-.container.advanced .logo-panel {
-  transition-delay: 0.3s;
-  transform: translateY(0);
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Advanced toggle wrapper above panels */
-
+/* Advanced toggle */
 .advanced-toggle-wrapper {
-  position: relative;
-  z-index: 20;
-  margin-top: 1.5rem;
   text-align: center;
+  margin-top: 1.5rem;
+  z-index: 10;
 }
 
-/* Responsive: stack panels on narrow screens */
+/* Error message */
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 1rem;
+}
 
+/* Responsive layout */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -165,21 +137,14 @@ body {
   }
 
   .sidebar-panel {
-    position: relative;
     width: 100%;
-    max-width: 440px;
-    transform: translateX(0) translateY(0);
+    transform: translateX(0);
     opacity: 1 !important;
     pointer-events: auto !important;
     margin-top: 2rem;
-    box-shadow: none;
-    height: auto;
   }
 
   .logo-panel {
     margin-top: 1.5rem;
-    transform: translateY(0);
-    opacity: 1 !important;
-    pointer-events: auto !important;
   }
 }
