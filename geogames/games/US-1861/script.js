@@ -106,12 +106,7 @@ function handleStateClick(clickedId) {
       } else {
         currentTargetEl.classList.add("partial");
       }
-
-      // POP EFFECT WITHOUT DOM REORDERING
-      currentTargetEl.classList.add("pop");
-      setTimeout(() => {
-        currentTargetEl.classList.remove("pop");
-      }, 500);
+      // pop effect removed entirely
     }
 
     score++;
