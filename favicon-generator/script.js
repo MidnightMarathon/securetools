@@ -94,8 +94,6 @@ function createDownloadLinks(img) {
       : `favicon-${size}x${size}.png`;
     a.textContent = `⬇️ ${a.download}`;
     a.className = "download-button";
-    a.style.display = "inline-block";
-    a.style.margin = "0.3em 0.6em";
 
     downloads.appendChild(a);
   });
@@ -118,12 +116,9 @@ function createDownloadLinks(img) {
     icoLink.download = "favicon.ico";
     icoLink.textContent = "⬇️ favicon.ico";
     icoLink.className = "download-button";
-    icoLink.style.display = "inline-block";
-    icoLink.style.margin = "0.3em 0.6em";
 
     downloads.appendChild(icoLink);
 
-    // Revoke URL on click to free memory
     icoLink.addEventListener("click", () => {
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
@@ -131,16 +126,5 @@ function createDownloadLinks(img) {
     console.warn("Failed to generate favicon.ico:", err);
   }
 
-  // Show HTML snippet
-  const snippet = `
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="shortcut icon" href="favicon.ico">
-`.trim();
-
-  const pre = document.createElement("pre");
-  pre.textContent = snippet;
-  downloads.appendChild(pre);
+  // Removed snippet display as requested
 }
