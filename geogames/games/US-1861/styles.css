@@ -186,3 +186,14 @@ body {
     filter: drop-shadow(0 4px 6px rgba(72, 187, 120, 0.3));
   }
 }
+
+.pop {
+  animation: pop-scale 0.5s ease forwards;
+}
+
+@keyframes pop-scale {
+  0%   { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+  50%  { transform: scale(1.1); filter: drop-shadow(0 0 6px rgba(0,0,0,0.5)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+}
+
