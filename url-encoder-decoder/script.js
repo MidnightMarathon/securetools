@@ -5,7 +5,9 @@ function updateCounts() {
   document.getElementById("inputCount").textContent = input.length;
 }
 
-document.getElementById("input").addEventListener("input", updateCounts);
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("input").addEventListener("input", updateCounts);
+});
 
 function handleURLEncode() {
   const input = document.getElementById("input").value;
@@ -45,16 +47,19 @@ function handleURLDecode() {
   }
 }
 
-function copyToClipboard(targetId) {
+async function copyToClipboard(targetId) {
   const el = document.getElementById(targetId);
-  el.select();
-  el.setSelectionRange(0, 99999);
-  document.execCommand("copy");
-
-  const copied = document.getElementById("copied");
-  copied.style.display = "block";
-  setTimeout(() => {
-    copied.style.display = "none";
-  }, 1500);
+  try {
+    await navigator.clipboard.writeText(el.value);
+    const copied = document.getElementById("copied");
+    copied.style.display = "block";
+    setTimeout(() => {
+      copied.style.display = "none";
+    }, 1500);
+  } catch (err) {
+    console.error("Clipboard copy failed:", err);
+    alert("⚠️ Unable to copy to clipboard.");
+  }
 }
+
 

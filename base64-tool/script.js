@@ -43,13 +43,12 @@ function handleEncode() {
   }
 
   if (formatBase64) {
-    encoded = insertLineBreaks(encoded, 76);
+    encoded = insertLineBreaks(encoded);
   }
 
   document.getElementById("encoded").value = encoded;
   document.getElementById("encodedCount").textContent = encoded.length;
 }
-
 
 function handleDecode() {
   let input = document.getElementById("input").value;
@@ -66,7 +65,7 @@ function handleDecode() {
     return;
   }
 
-  let decoded = safeDecode(input);
+  const decoded = safeDecode(input);
   if (!decoded) {
     errorBox.textContent = "⚠️ Decoding failed. Not valid Base64 input.";
     return;
@@ -76,17 +75,26 @@ function handleDecode() {
   document.getElementById("decodedCount").textContent = decoded.length;
 }
 
-function copyToClipboard(targetId) {
+async function copyToClipboard(targetId) {
   const el = document.getElementById(targetId);
-  el.select();
-  el.setSelectionRange(0, 99999);
-  document.execCommand("copy");
-
   const copied = document.getElementById("copied");
-  copied.style.display = "block";
-  setTimeout(() => {
-    copied.style.display = "none";
-  }, 1500);
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(el.value);
+    } else {
+      el.select();
+      el.setSelectionRange(0, el.value.length);
+      document.execCommand("copy");
+    }
+
+    copied.style.display = "block";
+    setTimeout(() => {
+      copied.style.display = "none";
+    }, 1500);
+  } catch {
+    alert("⚠️ Copy to clipboard failed. Please copy manually.");
+  }
 }
 
 function updateCounts() {
@@ -101,27 +109,22 @@ function handleFileUpload() {
   const count = document.getElementById("fileOutputCount");
 
   if (!fileInput.files.length) return;
-
   const file = fileInput.files[0];
+
   const reader = new FileReader();
-
   reader.onload = () => {
-    let result = reader.result; // data:[mime];base64,[base64 string]
-
+    let result = reader.result;
     if (stripPrefix) {
       const commaIndex = result.indexOf(",");
       result = result.slice(commaIndex + 1);
     }
-
     output.value = result;
     count.textContent = result.length;
   };
-
   reader.onerror = () => {
     output.value = "⚠️ Failed to read file.";
     count.textContent = 0;
   };
-
   reader.readAsDataURL(file);
 }
 
@@ -136,17 +139,14 @@ function handleBase64Download() {
     return;
   }
 
-  // Remove data: URL prefix if exists
   const base64Data = base64Input.includes(",") ? base64Input.split(",")[1] : base64Input;
 
-  // Validate Base64 (basic check)
   if (!/^[A-Za-z0-9+/=_-]+$/.test(base64Data)) {
     errorBox.textContent = "⚠️ Invalid Base64 characters detected.";
     return;
   }
 
   try {
-    // Decode base64 string to binary
     const binaryString = atob(base64Data);
     const len = binaryString.length;
     const bytes = new Uint8Array(len);
@@ -154,7 +154,6 @@ function handleBase64Download() {
       bytes[i] = binaryString.charCodeAt(i);
     }
 
-    // Create blob and trigger download
     const blob = new Blob([bytes], { type: "application/octet-stream" });
     const url = URL.createObjectURL(blob);
 
@@ -164,14 +163,11 @@ function handleBase64Download() {
     document.body.appendChild(a);
     a.click();
 
-    // Cleanup
     setTimeout(() => {
       URL.revokeObjectURL(url);
       document.body.removeChild(a);
     }, 100);
-
   } catch {
     errorBox.textContent = "⚠️ Decoding failed. Check your Base64 input.";
   }
 }
-

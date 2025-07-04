@@ -1,0 +1,67 @@
+/* Customize the white card container */
+.tool-tile {
+  min-height: 520px;
+  gap: 1.5rem;
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto; /* allow vertical growth */
+  text-align: center;
+}
+
+/* Preview canvas container */
+#preview {
+  margin-bottom: 1.5rem;
+  width: 128px;
+  height: 128px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Clear button spacing */
+#clear {
+  margin-top: 0.8rem;
+}
+
+/* Downloads container inside the tile */
+#downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: center;
+  max-width: 440px;
+  width: 100%;
+  margin-top: 0;
+}
+
+/* Download buttons styling and subtle hover/focus effect */
+#downloads a.download-button {
+  background: #2d9cdb;
+  color: #fff;
+  padding: 0.55rem 1.1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  user-select: none;
+  transition: background-color 0.25s ease, transform 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgba(45, 156, 219, 0.35);
+}
+
+#downloads a.download-button:hover,
+#downloads a.download-button:focus {
+  background: #1b6fbf;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(45, 156, 219, 0.6);
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
