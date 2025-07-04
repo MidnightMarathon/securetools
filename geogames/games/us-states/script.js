@@ -5,21 +5,19 @@ let total = 0;
 const attempts = {};
 const failedStates = new Set();
 
-const stateNames = {
-  "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California",
-  "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "FL": "Florida", "GA": "Georgia",
-  "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa",
-  "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland",
-  "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri",
-  "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey",
-  "NM": "New Mexico", "NY": "New York", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio",
-  "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina",
-  "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont",
-  "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"
-};
+const stateNames = new Set([
+  "Alabama", "Arkansas", "California", "Colorado Territory", "Connecticut",
+  "Dakota Territory", "Delaware", "Florida", "Georgia", "Illinois", "Indian Territory",
+  "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
+  "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri",
+  "Nebraska Territory", "Nevada Territory", "New Hampshire", "New Jersey",
+  "New Mexico Territory", "New York", "North Carolina", "Ohio", "Oregon",
+  "Pennsylvania", "Rhode Island", "South Carolina", "Tennessee", "Texas",
+  "Utah Territory", "Vermont", "Virginia", "Washington Territory", "Wisconsin"
+]);
 
-function getFullStateName(abbr) {
-  return stateNames[abbr] || abbr;
+function getFullStateName(name) {
+  return name; // IDs in the SVG are full names
 }
 
 function pickNewTarget() {
@@ -55,7 +53,6 @@ function updateScoreDisplay() {
 }
 
 function handleStateClick(clickedId) {
-  // Clear all previous incorrect flashes
   states.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.remove('incorrect-temp');
@@ -66,7 +63,6 @@ function handleStateClick(clickedId) {
   const clickedEl = document.getElementById(clickedId);
   const currentTargetEl = document.getElementById(currentTarget);
 
-  // --- Scenario 1: Failed state waiting for acknowledgment ---
   if (currentTargetEl && currentTargetEl.classList.contains("fail")) {
     if (clickedId === currentTarget) {
       currentTargetEl.classList.remove("fail", "hover-state");
@@ -84,7 +80,6 @@ function handleStateClick(clickedId) {
     return;
   }
 
-  // --- Scenario 2: Normal gameplay ---
   if (clickedId !== currentTarget) {
     attempts[currentTarget]++;
     if (clickedEl) {
@@ -105,17 +100,14 @@ function handleStateClick(clickedId) {
     const wrongGuessesCount = attempts[currentTarget];
 
     if (currentTargetEl) {
-      currentTargetEl.classList.remove("hover-state");  // Remove hover blue fill
+      currentTargetEl.classList.remove("hover-state");
       if (wrongGuessesCount === 0) {
         currentTargetEl.classList.add("correct");
       } else {
         currentTargetEl.classList.add("partial");
       }
 
-      // Bring to front in SVG
-      currentTargetEl.parentNode.appendChild(currentTargetEl);
-
-      // Add pop effect
+      // Apply pop effect on the group element
       currentTargetEl.classList.add("pop");
       setTimeout(() => {
         currentTargetEl.classList.remove("pop");
@@ -128,8 +120,7 @@ function handleStateClick(clickedId) {
   }
 }
 
-// --- SVG Setup ---
-fetch("us.svg")
+fetch("Historical_blank_US_map_1861.svg")
   .then(res => {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     return res.text();
@@ -137,9 +128,10 @@ fetch("us.svg")
   .then(svg => {
     document.getElementById("map-container").innerHTML = svg;
 
-    states = Array.from(document.querySelectorAll("#map-container path[id]"))
-      .map(p => p.id)
-      .filter(id => id.length === 2 && stateNames[id]);
+    // Select <g> elements with IDs matching your stateNames set
+    states = Array.from(document.querySelectorAll("#map-container g[id]"))
+      .map(g => g.id)
+      .filter(id => stateNames.has(id));
 
     total = states.length;
     document.getElementById("total-states").textContent = total;
@@ -153,10 +145,10 @@ fetch("us.svg")
 
         el.addEventListener('mouseover', function () {
           if (!this.classList.contains("correct") &&
-            !this.classList.contains("partial") &&
-            !this.classList.contains("fail") &&
-            !this.classList.contains("given-up") &&
-            !this.classList.contains("incorrect-temp")) {
+              !this.classList.contains("partial") &&
+              !this.classList.contains("fail") &&
+              !this.classList.contains("given-up") &&
+              !this.classList.contains("incorrect-temp")) {
             this.classList.add("hover-state");
           }
         });
