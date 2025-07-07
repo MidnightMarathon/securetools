@@ -37,7 +37,7 @@ body {
   display: flex;
   justify-content: center; /* horizontal centering */
   align-items: center;     /* vertical centering */
-  min-height: 100vh;       /* fill viewport height */
+  min-height: 40vh;       /* fill viewport height */
 
   /* Padding around content to prevent content from touching edges */
   padding: 2rem;
