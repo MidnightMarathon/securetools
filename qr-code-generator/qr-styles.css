@@ -1,146 +1,146 @@
-/* Apple-style pill nav */
-nav {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  z-index: 10;
+/* -------------------------------------------- */
+/* 1. GLOBAL STYLES & RESET                     */
+/* -------------------------------------------- */
+
+/* Include all elements to use border-box sizing for consistent sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-nav a {
-  padding: 0.4rem 1rem;
-  background-color: #fff;
-  border-radius: 9999px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  color: #333;
-  text-decoration: none;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-nav a.active {
-  background-color: #d0d0d5;
-  border-color: rgba(0, 0, 0, 0.2);
-}
-
-/* Gradient background */
+/* Remove default margin and padding on html and body */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
+/* -------------------------------------------- */
+/* 2. BODY & BACKGROUND                         */
+/* -------------------------------------------- */
+
 body {
+  /* Font stack for good cross-platform consistency */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+  /* Animated gradient background */
   background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
   background-size: 300% 300%;
   animation: gradientFlow 15s ease infinite;
+
+  /* Text color */
   color: #1d1d1f;
 
-  /* Fix: full viewport height and flex center */
+  /* Make body a full viewport flex container */
   display: flex;
-  align-items: center;      /* vertical center */
-  justify-content: center;  /* horizontal center */
-  min-height: 100vh;
+  justify-content: center; /* horizontal centering */
+  align-items: center;     /* vertical centering */
+  min-height: 100vh;       /* fill viewport height */
+
+  /* Padding around content to prevent content from touching edges */
   padding: 2rem;
-  box-sizing: border-box;
+
+  /* Prevent horizontal scrollbar */
+  overflow-x: hidden;
 }
 
+/* Gradient background animation keyframes */
 @keyframes gradientFlow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Container layout using grid */
+/* -------------------------------------------- */
+/* 3. MAIN CONTAINER                            */
+/* -------------------------------------------- */
+
+/* Container holding the generator and sidebar */
+/* Using flex for easier horizontal sliding and centering */
 .container {
-  display: grid;
-  grid-template-columns: 1fr;
-  align-items: center;
-  justify-content: center;
-  max-width: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0; /* removed padding so body padding works */
-  transition: grid-template-columns 0.4s ease;
-  gap: 0;
-}
-
-.container.advanced {
-  grid-template-columns: auto auto;
-  align-items: start;
-  justify-content: center;
-  gap: 2rem;
-}
-
-/* Main and logo wrapper */
-.main-and-logo-wrapper {
   display: flex;
-  flex-direction: column;
-  max-width: 440px;
-  width: 100%;
+  align-items: flex-start;  /* Align items at top for advanced mode */
+  justify-content: center;  /* Center horizontally */
+  max-width: 960px;         /* Max width to limit stretching on big screens */
+  width: 100%;              /* Full width of parent */
+  gap: 2rem;                /* Gap between panels when visible */
+
+  /* Smooth transition for layout changes */
+  transition: all 0.4s ease;
+}
+
+/* -------------------------------------------- */
+/* 4. GENERATOR PANEL                           */
+/* -------------------------------------------- */
+
+.main-and-logo-wrapper {
   background: white;
   border-radius: 16px;
   padding: 2rem;
+  max-width: 440px;
+  width: 100%;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
   position: relative;
   z-index: 1;
+
+  /* Transition to smoothly slide left when sidebar appears */
   transition: transform 0.4s ease;
 }
 
+/* Shift left on advanced mode */
 .container.advanced .main-and-logo-wrapper {
   transform: translateX(-20px);
 }
 
-/* QR canvas display */
-#qr-code canvas {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 1rem auto;
-}
+/* -------------------------------------------- */
+/* 5. SIDEBAR PANEL                            */
+/* -------------------------------------------- */
 
-/* Sidebar panel */
 .sidebar-panel {
-  opacity: 0;
-  transform: translateX(30px);
-  pointer-events: none;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-  max-width: 280px;
-  width: 100%;
   background: white;
   border-radius: 16px;
   padding: 2rem;
+  max-width: 280px;
+  width: 100%;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-  z-index: 2;
   display: flex;
   flex-direction: column;
+
+  /* Initially hidden and shifted right */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(30px);
+
+  /* Smooth transitions */
+  transition: all 0.4s ease;
+  z-index: 2;
 }
 
+/* Show sidebar when advanced mode active */
 .container.advanced .sidebar-panel {
   opacity: 1;
-  transform: translateX(0);
   pointer-events: auto;
+  transform: translateX(0);
 }
 
-/* Advanced toggle */
-.advanced-toggle-wrapper {
-  text-align: center;
-  margin-top: 1.5rem;
-  z-index: 10;
+/* -------------------------------------------- */
+/* 6. QR CODE CANVAS                           */
+/* -------------------------------------------- */
+
+#qr-code canvas {
+  display: block;
+  margin: 1rem auto;
+  max-width: 100%;
+  height: auto;
 }
 
-/* Error message */
-.error-message {
-  color: red;
-  text-align: center;
-  margin-top: 1rem;
-}
+/* -------------------------------------------- */
+/* 7. FORM CONTROLS                             */
+/* -------------------------------------------- */
 
-/* Input group styling */
+/* Input group container */
 .input-group {
   display: flex;
   gap: 0.5rem;
@@ -152,7 +152,7 @@ body {
   flex-grow: 1;
 }
 
-/* Form elements */
+/* Inputs, selects and buttons */
 input[type="text"],
 select,
 button {
@@ -184,7 +184,7 @@ button:hover {
   background-color: #444;
 }
 
-/* Color inputs */
+/* Color pickers */
 input[type="color"] {
   border: none;
   width: 100%;
@@ -194,14 +194,14 @@ input[type="color"] {
   cursor: pointer;
 }
 
-/* Range inputs */
+/* Range sliders */
 input[type="range"] {
   width: 100%;
   margin: 0.5rem 0;
   accent-color: #8fd3f4;
 }
 
-/* Download controls */
+/* Download controls container */
 #download-controls {
   display: flex;
   align-items: center;
@@ -211,20 +211,51 @@ input[type="range"] {
   justify-content: center;
 }
 
-/* Responsive layout */
+/* -------------------------------------------- */
+/* 8. ERROR MESSAGE                             */
+/* -------------------------------------------- */
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* -------------------------------------------- */
+/* 9. ADVANCED TOGGLE WRAPPER                   */
+/* -------------------------------------------- */
+
+.advanced-toggle-wrapper {
+  text-align: center;
+  margin-top: 1.5rem;
+  z-index: 10;
+  user-select: none;
+}
+
+/* -------------------------------------------- */
+/* 10. RESPONSIVE ADJUSTMENTS                    */
+/* -------------------------------------------- */
+
 @media (max-width: 768px) {
   .container {
-    grid-template-columns: 1fr !important;
+    /* Stack vertically on small screens */
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
   }
 
   .main-and-logo-wrapper,
   .sidebar-panel {
+    /* Reset transforms for mobile to avoid weird sliding */
     transform: none !important;
     opacity: 1 !important;
     pointer-events: auto;
-    width: 100%;
     max-width: 100%;
+    width: 100%;
   }
 
-  .container.advanced {
-    ga
+  /* Remove left shift on mobile */
+  .container.advanced .main-and-logo-wrapper {
+    transform: none !important;
+  }
+}
