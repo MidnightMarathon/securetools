@@ -107,7 +107,7 @@ const THEMES = {
 
 
   // symbolMap and numberMap from your original code
-  const symbolMap = { 'a': '@', 'i': '!', 's': '$', 'o': '()', 't': '+' };
+  const symbolMap = { 'a': '@', 'i': '!', 's': '$', 't': '+' };
   const numberMap = { 'e': '3', 'o': '0', 'i': '1', 'a': '4', 's': '5', 't': '7', 'b': '8' };
 
   function randomInt(max) {
@@ -355,10 +355,16 @@ function entropyColor(entropy) {
     if (typeof zxcvbn !== "undefined") {
       const result = zxcvbn(password);
 
+      // Guess rates for different attackers
+      const cpuRate = 1e4;      // guesses per second for single CPU
+      const gpuRate = 1e10;     // guesses per second for single GPU
+      const groupRate = 1e11;   // guesses per second for hacking group GPU cluster
+      const stateRate = 1e14;   // guesses per second for nation-state supercomputer
+
       crackCpu.textContent = formatCrackTime(result.crack_times_seconds.offline_slow_hashing_1e4_per_second);
       crackGpu.textContent = formatCrackTime(result.crack_times_seconds.offline_fast_hashing_1e10_per_second);
       crackGroup.textContent = formatCrackTime(result.crack_times_seconds.offline_fast_hashing_1e11_per_second);
-      crackState.textContent = formatCrackTime(result.crack_times_seconds.online_no_throttling_10_per_second);
+      crackState.textContent = formatCrackTime(result.crack_times_seconds.online_fast_hashing_1e13_per_second);
 
       const score = result.score;
       const scorePercent = (score / 4) * 100;
