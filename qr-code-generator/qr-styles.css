@@ -1,8 +1,6 @@
 /* -------------------------------------------- */
 /* 1. GLOBAL BOX-SIZING                         */
 /* -------------------------------------------- */
-/* Apply border-box sizing to all elements so padding and borders
-   don’t add extra width/height unexpectedly */
 *,
 *::before,
 *::after {
@@ -12,23 +10,17 @@
 /* -------------------------------------------- */
 /* 2. BODY & BACKGROUND                         */
 /* -------------------------------------------- */
-/* The body is the main wrapper for the entire page.
-   We use flexbox with column direction so that:
-   - The container and footer stack vertically,
-   - Footer stays below content and can be pushed to the bottom.
-*/
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* prevent horizontal scrollbar */
+  overflow-x: hidden;
 }
 
 body {
   display: flex;
-  flex-direction: column; /* stack children vertically */
-  min-height: 100vh;      /* at least full viewport height */
-
+  flex-direction: column;
+  min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
@@ -39,7 +31,6 @@ body {
   color: #1d1d1f;
 }
 
-/* Animate background gradient smoothly */
 @keyframes gradientFlow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -47,64 +38,57 @@ body {
 }
 
 /* -------------------------------------------- */
-/* 3. CONTAINER (holds generator + sidebar)    */
+/* 3. OVERRIDE shared-assets.css <main>         */
 /* -------------------------------------------- */
-/* The container holds the main QR generator panel
-   and the advanced sidebar.
-   - It’s horizontally centered,
-   - Has padding around,
-   - Uses flexbox to layout children side-by-side,
-   - Has a gap between the panels.
-*/
+body > main {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin-top: 2rem !important;
+}
+
+/* -------------------------------------------- */
+/* 4. CONTAINER                                 */
+/* -------------------------------------------- */
 .container {
   display: flex;
-  align-items: flex-start;   /* align children at top */
-  justify-content: center;   /* center container horizontally */
-  max-width: 960px;          /* limit container max width */
-  width: 100%;               /* full width up to max */
-  padding: 2rem;             /* inner spacing */
-  gap: 2rem;                 /* space between main and sidebar */
-  margin: 2rem auto 0 auto;  /* center horizontally with margin top */
-  /* No fixed height so footer can sit below naturally */
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 960px;
+  width: 100%;
+  padding: 2rem;
+  gap: 2rem;
+  margin: 0 auto;
   transition: all 0.4s ease;
 }
 
 /* -------------------------------------------- */
-/* 4. MAIN GENERATOR PANEL                      */
+/* 5. MAIN PANEL                                */
 /* -------------------------------------------- */
-/* This panel holds the input, button, QR code, text,
-   and advanced toggle.
-   - Modern frosted glass style with soft shadows,
-   - Uses vertical flex layout with gaps for spacing,
-   - Slides left slightly when advanced mode is enabled.
-*/
 .main-and-logo-wrapper {
-  background: rgba(255, 255, 255, 0.85);           /* semi-transparent white */
-  border-radius: 18px;                             /* smooth rounded corners */
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 18px;
   padding: 2rem;
   max-width: 440px;
   width: 100%;
   box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.12),             /* subtle, soft shadow */
+    0 10px 30px rgba(0, 0, 0, 0.12),
     0 4px 8px rgba(0, 0, 0, 0.06);
-  backdrop-filter: saturate(180%) blur(12px);     /* frosted glass effect */
-  border: 1px solid rgba(255, 255, 255, 0.3);     /* light translucent border */
+  backdrop-filter: saturate(180%) blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   position: relative;
   z-index: 1;
 
   display: flex;
-  flex-direction: column;  
+  flex-direction: column;
   gap: 1rem;
-
   transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
-/* Shift left by 20px when advanced mode toggled on */
 .container.advanced .main-and-logo-wrapper {
   transform: translateX(-20px);
 }
 
-/* Optional hover effect: gentle lift and stronger shadow */
 .main-and-logo-wrapper:hover {
   box-shadow:
     0 16px 40px rgba(0, 0, 0, 0.18),
@@ -113,34 +97,29 @@ body {
 }
 
 /* -------------------------------------------- */
-/* 5. SIDEBAR PANEL (advanced options)          */
+/* 6. SIDEBAR PANEL                             */
 /* -------------------------------------------- */
-/* This panel holds all advanced controls,
-   including dot styles, colors, logo upload, etc.
-   - Same styling as main panel,
-   - Initially hidden and slightly shifted right,
-   - Slides in and becomes fully visible on advanced mode toggle.
-*/
 .sidebar-panel {
-  background: white;
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 18px;
   padding: 2rem;
   max-width: 280px;
   width: 100%;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.06);
+  backdrop-filter: saturate(180%) blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 
   display: flex;
   flex-direction: column;
-
-  opacity: 0;              /* invisible initially */
-  pointer-events: none;    /* prevent interaction */
-  transform: translateX(30px); /* shifted right */
-
-  transition: all 0.4s ease; /* smooth fade and slide */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(30px);
+  transition: all 0.4s ease;
   z-index: 2;
 }
 
-/* Show sidebar panel on advanced mode */
 .container.advanced .sidebar-panel {
   opacity: 1;
   pointer-events: auto;
@@ -148,9 +127,8 @@ body {
 }
 
 /* -------------------------------------------- */
-/* 6. QR CODE CANVAS                            */
+/* 7. QR CODE CANVAS                            */
 /* -------------------------------------------- */
-/* Make the QR canvas responsive and centered */
 #qr-code canvas {
   display: block;
   margin: 1rem auto;
@@ -159,9 +137,8 @@ body {
 }
 
 /* -------------------------------------------- */
-/* 7. FORM CONTROLS                            */
+/* 8. FORM CONTROLS                             */
 /* -------------------------------------------- */
-/* Group input and button on a row with spacing */
 .input-group {
   display: flex;
   gap: 0.5rem;
@@ -169,12 +146,10 @@ body {
   margin-top: 1rem;
 }
 
-/* Input grows to fill available space */
 .input-group input {
   flex-grow: 1;
 }
 
-/* Styling inputs, selects, and buttons consistently */
 input[type="text"],
 select,
 button {
@@ -183,8 +158,8 @@ button {
   border: 1px solid #ccc;
   border-radius: 12px;
   width: 100%;
-  box-sizing: border-box;
   transition: border 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 
 input[type="text"]:focus,
@@ -206,7 +181,6 @@ button:hover {
   background-color: #444;
 }
 
-/* Color pickers have full width and nice height */
 input[type="color"] {
   border: none;
   width: 100%;
@@ -216,14 +190,12 @@ input[type="color"] {
   cursor: pointer;
 }
 
-/* Range sliders fill width and have accent color */
 input[type="range"] {
   width: 100%;
   margin: 0.5rem 0;
   accent-color: #8fd3f4;
 }
 
-/* Download controls layout */
 #download-controls {
   display: flex;
   align-items: center;
@@ -234,9 +206,8 @@ input[type="range"] {
 }
 
 /* -------------------------------------------- */
-/* 8. ERROR MESSAGE                            */
+/* 9. ERROR MESSAGE                             */
 /* -------------------------------------------- */
-/* Show error text in red and center it below inputs */
 .error-message {
   color: red;
   text-align: center;
@@ -244,9 +215,8 @@ input[type="range"] {
 }
 
 /* -------------------------------------------- */
-/* 9. ADVANCED TOGGLE WRAPPER                  */
+/* 10. ADVANCED TOGGLE                          */
 /* -------------------------------------------- */
-/* Center the advanced mode checkbox below inputs */
 .advanced-toggle-wrapper {
   text-align: center;
   margin-top: 1.5rem;
@@ -255,12 +225,10 @@ input[type="range"] {
 }
 
 /* -------------------------------------------- */
-/* 10. FOOTER                                  */
+/* 11. FOOTER                                   */
 /* -------------------------------------------- */
-/* The footer sits below the container and
-   is horizontally centered with muted text */
 footer {
-  margin-top: auto;          /* Push footer to bottom if container is smaller */
+  margin-top: auto;
   padding: 2rem 1rem;
   text-align: center;
   font-size: 0.9rem;
@@ -272,9 +240,8 @@ footer {
 }
 
 /* -------------------------------------------- */
-/* 11. RESPONSIVE ADJUSTMENTS                    */
+/* 12. RESPONSIVENESS                           */
 /* -------------------------------------------- */
-/* On smaller screens stack container children vertically */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -283,7 +250,6 @@ footer {
     padding: 1rem;
   }
 
-  /* Remove slide transitions on mobile for simplicity */
   .main-and-logo-wrapper,
   .sidebar-panel {
     transform: none !important;
@@ -297,4 +263,3 @@ footer {
     transform: none !important;
   }
 }
- 
