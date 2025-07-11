@@ -282,23 +282,24 @@ function entropyColor(entropy) {
   }
 
   function formatCrackTime(seconds) {
-    if (seconds === 0) return "Instantly";
-    if (seconds < 1) return "<1 second";
+  if (seconds === 0) return "Instantly";
+  if (seconds < 1) return "<1 second";
 
-    const units = [
-      { label: "years", seconds: 31536000 },
-      { label: "days", seconds: 86400 },
-      { label: "hours", seconds: 3600 },
-      { label: "minutes", seconds: 60 },
-      { label: "seconds", seconds: 1 },
-    ];
+  const units = [
+    { label: "years", seconds: 31536000 },
+    { label: "days", seconds: 86400 },
+    { label: "hours", seconds: 3600 },
+    { label: "minutes", seconds: 60 },
+    { label: "seconds", seconds: 1 },
+  ];
 
-    for (const unit of units) {
-      const val = Math.floor(seconds / unit.seconds);
-      if (val > 0) return `${val} ${unit.label}`;
-    }
-    return "Instantly";
+  for (const unit of units) {
+    const val = Math.floor(seconds / unit.seconds);
+    if (val > 0) return `${val.toLocaleString()} ${unit.label}`;
   }
+  return "Instantly";
+}
+
 
   function zxcvbnColor(score) {
     switch(score) {
