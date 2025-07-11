@@ -107,7 +107,7 @@ const THEMES = {
 
 
   // symbolMap and numberMap from your original code
-  const symbolMap = { 'a': '@', 'i': '!', 's': '$', 'o': '()', 't': '+' };
+  const symbolMap = { 'a': '@', 'i': '!', 's': '$', 't': '+' };
   const numberMap = { 'e': '3', 'o': '0', 'i': '1', 'a': '4', 's': '5', 't': '7', 'b': '8' };
 
   function randomInt(max) {
@@ -282,23 +282,24 @@ function entropyColor(entropy) {
   }
 
   function formatCrackTime(seconds) {
-    if (seconds === 0) return "Instantly";
-    if (seconds < 1) return "<1 second";
+  if (seconds === 0) return "Instantly";
+  if (seconds < 1) return "<1 second";
 
-    const units = [
-      { label: "years", seconds: 31536000 },
-      { label: "days", seconds: 86400 },
-      { label: "hours", seconds: 3600 },
-      { label: "minutes", seconds: 60 },
-      { label: "seconds", seconds: 1 },
-    ];
+  const units = [
+    { label: "years", seconds: 31536000 },
+    { label: "days", seconds: 86400 },
+    { label: "hours", seconds: 3600 },
+    { label: "minutes", seconds: 60 },
+    { label: "seconds", seconds: 1 },
+  ];
 
-    for (const unit of units) {
-      const val = Math.floor(seconds / unit.seconds);
-      if (val > 0) return `${val} ${unit.label}`;
-    }
-    return "Instantly";
+  for (const unit of units) {
+    const val = Math.floor(seconds / unit.seconds);
+    if (val > 0) return `${val.toLocaleString()} ${unit.label}`;
   }
+  return "Instantly";
+}
+
 
   function zxcvbnColor(score) {
     switch(score) {
@@ -345,28 +346,47 @@ function entropyColor(entropy) {
   return entropy;
 }
   function updateEntropy(password, opts) {
-    const entropy = calcEntropy(password, opts);
-    const maxEntropy = 80;
-    const widthPercent = Math.min((entropy / maxEntropy) * 100, 100);
-    entropyFill.style.width = widthPercent + "%";
-    entropyFill.style.backgroundColor = entropyColor(entropy);
-    entropyDesc.textContent = entropyDescription(entropy);
+  const entropy = calcEntropy(password, opts);
+  const maxEntropy = 80;
+  const widthPercent = Math.min((entropy / maxEntropy) * 100, 100);
 
-    if (typeof zxcvbn !== "undefined") {
-      const result = zxcvbn(password);
+  // Update entropy bar UI
+  entropyFill.style.width = widthPercent + "%";
+  entropyFill.style.backgroundColor = entropyColor(entropy);
+  entropyDesc.textContent = entropyDescription(entropy);
 
-      crackCpu.textContent = formatCrackTime(result.crack_times_seconds.offline_slow_hashing_1e4_per_second);
-      crackGpu.textContent = formatCrackTime(result.crack_times_seconds.offline_fast_hashing_1e10_per_second);
-      crackGroup.textContent = formatCrackTime(result.crack_times_seconds.offline_fast_hashing_1e11_per_second);
-      crackState.textContent = formatCrackTime(result.crack_times_seconds.online_no_throttling_10_per_second);
+  // Guess rates (guesses per second)
+  const cpuRate = 1e4;      // single CPU
+  const gpuRate = 1e10;     // single GPU
+  const groupRate = 1e11;   // hacking group cluster
+  const stateRate = 1e13;   // nation-state supercomputer
 
-      const score = result.score;
-      const scorePercent = (score / 4) * 100;
-      zxcvbnFill.style.width = scorePercent + "%";
-      zxcvbnFill.style.backgroundColor = zxcvbnColor(score);
-      zxcvbnDesc.textContent = zxcvbnDescription(score);
-    }
+  // Calculate guesses from entropy: guesses = 2^entropy
+  const guesses = Math.pow(2, entropy);
+
+  // Calculate crack times in seconds:
+  const cpuTime = guesses / cpuRate;
+  const gpuTime = guesses / gpuRate;
+  const groupTime = guesses / groupRate;
+  const stateTime = guesses / stateRate;
+
+  // Format and display crack times
+  crackCpu.textContent = formatCrackTime(cpuTime);
+  crackGpu.textContent = formatCrackTime(gpuTime);
+  crackGroup.textContent = formatCrackTime(groupTime);
+  crackState.textContent = formatCrackTime(stateTime);
+
+  // Use zxcvbn for scoring and UI feedback only
+  if (typeof zxcvbn !== "undefined") {
+    const result = zxcvbn(password);
+    const score = result.score;
+    const scorePercent = (score / 4) * 100;
+    zxcvbnFill.style.width = scorePercent + "%";
+    zxcvbnFill.style.backgroundColor = zxcvbnColor(score);
+    zxcvbnDesc.textContent = zxcvbnDescription(score);
   }
+}
+
 
   function updatePassword() {
     const opts = {
