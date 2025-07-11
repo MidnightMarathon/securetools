@@ -285,3 +285,10 @@ footer {
     transform: none !important;
   }
 }
+
+/* Remove white background and shadow from the main tile */
+.main-and-logo-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
