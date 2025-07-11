@@ -345,34 +345,47 @@ function entropyColor(entropy) {
   return entropy;
 }
   function updateEntropy(password, opts) {
-    const entropy = calcEntropy(password, opts);
-    const maxEntropy = 80;
-    const widthPercent = Math.min((entropy / maxEntropy) * 100, 100);
-    entropyFill.style.width = widthPercent + "%";
-    entropyFill.style.backgroundColor = entropyColor(entropy);
-    entropyDesc.textContent = entropyDescription(entropy);
+  const entropy = calcEntropy(password, opts);
+  const maxEntropy = 80;
+  const widthPercent = Math.min((entropy / maxEntropy) * 100, 100);
 
-    if (typeof zxcvbn !== "undefined") {
-      const result = zxcvbn(password);
+  // Update entropy bar UI
+  entropyFill.style.width = widthPercent + "%";
+  entropyFill.style.backgroundColor = entropyColor(entropy);
+  entropyDesc.textContent = entropyDescription(entropy);
 
-      // Guess rates for different attackers
-      const cpuRate = 1e4;      // guesses per second for single CPU
-      const gpuRate = 1e10;     // guesses per second for single GPU
-      const groupRate = 1e11;   // guesses per second for hacking group GPU cluster
-      const stateRate = 1e14;   // guesses per second for nation-state supercomputer
+  // Guess rates (guesses per second)
+  const cpuRate = 1e4;      // single CPU
+  const gpuRate = 1e10;     // single GPU
+  const groupRate = 1e11;   // hacking group cluster
+  const stateRate = 1e13;   // nation-state supercomputer
 
-      crackCpu.textContent = formatCrackTime(result.crack_times_seconds.offline_slow_hashing_1e4_per_second);
-      crackGpu.textContent = formatCrackTime(result.crack_times_seconds.offline_fast_hashing_1e10_per_second);
-      crackGroup.textContent = formatCrackTime(result.crack_times_seconds.offline_fast_hashing_1e11_per_second);
-      crackState.textContent = formatCrackTime(result.crack_times_seconds.online_fast_hashing_1e13_per_second);
+  // Calculate guesses from entropy: guesses = 2^entropy
+  const guesses = Math.pow(2, entropy);
 
-      const score = result.score;
-      const scorePercent = (score / 4) * 100;
-      zxcvbnFill.style.width = scorePercent + "%";
-      zxcvbnFill.style.backgroundColor = zxcvbnColor(score);
-      zxcvbnDesc.textContent = zxcvbnDescription(score);
-    }
+  // Calculate crack times in seconds:
+  const cpuTime = guesses / cpuRate;
+  const gpuTime = guesses / gpuRate;
+  const groupTime = guesses / groupRate;
+  const stateTime = guesses / stateRate;
+
+  // Format and display crack times
+  crackCpu.textContent = formatCrackTime(cpuTime);
+  crackGpu.textContent = formatCrackTime(gpuTime);
+  crackGroup.textContent = formatCrackTime(groupTime);
+  crackState.textContent = formatCrackTime(stateTime);
+
+  // Use zxcvbn for scoring and UI feedback only
+  if (typeof zxcvbn !== "undefined") {
+    const result = zxcvbn(password);
+    const score = result.score;
+    const scorePercent = (score / 4) * 100;
+    zxcvbnFill.style.width = scorePercent + "%";
+    zxcvbnFill.style.backgroundColor = zxcvbnColor(score);
+    zxcvbnDesc.textContent = zxcvbnDescription(score);
   }
+}
+
 
   function updatePassword() {
     const opts = {
