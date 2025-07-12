@@ -26,24 +26,24 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
   <link rel="manifest" href="/assets/site.webmanifest" />
 
-
+  <!-- CSS -->
   <link rel="stylesheet" href="qr-styles.css" />
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body>
- <nav>
+  <nav>
     <a href="/" class="active">Home</a>
   </nav>
-
 
   <main class="container" id="container">
     <div class="main-and-logo-wrapper">
       <section class="main-tile" aria-label="QR Code Generator">
         <h1>Free QR Code Generator</h1>
         <p>Create QR codes instantly. No watermark. No signup required.</p>
-
 
         <div class="input-group">
           <input
@@ -72,6 +72,7 @@
             <option value="png">PNG</option>
             <option value="svg">SVG</option>
             <option value="jpeg">JPEG</option>
+            <option value="pdf">PDF</option>
           </select>
           <a id="download-link" href="#" aria-label="Download QR code">Download</a>
         </div>
@@ -115,6 +116,11 @@
       <label for="bg-color">Background color:</label>
       <input type="color" id="bg-color" value="#ffffff" />
 
+      <label for="transparent-bg" style="margin-top: 0.5rem;">
+        <input type="checkbox" id="transparent-bg" />
+        Transparent background
+      </label>
+
       <label for="eye-color">Eye color:</label>
       <input type="color" id="eye-color" value="#000000" />
 
@@ -139,9 +145,9 @@
           type="range"
           id="logo-opacity"
           min="0"
-          max="1"
-          step="0.01"
-          value="1"
+          max="100"
+          step="1"
+          value="100"
         />
       </div>
     </section>
@@ -152,10 +158,8 @@
     <p>No cookies, no tracking, no stored data — generation is done 100% in your browser.</p>
     <p>
       Built with ❤️ using
-      <a href="https://github.com/kozakdenys/qr-code-styling" target="_blank" rel="noopener noreferrer"
-        >qr-code-styling</a
-      >
-      (MIT License).
+      <a href="https://github.com/kozakdenys/qr-code-styling" target="_blank" rel="noopener noreferrer">
+        qr-code-styling</a> (MIT License).
     </p>
   </footer>
 </body>
