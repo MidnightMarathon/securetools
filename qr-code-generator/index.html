@@ -8,42 +8,37 @@
   <link rel="stylesheet" href="/assets/styles.css" />
   <link rel="canonical" href="https://securetools.dev/qr-code-generator/" />
 
-  <!-- Open Graph -->
   <meta property="og:title" content="SecureTools – Free QR Code Generator" />
   <meta property="og:description" content="Create QR codes instantly with no watermarks, no signups, and no tracking. 100% free and private." />
   <meta property="og:image" content="https://securetools.dev/assets/qr-preview.png" />
   <meta property="og:url" content="https://securetools.dev/qr-code-generator/" />
   <meta property="og:type" content="website" />
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="SecureTools – Free QR Code Generator" />
   <meta name="twitter:description" content="Create QR codes instantly with no watermarks, no signups, and no tracking." />
   <meta name="twitter:image" content="https://securetools.dev/assets/qr-preview.png" />
 
-  <!-- Favicon -->
   <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
   <link rel="manifest" href="/assets/site.webmanifest" />
 
-
   <link rel="stylesheet" href="qr-styles.css" />
 
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body>
- <nav>
+  <nav>
     <a href="/" class="active">Home</a>
   </nav>
-
 
   <main class="container" id="container">
     <div class="main-and-logo-wrapper">
       <section class="main-tile" aria-label="QR Code Generator">
         <h1>Free QR Code Generator</h1>
         <p>Create QR codes instantly. No watermark. No signup required.</p>
-
 
         <div class="input-group">
           <input
@@ -72,6 +67,7 @@
             <option value="png">PNG</option>
             <option value="svg">SVG</option>
             <option value="jpeg">JPEG</option>
+            <option value="pdf">PDF</option>
           </select>
           <a id="download-link" href="#" aria-label="Download QR code">Download</a>
         </div>
@@ -99,24 +95,28 @@
         <option value="square">Square</option>
       </select>
 
-      <label for="eye-radius">Eye radius (px):</label>
-      <input
-        type="range"
-        id="eye-radius"
-        min="0"
-        max="20"
-        step="1"
-        value="10"
-        aria-valuemin="0"
-        aria-valuemax="20"
-        aria-valuenow="10"
-      />
-
+      <label for="eye-color">Eye color:</label>
+      <input type="color" id="eye-color" value="#000000" />
+      
+      <div style="margin-top: 0.5rem;">
+        <input type="checkbox" id="transparent-bg" />
+        <label for="transparent-bg" style="cursor: pointer; user-select: none;">Transparent background (Needs PNG)</label>
+      </div>
+      
       <label for="bg-color">Background color:</label>
       <input type="color" id="bg-color" value="#ffffff" />
 
-      <label for="eye-color">Eye color:</label>
-      <input type="color" id="eye-color" value="#000000" />
+      
+      <label for="qr-resolution">QR Code Resolution (px):</label>
+      <input
+        type="range"
+        id="qr-resolution"
+        min="100"
+        max="2160"
+        step="100"
+        value="300"
+      />
+      <span id="qr-resolution-value">300px</span>
 
       <div class="logo-panel">
         <h2>Logo Options</h2>
@@ -133,16 +133,6 @@
           step="1"
           value="15"
         />
-
-        <label for="logo-opacity">Logo opacity:</label>
-        <input
-          type="range"
-          id="logo-opacity"
-          min="0"
-          max="1"
-          step="0.01"
-          value="1"
-        />
       </div>
     </section>
   </main>
@@ -152,10 +142,8 @@
     <p>No cookies, no tracking, no stored data — generation is done 100% in your browser.</p>
     <p>
       Built with ❤️ using
-      <a href="https://github.com/kozakdenys/qr-code-styling" target="_blank" rel="noopener noreferrer"
-        >qr-code-styling</a
-      >
-      (MIT License).
+      <a href="https://github.com/kozakdenys/qr-code-styling" target="_blank" rel="noopener noreferrer">
+        qr-code-styling</a> (MIT License).
     </p>
   </footer>
 </body>
