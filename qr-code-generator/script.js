@@ -10,10 +10,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const advancedToggle = document.getElementById("advanced-toggle");
   const container = document.querySelector(".container");
   const transparentBgToggle = document.getElementById("transparent-bg");
+  const resolutionSlider = document.getElementById("qr-resolution");
+  const resolutionValue = document.getElementById("qr-resolution-value");
+
+  let currentResolution = Number(resolutionSlider.value);
+  let currentData = "";
 
   const qrCode = new QRCodeStyling({
-    width: 440,
-    height: 440,
+    width: currentResolution,
+    height: currentResolution,
     type: "canvas",
     data: "",
     dotsOptions: {
@@ -75,8 +80,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     errorMsg.style.display = "none";
+    currentData = data;
 
-    qrCode.update({ data });
+    qrCode.update({
+      data: currentData,
+      width: currentResolution,
+      height: currentResolution
+    });
 
     qrWrapper.style.display = "block";
     downloadControls.style.display = "flex";
@@ -85,6 +95,20 @@ document.addEventListener("DOMContentLoaded", () => {
   generateBtn.addEventListener("click", generateQr);
   qrInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") generateQr();
+  });
+
+  resolutionSlider.addEventListener("input", () => {
+    currentResolution = Number(resolutionSlider.value);
+    resolutionValue.textContent = `${currentResolution}px`;
+
+    // Update QR code with new size
+    if (currentData) {
+      qrCode.update({
+        width: currentResolution,
+        height: currentResolution,
+        data: currentData
+      });
+    }
   });
 
   formatSelect.addEventListener("change", () => {
@@ -119,11 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   advancedToggle.addEventListener("change", () => {
-    if (advancedToggle.checked) {
-      container.classList.add("advanced");
-    } else {
-      container.classList.remove("advanced");
-    }
+    container.classList.toggle("advanced", advancedToggle.checked);
   });
 
   const dotSelect = document.getElementById("dot-style");
@@ -144,11 +164,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   transparentBgToggle.addEventListener("change", () => {
-    if (transparentBgToggle.checked) {
-      qrCode.update({ backgroundOptions: { color: "rgba(0,0,0,0)" } });
-    } else {
-      qrCode.update({ backgroundOptions: { color: bgColorPicker.value } });
-    }
+    qrCode.update({
+      backgroundOptions: {
+        color: transparentBgToggle.checked
+          ? "rgba(0,0,0,0)"
+          : bgColorPicker.value
+      }
+    });
   });
 
   const eyeColorPicker = document.getElementById("eye-color");
@@ -173,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const logoSizeSlider = document.getElementById("logo-size");
   logoSizeSlider.addEventListener("input", () => {
-    const size = Number(logoSizeSlider.value) / 100 * 1.5; // max 150% size
+    const size = Number(logoSizeSlider.value) / 100 * 1.5;
     qrCode.update({ imageOptions: { imageSize: size } });
   });
 });
