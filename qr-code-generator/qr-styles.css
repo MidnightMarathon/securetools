@@ -134,6 +134,10 @@ body > main {
   margin: 1rem auto;
   max-width: 100%;
   height: auto;
+  
+  /* Fixed display size (smaller than the actual canvas resolution) */
+  width: 300px !important;
+  height: 300px !important;
 }
 
 /* -------------------------------------------- */
