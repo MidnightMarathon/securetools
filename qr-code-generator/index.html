@@ -104,6 +104,18 @@
       <label for="eye-color">Eye color:</label>
       <input type="color" id="eye-color" value="#000000" />
 
+      <label for="qr-resolution">QR Code Resolution (px):</label>
+      <input
+        type="range"
+        id="qr-resolution"
+        min="100"
+        max="1000"
+        step="50"
+        value="300"
+      />
+      <span id="qr-resolution-value">300px</span>
+
+
       <div class="logo-panel">
         <h2>Logo Options</h2>
 
@@ -118,16 +130,7 @@
           max="50"
           step="1"
           value="15"
-        />
-
-        <label for="logo-opacity">Logo opacity:</label>
-        <input
-          type="range"
-          id="logo-opacity"
-          min="0"
-          max="100"
-          step="1"
-          value="100"
+        
         />
       </div>
     </section>
