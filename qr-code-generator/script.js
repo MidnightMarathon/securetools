@@ -17,23 +17,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const eyeColorPicker = document.getElementById("eye-color");
   const dotSelect = document.getElementById("dot-style");
   const cornerSelect = document.getElementById("corner-style");
-  const bgColorPicker = document.getElementById("bg-color");
 
   let currentResolution = Number(resolutionSlider.value);
   let currentData = "";
 
+  // Initialize QR code with default options
   const qrCode = new QRCodeStyling({
     width: currentResolution,
     height: currentResolution,
     type: "canvas",
     data: "",
     dotsOptions: {
-      color: "#000",
+      color: "#000000",
       type: "rounded",
     },
     cornersSquareOptions: {
       type: "extra-rounded",
-      color: "#000",
+      color: "#000000",
+    },
+    cornersDotOptions: {
+      color: "#000000",
     },
     backgroundOptions: {
       color: "#ffffff",
@@ -126,12 +129,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (format === "pdf") {
       const canvas = document.querySelector("#qr-code canvas");
-
       if (!canvas) {
         console.error("No canvas found for QR Code.");
         return;
       }
-
       const dataUrl = canvas.toDataURL("image/png");
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({
@@ -139,7 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
         unit: "px",
         format: [canvas.width + 40, canvas.height + 40],
       });
-
       pdf.addImage(dataUrl, "PNG", 20, 20, canvas.width, canvas.height);
       pdf.save("qr-code.pdf");
     } else {
@@ -152,29 +152,39 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   dotSelect.addEventListener("change", () => {
-    qrCode.update({ dotsOptions: { type: dotSelect.value } });
-  });
-
-  cornerSelect.addEventListener("change", () => {
-    qrCode.update({ cornersSquareOptions: { type: cornerSelect.value } });
-  });
-
-  bgColorPicker.addEventListener("input", () => {
-    if (!transparentBgToggle.checked) {
-      qrCode.update({ backgroundOptions: { color: bgColorPicker.value } });
-    }
-  });
-
-  transparentBgToggle.addEventListener("change", () => {
     qrCode.update({
-      backgroundOptions: {
-        color: transparentBgToggle.checked
-          ? "rgba(0,0,0,0)"
-          : bgColorPicker.value,
-      },
+      dotsOptions: { type: dotSelect.value },
     });
   });
 
+  cornerSelect.addEventListener("change", () => {
+    qrCode.update({
+      cornersSquareOptions: { type: cornerSelect.value },
+    });
+  });
+
+  // Background color picker
+  const bgColorPicker = document.getElementById("bg-color");
+  if (bgColorPicker) {
+    bgColorPicker.addEventListener("input", () => {
+      if (!transparentBgToggle.checked) {
+        qrCode.update({ backgroundOptions: { color: bgColorPicker.value } });
+      }
+    });
+  }
+
+  // Transparent background toggle
+  if (transparentBgToggle) {
+    transparentBgToggle.addEventListener("change", () => {
+      qrCode.update({
+        backgroundOptions: {
+          color: transparentBgToggle.checked ? "rgba(0,0,0,0)" : (bgColorPicker ? bgColorPicker.value : "#ffffff"),
+        },
+      });
+    });
+  }
+
+  // Eye color picker - update both cornersSquare and cornersDot colors
   eyeColorPicker.addEventListener("input", () => {
     qrCode.update({
       cornersSquareOptions: { color: eyeColorPicker.value },
@@ -182,16 +192,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Logo upload handler
   logoInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (!file) {
       qrCode.update({ image: "" });
       return;
     }
-
     const reader = new FileReader();
     reader.onload = (e) => {
-      const size = (Number(logoSizeSlider.value) / 100) * 1.5;
+      const size = Number(logoSizeSlider.value) / 100 * 1.5;
       qrCode.update({
         image: e.target.result,
         imageOptions: {
@@ -204,8 +214,15 @@ document.addEventListener("DOMContentLoaded", () => {
     reader.readAsDataURL(file);
   });
 
+  // Logo size slider handler
   logoSizeSlider.addEventListener("input", () => {
-    const size = (Number(logoSizeSlider.value) / 100) * 1.5;
-    qrCode.update({ imageOptions: { imageSize: size } });
+    const size = Number(logoSizeSlider.value) / 100 * 1.5;
+    qrCode.update({
+      imageOptions: {
+        imageSize: size,
+        opacity: 1,
+        margin: 5,
+      },
+    });
   });
 });
