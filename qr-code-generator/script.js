@@ -100,26 +100,29 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const format = formatSelect.value;
 
-    if (format === "pdf") {
-      // Export PNG and embed in PDF
-      const canvas = qrCode._canvas || qrCode._options.type === "canvas" ? qrCode._canvas : null;
-      // Workaround: use toDataURL from qrCode.getRawData()
-      const rawData = await qrCode.getRawData("png");
-      const dataUrl = rawData.toDataURL("image/png");
+if (format === "pdf") {
+  const canvas = qrCode._canvas;
+  
+  if (!canvas) {
+    console.error("No canvas found for QR Code.");
+    return;
+  }
 
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "px",
-        format: [rawData.width + 40, rawData.height + 40],
-      });
+  const dataUrl = canvas.toDataURL("image/png");
 
-      pdf.addImage(dataUrl, "PNG", 20, 20, rawData.width, rawData.height);
-      pdf.save("qr-code.pdf");
-    } else {
-      qrCode.download({ name: "qr-code", extension: format });
-    }
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "px",
+    format: [canvas.width + 40, canvas.height + 40],
   });
+
+  pdf.addImage(dataUrl, "PNG", 20, 20, canvas.width, canvas.height);
+  pdf.save("qr-code.pdf");
+} else {
+  qrCode.download({ name: "qr-code", extension: format });
+}
+
 
   advancedToggle.addEventListener("change", () => {
     if (advancedToggle.checked) {
