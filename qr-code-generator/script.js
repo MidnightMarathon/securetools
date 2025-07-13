@@ -12,6 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const transparentBgToggle = document.getElementById("transparent-bg");
   const resolutionSlider = document.getElementById("qr-resolution");
   const resolutionValue = document.getElementById("qr-resolution-value");
+  const logoInput = document.getElementById("logo-upload");
+  const logoSizeSlider = document.getElementById("logo-size");
+  const eyeColorPicker = document.getElementById("eye-color");
+  const dotSelect = document.getElementById("dot-style");
+  const cornerSelect = document.getElementById("corner-style");
+  const bgColorPicker = document.getElementById("bg-color");
 
   let currentResolution = Number(resolutionSlider.value);
   let currentData = "";
@@ -85,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     qrCode.update({
       data: currentData,
       width: currentResolution,
-      height: currentResolution
+      height: currentResolution,
     });
 
     qrWrapper.style.display = "block";
@@ -101,12 +107,11 @@ document.addEventListener("DOMContentLoaded", () => {
     currentResolution = Number(resolutionSlider.value);
     resolutionValue.textContent = `${currentResolution}px`;
 
-    // Update QR code with new size
     if (currentData) {
       qrCode.update({
         width: currentResolution,
         height: currentResolution,
-        data: currentData
+        data: currentData,
       });
     }
   });
@@ -146,17 +151,14 @@ document.addEventListener("DOMContentLoaded", () => {
     container.classList.toggle("advanced", advancedToggle.checked);
   });
 
-  const dotSelect = document.getElementById("dot-style");
   dotSelect.addEventListener("change", () => {
     qrCode.update({ dotsOptions: { type: dotSelect.value } });
   });
 
-  const cornerSelect = document.getElementById("corner-style");
   cornerSelect.addEventListener("change", () => {
     qrCode.update({ cornersSquareOptions: { type: cornerSelect.value } });
   });
 
-  const bgColorPicker = document.getElementById("bg-color");
   bgColorPicker.addEventListener("input", () => {
     if (!transparentBgToggle.checked) {
       qrCode.update({ backgroundOptions: { color: bgColorPicker.value } });
@@ -168,17 +170,18 @@ document.addEventListener("DOMContentLoaded", () => {
       backgroundOptions: {
         color: transparentBgToggle.checked
           ? "rgba(0,0,0,0)"
-          : bgColorPicker.value
-      }
+          : bgColorPicker.value,
+      },
     });
   });
 
-  const eyeColorPicker = document.getElementById("eye-color");
   eyeColorPicker.addEventListener("input", () => {
-    qrCode.update({ cornersSquareOptions: { color: eyeColorPicker.value } });
+    qrCode.update({
+      cornersSquareOptions: { color: eyeColorPicker.value },
+      cornersDotOptions: { color: eyeColorPicker.value },
+    });
   });
 
-  const logoInput = document.getElementById("logo-upload");
   logoInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (!file) {
@@ -188,14 +191,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      qrCode.update({ image: e.target.result });
+      const size = (Number(logoSizeSlider.value) / 100) * 1.5;
+      qrCode.update({
+        image: e.target.result,
+        imageOptions: {
+          imageSize: size,
+          opacity: 1,
+          margin: 5,
+        },
+      });
     };
     reader.readAsDataURL(file);
   });
 
-  const logoSizeSlider = document.getElementById("logo-size");
   logoSizeSlider.addEventListener("input", () => {
-    const size = Number(logoSizeSlider.value) / 100 * 1.5;
+    const size = (Number(logoSizeSlider.value) / 100) * 1.5;
     qrCode.update({ imageOptions: { imageSize: size } });
   });
 });
