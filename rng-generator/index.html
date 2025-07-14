@@ -1,151 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Random Number Generator – SecureTools</title>
-  <meta name="description" content="Generate a random number securely in your browser. No tracking. No nonsense." />
-  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" />
-  <link rel="stylesheet" href="/assets/style.css" /> <!-- If you have shared styles -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Random Number Generator – SecureTools</title>
+    <meta name="description" content="Generate a random number securely in your browser. No tracking. No nonsense. Instant and private." />
+    <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" />
+    <link rel="stylesheet" href="/assets/styles.css" /> <link rel="canonical" href="https://www.securegenerators.com/rng-generator/" />
 
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
-        "Open Sans", "Helvetica Neue", sans-serif;
-      background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
-      background-size: 300% 300%;
-      animation: gradientFlow 15s ease infinite;
-      color: #1d1d1f;
-      margin: 0;
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
+    <meta property="og:title" content="Random Number Generator – SecureTools" />
+    <meta property="og:description" content="Generate a random number securely in your browser. No tracking, no nonsense. Instant and private." />
+    <meta property="og:image" content="https://www.securegenerators.com/assets/social-preview-rng.png" /> <meta property="og:url" content="https://www.securegenerators.com/rng-generator/" />
+    <meta property="og:type" content="website" />
 
-    @keyframes gradientFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Random Number Generator – SecureTools" />
+    <meta name="twitter:description" content="Generate a random number securely in your browser. No tracking, no nonsense. Instant and private." />
+    <meta name="twitter:image" content="https://www.securegenerators.com/assets/social-preview-rng.png" />
 
-    nav {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-    }
-
-    nav a {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background-color: #fff;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      color: #333;
-      text-decoration: none;
-      font-weight: 600;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s ease;
-    }
-
-    nav a:hover {
-      background-color: #d0d0d5;
-      color: #2d9cdb;
-    }
-
-    main {
-      max-width: 400px;
-      width: 100%;
-      background: #fff;
-      border-radius: 1.5rem;
-      padding: 2rem;
-      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-      margin-top: 5rem;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-    }
-
-    .inputs {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .inputs input {
-      width: 80px;
-      padding: 0.5rem;
-      font-size: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.5rem;
-      text-align: center;
-    }
-
-    .result {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #2563eb;
-      margin: 1.5rem 0;
-      transition: transform 0.2s ease-in-out;
-    }
-
-    button {
-      background-color: #2563eb;
-      color: white;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      font-weight: 500;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    button:hover {
-      background-color: #1d4ed8;
-    }
-
-    footer {
-      margin-top: auto;
-      padding: 2rem 1rem;
-      font-size: 0.875rem;
-      color: #555;
-    }
-
-    @media (max-width: 500px) {
-      .inputs {
-        flex-direction: column;
-        gap: 0.75rem;
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "SecureTools Random Number Generator",
+      "operatingSystem": "Web",
+      "applicationCategory": "UtilityApplication",
+      "url": "https://www.securegenerators.com/rng-generator/",
+      "description": "Generate truly random numbers securely in your browser. Customize min/max values. Private, fast, and no tracking.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SecureTools",
+        "url": "https://www.securegenerators.com/"
       }
     }
-  </style>
+    </script>
+
+    <style>
+        /* Page-specific styles for the Random Number Generator */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+                "Open Sans", "Helvetica Neue", sans-serif;
+            background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
+            background-size: 300% 300%;
+            animation: gradientFlow 15s ease infinite;
+            color: #1d1d1f;
+            margin: 0;
+            /* This padding-top is crucial for the absolute positioned nav */
+            padding-top: 5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        main {
+            max-width: 400px;
+            width: 100%;
+            background: #fff;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .inputs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .inputs input {
+            width: 80px;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        .result {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin: 1.5rem 0;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        button {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 2rem 1rem;
+            font-size: 0.875rem;
+            color: #555;
+        }
+
+        .tool-info {
+            text-align: left; /* Align text within tool-info to the left */
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .tool-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: left; /* Ensure H2 in tool-info is left-aligned */
+        }
+
+        .tool-info h3 {
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            text-align: left; /* Ensure H3 in tool-info is left-aligned */
+        }
+
+        .tool-info p, .tool-info ol {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .tool-info ol {
+            padding-left: 1.5rem; /* Indent ordered list */
+        }
+
+
+        @media (max-width: 500px) {
+            .inputs {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <nav>
-    <a href="/" aria-label="Back to Home">← Home</a>
-  </nav>
+    <nav>
+        <a href="/" aria-label="Back to Home">← Home</a>
+    </nav>
 
-  <main>
-    <h1>🎲 Random Number Generator</h1>
-    <div class="inputs">
-      <input type="number" id="min" placeholder="Min" value="1" />
-      <input type="number" id="max" placeholder="Max" value="100" />
-    </div>
-    <div class="result" id="result">—</div>
-    <button onclick="generateRandom()">Generate</button>
-  </main>
+    <main>
+        <h1>🎲 Random Number Generator</h1>
+        <div class="inputs">
+            <input type="number" id="min" placeholder="Min" value="1" />
+            <input type="number" id="max" placeholder="Max" value="100" />
+        </div>
+        <div class="result" id="result">—</div>
+        <button onclick="generateRandom()">Generate</button>
 
-  <footer>
-    <p>© 2025 SecureTools. No tracking, no nonsense — just tools.</p>
-  </footer>
+        <section class="tool-info">
+            <h2>About this Random Number Generator</h2>
+            <p>Our Random Number Generator provides truly random numbers directly in your browser. This client-side generation ensures your privacy, as no data leaves your device. Perfect for games, lotteries, statistical sampling, or any situation requiring unpredictable numerical outcomes.</p>
+            <h3>How to Use:</h3>
+            <ol>
+                <li>Enter your desired minimum value in the "Min" field.</li>
+                <li>Enter your desired maximum value in the "Max" field.</li>
+                <li>Click the "Generate" button.</li>
+                <li>Your random number will appear instantly above the button.</li>
+            <li>Need another number? Simply click "Generate" again!</li>
+            </ol>
+            <h3>Why Use a Secure, Browser-Based RNG?</h3>
+            <p>Unlike server-side generators that might log your requests, our tool keeps your usage entirely private. This makes it ideal for sensitive applications where data integrity and user anonymity are paramount. Our algorithms are designed for strong statistical randomness.</p>
+        </section>
+    </main>
 
-  <script src="script.js"></script>
+    <footer>
+        <p>© 2025 SecureTools. No tracking, no nonsense — just tools.</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

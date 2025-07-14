@@ -47,7 +47,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1.5rem;
   white-space: nowrap;
@@ -196,4 +196,3 @@ body {
   50%  { transform: scale(1.1); filter: drop-shadow(0 0 6px rgba(0,0,0,0.5)); }
   100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
 }
-
