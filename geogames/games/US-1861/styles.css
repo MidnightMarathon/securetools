@@ -1,258 +1,198 @@
 /* Animate gradient background */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
-  background-size: 300% 300%;
-  animation: gradientFlow 15s ease infinite;
-  color: #1d1d1f;
-  margin: 0;
-  padding: 2rem 1rem; /* Keep some overall padding */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
+  background-size: 300% 300%;
+  animation: gradientFlow 15s ease infinite;
+  color: #1d1d1f;
+  margin: 0;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
 
 @keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Main tile container with white frosted glass */
 #game-container {
-  width: 85vw;
-  max-width: 900px;
-  background: rgba(255, 255, 255, 0.9); /* mostly white, semi-opaque */
-  backdrop-filter: saturate(180%) blur(15px);
-  -webkit-backdrop-filter: saturate(180%) blur(15px);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  padding: 2rem 2.5rem 3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Centers items like map horizontally */
-  box-sizing: border-box; /* Ensures padding is included in width calculation */
+  width: 85vw;
+  max-width: 900px;
+  background: rgba(255, 255, 255, 0.9); /* mostly white, semi-opaque */
+  backdrop-filter: saturate(180%) blur(15px);
+  -webkit-backdrop-filter: saturate(180%) blur(15px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  padding: 2rem 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Inline top info bar: title, instructions, target, score */
 #top-info-bar {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap; /* <--- CRITICAL CHANGE: Allow items to wrap */
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  /* white-space: nowrap; <--- REMOVED: This was preventing wrapping */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  white-space: nowrap;
 }
 
 #title-instructions {
-  display: flex;
-  flex-direction: column; /* <--- CRITICAL CHANGE: Stack h1 and span vertically */
-  align-items: flex-start; /* <--- Align text to the left within this column */
-  gap: 0.25rem; /* Reduced gap between title and instruction */
-  flex-shrink: 0;
-  /* Allows this section to take up full width on smaller screens */
-  flex-basis: 100%; /* <--- NEW: Forces title/instructions to take full width */
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 #title-instructions h1 {
-  font-weight: 700;
-  font-size: 1.5rem;
-  margin: 0;
-  line-height: 1.2; /* Improve readability for title */
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin: 0;
 }
 
 .instruction {
-  font-size: 1rem;
-  color: #555;
-  text-align: left; /* Ensure instruction text aligns left */
+  font-size: 1rem;
+  color: #555;
 }
 
-#target-container,
-#score-container {
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: #28a745; /* green */
-  white-space: nowrap;
-  flex-shrink: 0;
-  /* NEW: Allow these to wrap below title/instructions on small screens */
-  flex-basis: content; /* Allow content to dictate size */
+#target-container {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #28a745; /* green */
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 #target-container strong#target-state {
-  font-weight: 900;
-  color: #28a745;
+  font-weight: 900;
+  color: #28a745;
 }
 
 #score-container {
-  font-size: 1.1rem;
-  white-space: nowrap;
-  color: #333;
-  flex-shrink: 0;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  color: #333;
+  flex-shrink: 0;
 }
 
 /* Map container with blue background behind the SVG */
 #map-container {
-  width: 100%;
-  max-width: 1000px;
-  height: auto;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  background-color: #a3c1f7; /* blue background behind SVG */
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  background-color: #a3c1f7; /* blue background behind SVG */
 }
 
 /* SVG sizing */
 #map-container svg {
-  display: block;
-  width: 100%;
-  height: 100%;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* SVG paths default style */
 .map-container path {
-  fill: #cfd8dc; /* Light blue-grey */
-  stroke: #607d8b; /* Darker blue-grey */
-  stroke-width: 1px;
-  transition: filter 0.3s ease, transform 0.3s ease, fill 0.3s ease;
-  cursor: pointer;
+  fill: #cfd8dc; /* Light blue-grey */
+  stroke: #607d8b; /* Darker blue-grey */
+  stroke-width: 1px;
+  transition: filter 0.3s ease, transform 0.3s ease, fill 0.3s ease;
+  cursor: pointer;
 }
 
 /* Hover effect */
 .map-container path.hover-state {
-  fill: #a0c4ff !important;
-  stroke-width: 2px;
-  filter: drop-shadow(0 0 5px rgba(160, 196, 255, 0.8));
+  fill: #a0c4ff !important;
+  stroke-width: 2px;
+  filter: drop-shadow(0 0 5px rgba(160, 196, 255, 0.8));
 }
 
 /* Correct guess */
 .map-container path.correct {
-  fill: #a8df8e;
-  pointer-events: none;
+  fill: #a8df8e;
+  pointer-events: none;
 }
 
 /* Partial correct */
 .map-container path.partial {
-  fill: #fdfd96;
-  pointer-events: none;
+  fill: #fdfd96;
+  pointer-events: none;
 }
 
 /* Incorrect flash */
 .map-container path.incorrect-temp {
-  fill: #ff6666 !important;
-  stroke: #ff0000 !important;
-  stroke-width: 3px !important;
-  animation: none !important;
+  fill: #ff6666 !important;
+  stroke: #ff0000 !important;
+  stroke-width: 3px !important;
+  animation: none !important;
 }
 
 /* Fail */
 .map-container path.fail {
-  fill: #ff6666;
-  animation: pulseRed 1.5s infinite alternate;
+  fill: #ff6666;
+  animation: pulseRed 1.5s infinite alternate;
 }
 
 /* Given up */
 .map-container path.given-up {
-  fill: #8b0000;
-  pointer-events: none;
+  fill: #8b0000;
+  pointer-events: none;
 }
 
 /* Pulsing red animation */
 @keyframes pulseRed {
-  0% { fill: #ff6666; }
-  100% { fill: #cc0000; }
+  0% { fill: #ff6666; }
+  100% { fill: #cc0000; }
 }
 
 /* Pop animation */
 .map-container path.correct.pop,
 .map-container path.partial.pop {
-  transform-origin: center;
-  animation: popUpDown 0.6s ease forwards;
-  filter: drop-shadow(0 6px 10px rgba(72, 187, 120, 0.7));
-  cursor: default;
+  transform-origin: center;
+  animation: popUpDown 0.6s ease forwards;
+  filter: drop-shadow(0 6px 10px rgba(72, 187, 120, 0.7));
+  cursor: default;
 }
 
 @keyframes popUpDown {
-  0% {
-    transform: scale(1) translateY(0);
-    filter: drop-shadow(0 4px 6px rgba(72, 187, 120, 0.3));
-  }
-  50% {
-    transform: scale(1.15) translateY(-20px);
-    filter: drop-shadow(0 10px 15px rgba(72, 187, 120, 0.8));
-  }
-  100% {
-    transform: scale(1) translateY(0);
-    filter: drop-shadow(0 4px 6px rgba(72, 187, 120, 0.3));
-  }
+  0% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 4px 6px rgba(72, 187, 120, 0.3));
+  }
+  50% {
+    transform: scale(1.15) translateY(-20px);
+    filter: drop-shadow(0 10px 15px rgba(72, 187, 120, 0.8));
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 4px 6px rgba(72, 187, 120, 0.3));
+  }
 }
 
 .pop {
-  animation: pop-scale 0.5s ease forwards;
+  animation: pop-scale 0.5s ease forwards;
 }
 
 @keyframes pop-scale {
-  0%   { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
-  50%  { transform: scale(1.1); filter: drop-shadow(0 0 6px rgba(0,0,0,0.5)); }
-  100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
-}
-
-/* --- Media Queries for Responsiveness --- */
-@media (max-width: 768px) {
-    /* On smaller screens, allow top-info-bar items to wrap */
-    #top-info-bar {
-        flex-wrap: wrap; /* Allow wrapping */
-        justify-content: center; /* Center items when they wrap */
-        align-items: flex-start; /* Align from the top */
-    }
-
-    #title-instructions {
-        flex-basis: 100%; /* Force title/instructions to take full width */
-        margin-bottom: 1rem; /* Add space below instructions when they are on their own line */
-    }
-
-    #target-container,
-    #score-container {
-        /* When wrapped, distribute space evenly */
-        flex-basis: calc(50% - 0.5rem); /* Two items per row, with gap */
-        text-align: center; /* Center their internal text */
-        padding: 0.8rem 1rem; /* Adjust padding */
-        font-size: 1.1rem;
-    }
-
-    #target-container strong#target-state,
-    #score-container span {
-        display: block; /* Make the value go to a new line if needed */
-        margin-top: 0.2rem; /* Small space below label */
-        font-size: 1.2rem;
-    }
-
-    #game-container {
-        padding: 1.5rem 1rem 2rem; /* Reduce padding on smaller screens */
-        width: 95vw; /* Allow it to take more width on small screens */
-    }
-
-    #title-instructions h1 {
-        font-size: 1.3rem; /* Slightly smaller title on mobile */
-    }
-
-    .instruction {
-        font-size: 0.9rem; /* Slightly smaller instructions on mobile */
-    }
-}
-
-@media (max-width: 480px) {
-    #target-container,
-    #score-container {
-        flex-basis: 100%; /* Stack target and score on very small screens */
-    }
+  0%   { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+  50%  { transform: scale(1.1); filter: drop-shadow(0 0 6px rgba(0,0,0,0.5)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
 }
