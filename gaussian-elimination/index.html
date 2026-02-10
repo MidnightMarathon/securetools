@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaussian Elimination – SecureTools</title>
+    <meta name="description" content="Master linear algebra by solving systems of equations step-by-step using Gaussian elimination.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main id="game-container">
+        <div id="top-info-bar">
+            <div id="title-section">
+                <h1>Gaussian Elimination</h1>
+                <p id="instructions">Select a row, choose an operation, then drag to another row to eliminate. Swap rows by dragging without selecting an operation.</p>
+                <div id="hint-display" style="display: none;">
+                    <span class="hint-icon">💡</span>
+                    <span id="hint-text"></span>
+                </div>
+            </div>
+            <div id="controls-section">
+                <button id="undo-btn" disabled>↶ Undo</button>
+                <button id="hint-btn">💡 Hint</button>
+                <button id="custom-matrix-btn">Custom Matrix</button>
+                <button id="new-problem-btn">New Problem</button>
+            </div>
+        </div>
+
+        <div id="setup-screen">
+            <h2>Game Setup</h2>
+            <div class="setup-container">
+                <div class="setup-group">
+                    <h3>System Size</h3>
+                    <div class="btn-group">
+                        <button class="config-btn size-btn" data-size="2">2 variables</button>
+                        <button class="config-btn size-btn active" data-size="3">3 variables</button>
+                        <button class="config-btn size-btn" data-size="4">4 variables</button>
+                    </div>
+                </div>
+                
+                <div class="setup-group">
+                    <h3>Difficulty</h3>
+                    <div class="btn-group">
+                        <button class="config-btn diff-btn active" data-difficulty="easy">Easy</button>
+                        <button class="config-btn diff-btn" data-difficulty="medium">Medium</button>
+                        <button class="config-btn diff-btn" data-difficulty="hard">Hard</button>
+                    </div>
+                </div>
+            </div>
+            <button id="start-game-btn" class="action-btn primary-btn">Start Game</button>
+        </div>
+
+        <div id="game-area" style="display: none;">
+            <div id="matrix-container">
+                <table id="matrix-table">
+                    <!-- Matrix will be generated here -->
+                </table>
+            </div>
+
+            <div id="operation-toolbar" style="display: none;">
+                <h3>Row Operations</h3>
+                <div id="toolbar-content">
+                    <button id="multiply-btn" class="operation-btn">× Multiply This Row</button>
+                    <label for="scalar-input">by </label>
+                    <input type="text" id="scalar-input" placeholder="e.g., 2 or 1/2" value="1">
+                    <button id="add-row-btn" class="operation-btn">+ Add (Scalar × This Row) to Target</button>
+                    <button id="cancel-btn" class="cancel-btn">Cancel</button>
+                </div>
+            </div>
+
+            <div id="solution-section" style="display: none;">
+                <h2>Enter Solution:</h2>
+                <div id="solution-inputs">
+                    <div class="solution-field">
+                        <label for="x-input">x = </label>
+                        <input type="text" id="x-input" placeholder="0">
+                    </div>
+                    <div class="solution-field">
+                        <label for="y-input">y = </label>
+                        <input type="text" id="y-input" placeholder="0">
+                    </div>
+                    <div class="solution-field" id="z-field">
+                        <label for="z-input">z = </label>
+                        <input type="text" id="z-input" placeholder="0">
+                    </div>
+                    <div class="solution-field" id="w-field" style="display: none;">
+                        <label for="w-input">w = </label>
+                        <input type="text" id="w-input" placeholder="0">
+                    </div>
+                </div>
+                <button id="check-solution-btn">Check Solution</button>
+                <div id="result-message"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="custom-matrix-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Enter Custom Matrix</h2>
+            <div class="setup-group">
+                <label>Variables: </label>
+                <select id="custom-size-select">
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                </select>
+                <label style="margin-left: 15px;">Augmented Cols: </label>
+                <select id="custom-augment-select">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            <div id="custom-matrix-inputs"></div>
+            <div class="modal-actions">
+                <button id="load-custom-matrix-btn" class="action-btn primary-btn">Load Matrix</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
