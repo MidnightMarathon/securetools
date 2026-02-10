@@ -1,7 +1,9 @@
 // Gaussian Elimination Game
 // Game state
 let currentSize = 3;
+let numAugmentedCols = 1; // Default to 1
 let matrix = [];
+let initialMatrix = []; // To store the original state for validation
 let solution = [];
 let operationHistory = [];
 let selectedRow = null;
@@ -115,6 +117,175 @@ function setupButtons() {
     document.getElementById('check-solution-btn').addEventListener('click', checkSolution);
     document.getElementById('scalar-input').addEventListener('input', updateScalar);
     document.getElementById('hint-btn').addEventListener('click', showHint);
+    
+    // Custom Matrix Handlers
+    const customBtn = document.getElementById('custom-matrix-btn');
+    if (customBtn) customBtn.addEventListener('click', openCustomModal);
+    
+    const closeModal = document.querySelector('.close-modal');
+    if (closeModal) closeModal.addEventListener('click', closeCustomModal);
+    
+    const loadCustomBtn = document.getElementById('load-custom-matrix-btn');
+    if (loadCustomBtn) loadCustomBtn.addEventListener('click', loadCustomMatrix);
+    
+    const customSizeSelect = document.getElementById('custom-size-select');
+    if (customSizeSelect) customSizeSelect.addEventListener('change', (e) => {
+        const augSelect = document.getElementById('custom-augment-select');
+        const augCols = augSelect ? parseInt(augSelect.value) : 1;
+        createMatrixInputGrid(parseInt(e.target.value), augCols);
+    });
+    
+    const customAugmentSelect = document.getElementById('custom-augment-select');
+    if (customAugmentSelect) customAugmentSelect.addEventListener('change', (e) => {
+        const sizeSelect = document.getElementById('custom-size-select');
+        createMatrixInputGrid(parseInt(sizeSelect.value), parseInt(e.target.value));
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('custom-matrix-modal');
+        if (e.target === modal) {
+            closeCustomModal();
+        }
+    });
+}
+
+function openCustomModal() {
+    const modal = document.getElementById('custom-matrix-modal');
+    // Set select to current size
+    const select = document.getElementById('custom-size-select');
+    select.value = currentSize;
+    document.getElementById('custom-augment-select').value = numAugmentedCols;
+    
+    createMatrixInputGrid(currentSize, numAugmentedCols);
+    modal.style.display = 'flex';
+}
+
+function closeCustomModal() {
+    document.getElementById('custom-matrix-modal').style.display = 'none';
+}
+
+function createMatrixInputGrid(size, augCols = 1) {
+    const container = document.getElementById('custom-matrix-inputs');
+    container.innerHTML = '';
+    
+    for (let i = 0; i < size; i++) {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'matrix-input-row';
+        
+        // Coefficient columns
+        for (let j = 0; j < size; j++) {
+            const input = document.createElement('input');
+            input.type = 'text'; // Allow fractions
+            input.className = 'matrix-input-cell';
+            input.placeholder = `x${j+1}`;
+            input.dataset.row = i;
+            input.dataset.col = j;
+            rowDiv.appendChild(input);
+        }
+        
+        const separator = document.createElement('div');
+        separator.className = 'matrix-augment-separator';
+        rowDiv.appendChild(separator);
+        
+        // Augmented columns
+        for (let k = 0; k < augCols; k++) {
+            const augmentInput = document.createElement('input');
+            augmentInput.type = 'text';
+            augmentInput.className = 'matrix-input-cell';
+            augmentInput.placeholder = `b${augCols > 1 ? k+1 : ''}`;
+            augmentInput.dataset.row = i;
+            augmentInput.dataset.col = size + k; // Augmented column index
+            rowDiv.appendChild(augmentInput);
+        }
+        
+        container.appendChild(rowDiv);
+    }
+}
+
+function loadCustomMatrix() {
+    const sizeSelect = document.getElementById('custom-size-select');
+    const augSelect = document.getElementById('custom-augment-select');
+    
+    const size = parseInt(sizeSelect.value);
+    const augCols = parseInt(augSelect.value);
+    const inputs = document.querySelectorAll('.matrix-input-cell');
+    
+    const newMatrix = [];
+    
+    // Initialize matrix structure
+    for(let i=0; i<size; i++) {
+        newMatrix.push(new Array(size + augCols));
+    }
+    
+    let isValid = true;
+    
+    inputs.forEach(input => {
+        const r = parseInt(input.dataset.row);
+        const c = parseInt(input.dataset.col);
+        try {
+            const val = input.value.trim() === '' ? new Fraction(0) : Fraction.fromString(input.value);
+            // Safety check for indices
+            if (newMatrix[r] && c < newMatrix[r].length) {
+                newMatrix[r][c] = val;
+            }
+        } catch (e) {
+            isValid = false;
+            input.style.borderColor = 'red';
+        }
+    });
+    
+    if (!isValid) {
+        alert("Please enter valid numbers or fractions (e.g., '1/2', '-5').");
+        return;
+    }
+    
+    // Update game state
+    currentSize = size;
+    numAugmentedCols = augCols;
+    matrix = newMatrix;
+    initialMatrix = matrix.map(row => row.map(val => new Fraction(val.num, val.den)));
+    solution = []; // Clear solution as we don't know it yet
+    
+    // Reset UI for new game
+    operationHistory = [];
+    selectedRow = null;
+    selectedOperation = null;
+    document.getElementById('undo-btn').disabled = true;
+    
+    // Complex solution handling
+    const solutionSection = document.getElementById('solution-section');
+    const resultMessage = document.getElementById('result-message');
+    
+    if (numAugmentedCols > 1) {
+        // If multiple output columns, standard x,y,z checking is ambiguous
+        // We will just allow users to solve to RREF
+        solutionSection.style.display = 'none'; 
+    } else {
+        solutionSection.style.display = 'block'; 
+        // Show/hide z and w fields based on size
+        document.getElementById('z-field').style.display = currentSize >= 3 ? 'block' : 'none';
+        document.getElementById('w-field').style.display = currentSize >= 4 ? 'block' : 'none';
+        
+        // Reset inputs
+        ['x-input', 'y-input', 'z-input', 'w-input'].forEach(id => {
+            const el = document.getElementById(id); 
+            if(el) el.value = '';
+        });
+    }
+    resultMessage.textContent = '';
+    
+    // Update active size button in main UI to match (visual sync)
+    document.querySelectorAll('.size-btn').forEach(btn => {
+        if (parseInt(btn.dataset.size) === currentSize) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
+    
+    renderMatrix();
+    closeCustomModal();
+    
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('game-area').style.display = 'block';
 }
 
 function showHint() {
@@ -208,6 +379,8 @@ function generateMatrix() {
         sparsity = 0.05;
     }
     
+    numAugmentedCols = 1; // Standard games always have 1 result column
+
     // Generate a random system with integer solution
     solution = [];
     for (let i = 0; i < currentSize; i++) {
@@ -246,6 +419,9 @@ function generateMatrix() {
         
         matrix.push(row);
     }
+    
+    // Save initial state for validation
+    initialMatrix = matrix.map(row => row.map(val => new Fraction(val.num, val.den)));
 }
 
 function renderMatrix() {
@@ -269,11 +445,11 @@ function renderMatrix() {
             const td = document.createElement('td');
             td.textContent = value.toString();
             
-            // Add divider class before last column
+            // Add divider class before last column (augmented section starts at currentSize)
             if (colIndex === currentSize - 1) {
                 td.classList.add('before-divider');
             }
-            if (colIndex === currentSize) {
+            if (colIndex >= currentSize) {
                 td.classList.add('augment-column');
             }
             
@@ -347,7 +523,7 @@ function performMultiply() {
     saveState();
     
     // Multiply selected row by scalar
-    for (let i = 0; i <= currentSize; i++) {
+    for (let i = 0; i < matrix[selectedRow].length; i++) {
         matrix[selectedRow][i] = matrix[selectedRow][i].multiply(scalarValue);
     }
     
@@ -391,7 +567,7 @@ function showPreviewRow() {
         if (colIndex === currentSize - 1) {
             td.classList.add('before-divider');
         }
-        if (colIndex === currentSize) {
+        if (colIndex >= currentSize) {
             td.classList.add('augment-column');
         }
         
@@ -553,7 +729,7 @@ function performAddOperation(targetRow) {
     saveState();
     
     // Add (scalar * source row) to target row
-    for (let i = 0; i <= currentSize; i++) {
+    for (let i = 0; i < matrix[selectedRow].length; i++) {
         const term = matrix[selectedRow][i].multiply(scalarValue);
         matrix[targetRow][i] = matrix[targetRow][i].add(term);
     }
@@ -615,17 +791,29 @@ function checkRREF() {
         // Visual feedback when RREF is achieved
         document.getElementById('matrix-table').classList.add('rref-complete');
         
-        // Auto-fill solution inputs using the augmented column values
-        const inputIds = ['x-input', 'y-input', 'z-input', 'w-input'];
-        for (let i = 0; i < currentSize; i++) {
-            const inputEl = document.getElementById(inputIds[i]);
-            if (inputEl) {
-                // The value is in the last column (index currentSize)
-                inputEl.value = matrix[i][currentSize].toString();
+        if (numAugmentedCols === 1) {
+            document.getElementById('solution-section').style.display = 'block';
+            
+            // Auto-fill solution inputs using the augmented column values
+            const inputIds = ['x-input', 'y-input', 'z-input', 'w-input'];
+            for (let i = 0; i < currentSize; i++) {
+                const inputEl = document.getElementById(inputIds[i]);
+                if (inputEl) {
+                    // The value is in the last column (index currentSize)
+                    inputEl.value = matrix[i][currentSize].toString();
+                }
             }
+        } else {
+            // For multiple augmented columns, we don't have a simple x,y,z input form
+            document.getElementById('solution-section').style.display = 'none';
+            // Could add a toast or modal here saying "Solved"
         }
     } else {
         document.getElementById('matrix-table').classList.remove('rref-complete');
+        // Only hide solution section if we were supposed to show it (single col)
+        if (numAugmentedCols === 1) {
+            document.getElementById('solution-section').style.display = 'none';
+        }
     }
 }
 
@@ -635,24 +823,56 @@ function checkSolution() {
         document.getElementById('y-input').value,
         currentSize >= 3 ? document.getElementById('z-input').value : null,
         currentSize >= 4 ? document.getElementById('w-input').value : null
-    ];
+    ].filter(val => val !== null);
     
     let allCorrect = true;
     const resultDiv = document.getElementById('result-message');
     
-    for (let i = 0; i < currentSize; i++) {
-        try {
-            const userAnswer = Fraction.fromString(inputs[i]);
-            const correctAnswer = solution[i]; // Compare against original solution
+    // Parse user inputs first
+    const userValues = [];
+    try {
+        for (let val of inputs) {
+            if (!val.trim()) throw new Error("Empty input");
+            userValues.push(Fraction.fromString(val));
+        }
+    } catch (e) {
+        resultDiv.textContent = ' Please fill in all fields with valid numbers.';
+        resultDiv.classList.remove('correct');
+        resultDiv.classList.add('incorrect');
+        return;
+    }
+
+    // Verify against initial matrix: A * x = b
+    // Use initialMatrix if available (should be), else fallback to solution array (legacy)
+    if (initialMatrix && initialMatrix.length > 0) {
+        for (let i = 0; i < currentSize; i++) {
+            let rowSum = new Fraction(0);
             
-            if (userAnswer.num !== correctAnswer.num || userAnswer.den !== correctAnswer.den) {
+            // Calculate dot product for this row
+            for (let j = 0; j < currentSize; j++) {
+                rowSum = rowSum.add(initialMatrix[i][j].multiply(userValues[j]));
+            }
+            
+            // Compare with augmented value (last column)
+            const augmentedVal = initialMatrix[i][currentSize];
+            
+            if (rowSum.num !== augmentedVal.num || rowSum.den !== augmentedVal.den) {
                 allCorrect = false;
                 break;
             }
-        } catch (e) {
-            allCorrect = false;
-            break;
         }
+    } else if (solution && solution.length > 0) {
+        // Fallback for generated games if initialMatrix missing (shouldn't happen)
+        for (let i = 0; i < currentSize; i++) {
+            if (userValues[i].num !== solution[i].num || userValues[i].den !== solution[i].den) {
+                allCorrect = false;
+                break;
+            }
+        }
+    } else {
+        // No validation data available
+        resultDiv.textContent = ' Error: No solution data available.';
+        return;
     }
     
     if (allCorrect) {

@@ -545,3 +545,79 @@ button:disabled {
  from { opacity: 0; transform: translateY(-10px); }
  to { opacity: 1; transform: translateY(0); }
 }
+
+/* Modal Styles */
+.modal {
+    /* display: none; override in JS */
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.5); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    width: auto;
+    max-width: 800px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: #000;
+}
+
+#custom-matrix-inputs {
+    display: grid;
+    gap: 10px;
+    margin: 20px 0;
+    overflow-x: auto;
+    padding: 10px;
+}
+
+.matrix-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.matrix-input-cell {
+    width: 60px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.matrix-augment-separator {
+    width: 2px;
+    height: 30px;
+    background-color: #333;
+    margin: 0 5px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}

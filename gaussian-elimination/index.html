@@ -21,6 +21,7 @@
             <div id="controls-section">
                 <button id="undo-btn" disabled>↶ Undo</button>
                 <button id="hint-btn">💡 Hint</button>
+                <button id="custom-matrix-btn">Custom Matrix</button>
                 <button id="new-problem-btn">New Problem</button>
             </div>
         </div>
@@ -93,6 +94,30 @@
         </div>
     </main>
 
+    <div id="custom-matrix-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Enter Custom Matrix</h2>
+            <div class="setup-group">
+                <label>Variables: </label>
+                <select id="custom-size-select">
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                </select>
+                <label style="margin-left: 15px;">Augmented Cols: </label>
+                <select id="custom-augment-select">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            <div id="custom-matrix-inputs"></div>
+            <div class="modal-actions">
+                <button id="load-custom-matrix-btn" class="action-btn primary-btn">Load Matrix</button>
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
