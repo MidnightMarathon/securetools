@@ -614,6 +614,16 @@ function checkRREF() {
     if (isRREF) {
         // Visual feedback when RREF is achieved
         document.getElementById('matrix-table').classList.add('rref-complete');
+        
+        // Auto-fill solution inputs using the augmented column values
+        const inputIds = ['x-input', 'y-input', 'z-input', 'w-input'];
+        for (let i = 0; i < currentSize; i++) {
+            const inputEl = document.getElementById(inputIds[i]);
+            if (inputEl) {
+                // The value is in the last column (index currentSize)
+                inputEl.value = matrix[i][currentSize].toString();
+            }
+        }
     } else {
         document.getElementById('matrix-table').classList.remove('rref-complete');
     }
