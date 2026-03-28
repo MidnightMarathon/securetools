@@ -2,7 +2,7 @@
 
 I got tired of watching people Google "free QR code generator" and land on sites plastered with ads, paywalls, and sign-up modals — just to encode a URL. These are simple tools. They shouldn't require an account, a cookie banner, or a privacy policy written to obscure rather than inform.
 
-I care about privacy seriously — the kind the GDPR was trying to get at before it became a checkbox exercise. Your data is yours. That's not a selling point, it's just the baseline. So I built tools that make it structurally impossible to collect anything: everything runs in the browser, nothing is sent to a server, and there's no backend to leak.
+I care about privacy seriously - your data is yours. So I built tools that make it structurally impossible to collect anything: everything runs in the browser, nothing is sent to a server, and there's no backend to leak.
 
 Live at [securegenerators.com](https://www.securegenerators.com).
 
@@ -32,11 +32,8 @@ Vanilla HTML, CSS, and JavaScript. No build step, no framework, no `node_modules
 
 This is a deliberate choice. A page that's just HTML and CSS loads in milliseconds on a ten-year-old phone on a slow connection. The moment you pull in a framework, you're making someone wait so you can have a nicer developer experience — and that trade-off isn't worth it here. These tools should work for everyone, not just people with fast hardware and uncapped data plans.
 
-It also means the code is auditable. You can open a file, read it, and verify it does what it says. No minified bundle, no obfuscated dependencies.
-
-Each tool lives in its own folder and is fully self-contained.
-
----
+**It also means the code is auditable. You can open a file, read it, and verify it does what it says.
+**---
 
 ## Running locally
 
@@ -106,48 +103,3 @@ This isn't a strong privacy stance so much as a practical one — most of these 
 
 The codebase is vanilla HTML, CSS, and JavaScript. No build step, no framework, no `node_modules`. You can open the files directly, read them, and understand them without installing anything.
 
----
-
-## Running locally
-
-```bash
-git clone https://github.com/MidnightMarathon/securetools.git
-cd securetools
-python -m http.server 8000
-```
-
-Then open `http://localhost:8000`.
-
----
-
-## Structure
-
-```
-/
-├── index.html               # Landing page
-├── about.html               # About page
-├── assets/                  # Shared CSS and JS
-├── qr-code-generator/
-├── password-generator/
-├── uuid-generator/
-├── rng-generator/
-├── favicon-generator/
-├── base64-tool/
-├── url-encoder-decoder/
-├── geogames/                # US States quiz
-└── gaussian-elimination/    # Linear algebra game
-```
-
-Each tool is self-contained in its own folder with its own HTML, CSS, and JS.
-
----
-
-## Contributing
-
-Issues and pull requests are welcome. The bar is pretty low — if something is broken or a tool is missing that would fit here, feel free to open something.
-
----
-
-## License
-
-MIT.
