@@ -69,7 +69,7 @@ Then open `http://localhost:8000`.
 
 ## Contributing
 
-If something's broken or you have a tool that fits here, open an issue or a PR. The bar is low.
+If something's broken or you have a tool that fits here, open an issue or a PR. Happy to have contributors to help fight against greedy tools that take way too data for providing a simple service. 
 
 ---
 
