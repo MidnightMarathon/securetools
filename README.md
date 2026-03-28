@@ -99,7 +99,7 @@ MIT.
 
 Everything runs in the browser. There are no accounts, no analytics, no cookies, no servers receiving your input.
 
-This isn't a strong privacy stance so much as a practical one — most of these tools don't need a backend, so there isn't one. Client-side is simpler, faster, and easier to trust.
+All of these tools don't need a backend, so there isn't one. Client-side is simpler, faster, and easier to trust.
 
 The codebase is vanilla HTML, CSS, and JavaScript. No build step, no framework, no `node_modules`. You can open the files directly, read them, and understand them without installing anything.
 
