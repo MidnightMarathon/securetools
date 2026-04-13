@@ -41,136 +41,55 @@
     </script>
 
     <style>
-        /* Page-specific styles for the Random Number Generator */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
-                "Open Sans", "Helvetica Neue", sans-serif;
-            background: linear-gradient(135deg, #b388eb, #8fd3f4, #f093fb);
-            background-size: 300% 300%;
-            animation: gradientFlow 15s ease infinite;
-            color: #1d1d1f;
-            margin: 0;
-            /* This padding-top is crucial for the absolute positioned nav */
-            padding-top: 5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
+      /* Tool-specific styles only — body, nav, and main are shared via /assets/styles.css */
+      main { max-width: 400px; text-align: center; }
 
-        @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+      .inputs {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
 
-        main {
-            max-width: 400px;
-            width: 100%;
-            background: #fff;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-            margin-top: 2rem;
-            text-align: center;
-        }
+      .inputs input {
+        width: 80px;
+        padding: 0.5rem;
+        font-size: 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        text-align: center;
+        min-height: unset;
+      }
 
-        h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
+      .result {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2d9cdb;
+        margin: 1.5rem 0;
+        transition: transform 0.2s ease-in-out;
+      }
 
-        .inputs {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
+      .tool-info {
+        text-align: left;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eee;
+      }
 
-        .inputs input {
-            width: 80px;
-            padding: 0.5rem;
-            font-size: 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            text-align: center;
-        }
+      .tool-info h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+      .tool-info h3 { font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+      .tool-info p, .tool-info ol { font-size: 1rem; line-height: 1.6; color: #444; margin-bottom: 1rem; }
+      .tool-info ol { padding-left: 1.5rem; }
 
-        .result {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #2563eb;
-            margin: 1.5rem 0;
-            transition: transform 0.2s ease-in-out;
-        }
-
-        button {
-            background-color: #2563eb;
-            color: white;
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            font-weight: 500;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        button:hover {
-            background-color: #1d4ed8;
-        }
-
-        footer {
-            margin-top: auto;
-            padding: 2rem 1rem;
-            font-size: 0.875rem;
-            color: #555;
-        }
-
-        .tool-info {
-            text-align: left; /* Align text within tool-info to the left */
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #eee;
-        }
-
-        .tool-info h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            text-align: left; /* Ensure H2 in tool-info is left-aligned */
-        }
-
-        .tool-info h3 {
-            font-size: 1.2rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.8rem;
-            text-align: left; /* Ensure H3 in tool-info is left-aligned */
-        }
-
-        .tool-info p, .tool-info ol {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #444;
-            margin-bottom: 1rem;
-        }
-
-        .tool-info ol {
-            padding-left: 1.5rem; /* Indent ordered list */
-        }
-
-
-        @media (max-width: 500px) {
-            .inputs {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-        }
+      @media (max-width: 500px) {
+        .inputs { flex-direction: column; gap: 0.75rem; }
+      }
     </style>
 </head>
 <body>
     <nav>
-        <a href="/" aria-label="Back to Home">← Home</a>
+      <a href="/" aria-label="SecureTools Home">Home</a>
+      <a href="/about.html" aria-label="About SecureTools">About</a>
     </nav>
 
     <main>
@@ -180,7 +99,7 @@
             <input type="number" id="max" placeholder="Max" value="100" />
         </div>
         <div class="result" id="result">—</div>
-        <button onclick="generateRandom()">Generate</button>
+        <button id="generate-btn" type="button">Generate</button>
 
         <section class="tool-info">
             <h2>About this Random Number Generator</h2>
@@ -199,7 +118,7 @@
     </main>
 
     <footer>
-        <p>© 2025 SecureTools. No tracking, no nonsense — just tools.</p>
+        <p>© 2026 SecureTools. No tracking, no nonsense — just tools.</p>
     </footer>
 
     <script src="script.js"></script>

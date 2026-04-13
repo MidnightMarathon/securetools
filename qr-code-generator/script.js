@@ -1,3 +1,5 @@
+'use strict';
+
 document.addEventListener("DOMContentLoaded", () => {
   const qrInput = document.getElementById("qr-input");
   const generateBtn = document.getElementById("generate-btn");

@@ -1,3 +1,5 @@
+'use strict';
+
 document.addEventListener("DOMContentLoaded", () => {
   // Elements
   const lengthInput = document.getElementById("length");

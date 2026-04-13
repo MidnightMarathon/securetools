@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Node (only used for CI tooling — never committed)
+node_modules/
+npm-debug.log*
+
+# Python dev server
+__pycache__/
+*.pyc

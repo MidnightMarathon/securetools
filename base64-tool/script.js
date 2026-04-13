@@ -1,3 +1,5 @@
+'use strict';
+
 const MAX_INPUT_LENGTH = 16000;
 
 function safeEncode(str) {
@@ -171,3 +173,22 @@ function handleBase64Download() {
     errorBox.textContent = "⚠️ Decoding failed. Check your Base64 input.";
   }
 }
+
+// -- Event listeners ----------------------------------------------------------
+
+function updateDownloadCount() {
+  const val = document.getElementById("downloadBase64Input").value;
+  document.getElementById("downloadBase64Count").textContent = val.length;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("input").addEventListener("input", updateCounts);
+  document.getElementById("encode-btn").addEventListener("click", handleEncode);
+  document.getElementById("decode-btn").addEventListener("click", handleDecode);
+  document.getElementById("copy-encoded-btn").addEventListener("click", () => copyToClipboard("encoded"));
+  document.getElementById("copy-decoded-btn").addEventListener("click", () => copyToClipboard("decoded"));
+  document.getElementById("fileInput").addEventListener("change", handleFileUpload);
+  document.getElementById("copy-file-btn").addEventListener("click", () => copyToClipboard("fileOutput"));
+  document.getElementById("downloadBase64Input").addEventListener("input", updateDownloadCount);
+  document.getElementById("download-btn").addEventListener("click", handleBase64Download);
+});

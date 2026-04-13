@@ -83,12 +83,22 @@ body {
 
 main {
   max-width: 440px;
+  width: 100%;
   margin: auto;
   background: #ffffff;
   padding: 2rem;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
   margin-top: 4rem;
+  box-sizing: border-box;
+}
+
+/* Home page — wider layout, no white card */
+main.no-tile {
+  max-width: 960px;
+  background: transparent;
+  box-shadow: none;
+  padding: 1rem;
 }
 
 /* Input groups - general */
@@ -195,6 +205,41 @@ textarea[readonly] {
   line-height: 1.4;
   margin: 0;
 }
+/* Shared button style */
+button {
+  display: inline-block;
+  padding: 0.6rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #2d9cdb;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: #1b6ea8;
+}
+
+button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 156, 219, 0.4);
+}
+
+/* .btn-row — side-by-side button pairs */
+.btn-row {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
 /* Password strength bar styles */
 
 .bar {

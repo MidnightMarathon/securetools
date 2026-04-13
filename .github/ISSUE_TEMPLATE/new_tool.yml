@@ -1,0 +1,78 @@
+name: New Tool Proposal
+description: Suggest a new client-side tool to add to SecureTools
+labels: ["new tool", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening this, check the [existing tools](https://github.com/MidnightMarathon/securetools#tools) and open issues to make sure it hasn't already been proposed.
+
+        New tools must meet a few requirements:
+        - **Client-side only** — no backend, no server calls, no external API keys
+        - **Vanilla HTML/CSS/JS** — no frameworks, no build step, no `node_modules`
+        - **Genuinely useful** — solves a real problem, not a duplicate of something already here
+
+        See [AGENTS.md](https://github.com/MidnightMarathon/securetools/blob/main/AGENTS.md) for the full specification and tool ideas.
+
+  - type: input
+    id: name
+    attributes:
+      label: Tool name
+      placeholder: "Hash Generator"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What does it do?
+      description: One or two sentences explaining what the tool does and what problem it solves.
+      placeholder: "Computes MD5, SHA-1, SHA-256, and SHA-512 hashes of text or files entirely in the browser. Useful for verifying file integrity without uploading anything."
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does this belong in SecureTools?
+      description: What's wrong with existing solutions? (ads, tracking, paywalls, sign-up walls...)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: requirements
+    attributes:
+      label: Checklist
+      options:
+        - label: This tool can run entirely in the browser with no backend
+          required: true
+        - label: This tool can be built with vanilla HTML, CSS, and JavaScript only
+          required: true
+        - label: I am willing to implement this (or have already started)
+          required: false
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: What must be true for this tool to be considered complete?
+      placeholder: |
+        - User can paste a JWT and see the decoded header and payload
+        - No data is sent to any server
+        - Tool is accessible via keyboard
+        - Tool passes all CI checks
+    validations:
+      required: false
+
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Estimated difficulty
+      description: How hard is this to build? Helps us label the issue for contributors.
+      options:
+        - "Easy — good first issue (< 100 lines of JS)"
+        - "Medium — requires some design (100-300 lines of JS)"
+        - "Hard — complex logic or multiple components"
+        - "Not sure"
+    validations:
+      required: false

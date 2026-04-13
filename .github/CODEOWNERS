@@ -1,0 +1,14 @@
+# CODEOWNERS
+# GitHub will automatically request review from these owners when a PR
+# touches the files matched by each pattern.
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+* @MidnightMarathon
+
+# Shared assets — any change here affects all tools
+/assets/ @MidnightMarathon
+/index.html @MidnightMarathon
+
+# CI and project config — require extra scrutiny
+/.github/ @MidnightMarathon

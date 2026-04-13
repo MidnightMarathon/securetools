@@ -1,3 +1,5 @@
+'use strict';
+
 const upload = document.getElementById("upload");
 const preview = document.getElementById("preview");
 const downloads = document.getElementById("downloads");

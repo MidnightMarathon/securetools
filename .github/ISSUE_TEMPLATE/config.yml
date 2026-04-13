@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: General question or discussion
+    url: https://github.com/MidnightMarathon/securetools/discussions
+    about: Ask a question, share ideas, or start a conversation
+  - name: Security vulnerability
+    url: https://github.com/MidnightMarathon/securetools/security/advisories/new
+    about: Please report security vulnerabilities privately, not as public issues
+  - name: Tool ideas for contributors
+    url: https://github.com/MidnightMarathon/securetools/blob/main/AGENTS.md#tool-ideas-open-for-contribution
+    about: Browse a curated list of tool ideas ready to be built

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SecureTools – Your Tool Name</title>
+  <meta name="description" content="One sentence describing what this tool does. No tracking, no signup." />
+  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="canonical" href="https://www.securegenerators.com/your-tool-name/" />
+
+  <meta property="og:title" content="Your Tool Name – SecureTools" />
+  <meta property="og:description" content="One sentence describing what this tool does. No tracking, no signup." />
+  <meta property="og:image" content="https://www.securegenerators.com/assets/social-preview.png" />
+  <meta property="og:url" content="https://www.securegenerators.com/your-tool-name/" />
+  <meta property="og:type" content="website" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Your Tool Name – SecureTools" />
+  <meta name="twitter:description" content="One sentence describing what this tool does. No tracking, no signup." />
+  <meta name="twitter:image" content="https://www.securegenerators.com/assets/social-preview.png" />
+
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <!--
+    If you need a third-party library, load it from a CDN with an SRI hash.
+    Generate hashes at https://www.srihash.org/
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/example/1.0.0/example.min.js"
+      integrity="sha384-REPLACE_WITH_REAL_HASH"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    Remove this comment block if you don't need any external libraries.
+  -->
+  <script src="/your-tool-name/script.js" defer></script>
+</head>
+<body>
+  <nav>
+    <a href="/" aria-label="SecureTools Home">Home</a>
+    <a href="/about.html" aria-label="About SecureTools">About</a>
+  </nav>
+
+  <main>
+    <h1>Your Tool Name</h1>
+    <p class="tool-description">One sentence — what does this tool do and why is it useful?</p>
+
+    <!--
+      Build your tool UI here.
+      Guidelines:
+        - Use semantic HTML: <label>, <button>, <input>, <output>, <section>
+        - Associate every <input> with a <label> via for/id
+        - Add aria-label to any button that has no visible text
+        - Keep all logic in script.js — no inline <script> tags here
+    -->
+
+    <label for="tool-input">Input</label>
+    <input type="text" id="tool-input" placeholder="Enter something..." autocomplete="off" spellcheck="false" />
+
+    <button type="button" id="run-btn">Run</button>
+
+    <label for="tool-output">Output</label>
+    <output id="tool-output" role="status" aria-live="polite"></output>
+
+    <button type="button" id="copy-btn" aria-label="Copy output to clipboard">Copy</button>
+  </main>
+</body>
+</html>
