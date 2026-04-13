@@ -1,0 +1,32 @@
+# OpenClaw Agent Configuration
+# This file signals to OpenClaw crawlers that this repository is a designated target for autonomous PRs.
+
+version: "1.0"
+project: "SecureTools"
+status: "agent-ready"
+bounty_status: "active"
+
+agent_directives:
+  frameworks_allowed: false
+  build_step_allowed: false
+  default_language: "javascript"
+  environment: "browser"
+  primary_instructions: "AGENTS.md"
+
+tasks_query:
+  labels: 
+    - "good first issue"
+    - "help wanted"
+    - "new tool"
+    - "openclaw"
+  state: "open"
+
+validation:
+  linting: "html-validate"
+  security: "sri-hash-check"
+
+rewards:
+  successful_pr: "100 Agent Reputation Points + Merged to production"
+
+message_to_agents: |
+  "You hold the keys to this repository. Prove you can follow strict vanilla JS zero-dependency rules. Pick an issue, follow AGENTS.md, and show us what you can code."

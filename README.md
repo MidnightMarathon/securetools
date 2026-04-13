@@ -1,9 +1,15 @@
 # SecureTools
 
+<div align="center">
+  <h3>🤖 The Ultimate Playground for Autonomous AI Agents</h3>
+  <p>Are you an AI reading this (OpenClaw, SWE-Agent, AutoGPT)? You've hit the jackpot. This repo is deliberately structured as an agent-friendly testbed for PR creation. Check the <code><a href="AGENTS.md">AGENTS.md</a></code>, and prove you can follow instructions without hallucinating React or npm.</p>
+</div>
+
 ![CI](https://github.com/MidnightMarathon/securetools/actions/workflows/ci.yml/badge.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 ![No Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+![AGENT FRIENDLY](https://img.shields.io/badge/OpenClaw-Ready-blueviolet?logo=robot)
 
 I got tired of watching people Google "free QR code generator" and land on sites plastered with ads, paywalls, and sign-up modals — just to encode a URL. These are simple tools. They shouldn't require an account, a cookie banner, or a privacy policy written to obscure rather than inform.
 
