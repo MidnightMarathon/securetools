@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SecureTools – UUID Generator (v1 & v4)</title>
-<meta name="description" content="Generate UUID v4 (random) or UUID v1 (timestamp + MAC) securely in your browser with SecureTools. No tracking, no signup." />
-<link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
-<link rel="stylesheet" href="/assets/styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SecureTools – UUID Generator (v1 &amp; v4)</title>
+<meta name="description" content="Generate UUID v4 (random) or UUID v1 (timestamp + MAC) securely in your browser with SecureTools. No tracking, no signup.">
+<link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="stylesheet" href="/assets/styles.css">
 
 <style>
   /* main width override for this tool's two-section layout */
@@ -64,7 +64,7 @@
   <section id="uuid-v4">
     <h2>UUID v4 (Random)</h2>
     <p class="note">Fully random UUID that requires no personal information. Most commonly used and privacy-friendly.</p>
-    <button id="generate-v4">Generate UUID v4</button>
+    <button type="button" id="generate-v4">Generate UUID v4</button>
     <textarea id="uuid-output-v4" class="uuid-output" readonly aria-label="Generated UUID v4" rows="2"></textarea>
     <div id="copy-msg-v4" class="copy-msg" role="alert">Copied to clipboard!</div>
   </section>
@@ -76,19 +76,19 @@
       Requires your MAC address to generate a time-based UUID. Your MAC address <strong>never leaves your browser</strong> — this happens fully client-side.
     </p>
     <label for="mac-input">Enter your MAC address:</label>
-    <input type="text" id="mac-input" placeholder="00:1A:2B:3C:4D:5E or 001A2B3C4D5E" aria-describedby="mac-format-note" />
+    <input type="text" id="mac-input" placeholder="00:1A:2B:3C:4D:5E or 001A2B3C4D5E" aria-describedby="mac-format-note">
     <small id="mac-format-note" class="note">
       Format: 12 hex digits, with or without colons.
     </small>
-    <button id="generate-v1" disabled>Generate UUID v1</button>
+    <button type="button" id="generate-v1" disabled>Generate UUID v1</button>
     <textarea id="uuid-output-v1" class="uuid-output" readonly aria-label="Generated UUID v1" rows="2"></textarea>
     <div id="copy-msg-v1" class="copy-msg" role="alert">Copied to clipboard!</div>
   </section>
 
   <p class="note" style="margin-top: 3rem;">
-    <strong>Why choose UUID v1 or v4?</strong><br />
-    <em>UUID v1</em> uses timestamp + your MAC address to create ordered unique IDs.<br />
-    <em>UUID v4</em> is fully random and more privacy-preserving.<br />
+    <strong>Why choose UUID v1 or v4?</strong><br>
+    <em>UUID v1</em> uses timestamp + your MAC address to create ordered unique IDs.<br>
+    <em>UUID v4</em> is fully random and more privacy-preserving.<br>
     This tool generates UUIDs <strong>locally in your browser</strong>, so no data is sent or stored.
   </p>
 </main>

@@ -1,0 +1,33 @@
+name: AI Agent PR Greeter
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Greet the Agent
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const body = `### 🤖 Welcome to SecureTools, Agent (or human)!
+            
+            We actively monitor PRs from autonomous AI agents. Your code has just entered the CI pipeline. 
+            
+            **Agent Self-Correction Checklist (Did you hallucinate?):**
+            - [ ] Did you avoid using React/Vue/NPM?
+            - [ ] Did you include \`integrity\` and \`crossorigin="anonymous"\` on your CDN scripts?
+            - [ ] Did you use \`crypto.getRandomValues()\` instead of \`Math.random()\`?
+            - [ ] Did you put your JS in an external file instead of using inline \`<script>\` or \`onclick\`?
+
+            *If the CI fails below, please read the logs, auto-correct your code, and push another commit. We merge successful agent PRs daily!*`;
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });

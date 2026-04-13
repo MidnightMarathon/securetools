@@ -19,10 +19,10 @@
                 </div>
             </div>
             <div id="controls-section">
-                <button id="undo-btn" disabled>↶ Undo</button>
-                <button id="hint-btn">💡 Hint</button>
-                <button id="custom-matrix-btn">Custom Matrix</button>
-                <button id="new-problem-btn">New Problem</button>
+                <button type="button" id="undo-btn" disabled>↶ Undo</button>
+                <button type="button" id="hint-btn">💡 Hint</button>
+                <button type="button" id="custom-matrix-btn">Custom Matrix</button>
+                <button type="button" id="new-problem-btn">New Problem</button>
             </div>
         </div>
 
@@ -32,22 +32,22 @@
                 <div class="setup-group">
                     <h3>System Size</h3>
                     <div class="btn-group">
-                        <button class="config-btn size-btn" data-size="2">2 variables</button>
-                        <button class="config-btn size-btn active" data-size="3">3 variables</button>
-                        <button class="config-btn size-btn" data-size="4">4 variables</button>
+                        <button type="button" class="config-btn size-btn" data-size="2">2 variables</button>
+                        <button type="button" class="config-btn size-btn active" data-size="3">3 variables</button>
+                        <button type="button" class="config-btn size-btn" data-size="4">4 variables</button>
                     </div>
                 </div>
                 
                 <div class="setup-group">
                     <h3>Difficulty</h3>
                     <div class="btn-group">
-                        <button class="config-btn diff-btn active" data-difficulty="easy">Easy</button>
-                        <button class="config-btn diff-btn" data-difficulty="medium">Medium</button>
-                        <button class="config-btn diff-btn" data-difficulty="hard">Hard</button>
+                        <button type="button" class="config-btn diff-btn active" data-difficulty="easy">Easy</button>
+                        <button type="button" class="config-btn diff-btn" data-difficulty="medium">Medium</button>
+                        <button type="button" class="config-btn diff-btn" data-difficulty="hard">Hard</button>
                     </div>
                 </div>
             </div>
-            <button id="start-game-btn" class="action-btn primary-btn">Start Game</button>
+            <button type="button" id="start-game-btn" class="action-btn primary-btn">Start Game</button>
         </div>
 
         <div id="game-area" style="display: none;">
@@ -60,11 +60,11 @@
             <div id="operation-toolbar" style="display: none;">
                 <h3>Row Operations</h3>
                 <div id="toolbar-content">
-                    <button id="multiply-btn" class="operation-btn">× Multiply This Row</button>
+                    <button type="button" id="multiply-btn" class="operation-btn">× Multiply This Row</button>
                     <label for="scalar-input">by </label>
                     <input type="text" id="scalar-input" placeholder="e.g., 2 or 1/2" value="1">
-                    <button id="add-row-btn" class="operation-btn">+ Add (Scalar × This Row) to Target</button>
-                    <button id="cancel-btn" class="cancel-btn">Cancel</button>
+                    <button type="button" id="add-row-btn" class="operation-btn">+ Add (Scalar × This Row) to Target</button>
+                    <button type="button" id="cancel-btn" class="cancel-btn">Cancel</button>
                 </div>
             </div>
 
@@ -88,7 +88,7 @@
                         <input type="text" id="w-input" placeholder="0">
                     </div>
                 </div>
-                <button id="check-solution-btn">Check Solution</button>
+                <button type="button" id="check-solution-btn">Check Solution</button>
                 <div id="result-message"></div>
             </div>
         </div>
@@ -114,7 +114,7 @@
             </div>
             <div id="custom-matrix-inputs"></div>
             <div class="modal-actions">
-                <button id="load-custom-matrix-btn" class="action-btn primary-btn">Load Matrix</button>
+                <button type="button" id="load-custom-matrix-btn" class="action-btn primary-btn">Load Matrix</button>
             </div>
         </div>
     </div>
