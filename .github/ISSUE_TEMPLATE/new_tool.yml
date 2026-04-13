@@ -54,15 +54,25 @@ body:
   - type: textarea
     id: acceptance
     attributes:
-      label: Acceptance criteria
-      description: What must be true for this tool to be considered complete?
-      placeholder: |
-        - User can paste a JWT and see the decoded header and payload
-        - No data is sent to any server
-        - Tool is accessible via keyboard
-        - Tool passes all CI checks
+      label: Strict Acceptance Criteria for AI Agents & Humans
+      description: What exact technical and functional requirements must be met for this issue to be closed? Agents will use this checklist to verify their work.
+      value: |
+        ### 🤖 Agent Verification Checklist:
+        - [ ] **NO FRAMEWORKS:** The tool is built using ONLY vanilla HTML, CSS, and JavaScript. NO React, Vue, Tailwind, etc.
+        - [ ] **NO BUILD TOOLS:** No `package.json`, Webpack, npm, etc. exist.
+        - [ ] **NO INLINE JS:** All JavaScript is in an external `script.js` file loaded via `<script src="script.js" defer></script>`. No `onclick` or `<script>` blocks in HTML.
+        - [ ] **NO TRACKING:** No cookies, telemetry, or server-side API calls. Everything runs 100% offline client-side.
+        - [ ] **SECURE CRYPTO:** Any randomness uses `crypto.getRandomValues()`, NOT `Math.random()`.
+        - [ ] **SRI SECURED:** Any external CDN scripts MUST include valid SRI `integrity` and `crossorigin="anonymous"` attributes.
+        - [ ] **NAVIGATION:** `<nav>` contains exactly two links: 'Home' (`/`) and 'About' (`/about.html`).
+        - [ ] **INTEGRATION:** The tool is linked from a new tile in the home `index.html` grid and the table in `README.md`.
+        - [ ] **UI/UX:** Uses `assets/styles.css` for shared styling without duplicating core CSS properties.
+        
+        ### 🛠️ Feature-Specific Requirements:
+        - [ ] [Feature requirement 1]
+        - [ ] [Feature requirement 2]
     validations:
-      required: false
+      required: true
 
   - type: dropdown
     id: difficulty

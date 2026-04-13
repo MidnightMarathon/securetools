@@ -89,10 +89,19 @@ body:
   - type: textarea
     id: acceptance
     attributes:
-      label: Acceptance criteria
-      description: How will we know the bug is fixed? Leave blank if obvious from the description.
-      placeholder: |
-        - The QR code should render within 1 second of clicking Generate
-        - No errors should appear in the browser console
+      label: Strict Acceptance Criteria for AI Agents & Humans
+      description: How will we know the bug is fixed? What explicit requirements must be met before closing this issue?
+      value: |
+        ### 🤖 Agent Verification Checklist:
+        - [ ] **NO FRAMEWORKS:** The bug fix MUST NOT introduce React, Vue, Tailwind, Node.js, `package.json`, or a build step.
+        - [ ] **NO INLINE JS:** The fix MUST NOT add `<script>` tags without `defer` or inline event handlers like `onclick` into the HTML files.
+        - [ ] **SRI SECURED:** Any modified or new CDN scripts MUST include valid SRI `integrity` and `crossorigin="anonymous"` attributes.
+        - [ ] **CI TESTED:** The fix handles any `html-validate` errors cleanly without triggering new pipeline failures.
+        - [ ] **SECURE CRYPTO:** The fix does NOT use `Math.random()`.
+
+        ### 🐛 Fix-Specific Requirements:
+        - [ ] The reported bug no longer occurs when following the reproduction steps.
+        - [ ] No new errors appear in the browser console.
+        - [ ] [Requirement 1]
     validations:
-      required: false
+      required: true
