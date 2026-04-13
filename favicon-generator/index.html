@@ -4,19 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Favicon Generator — SecureTools</title>
+  <meta name="description" content="Generate favicons in all standard sizes from any image, entirely in your browser. No upload, no tracking." />
+  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
   <!-- Global site-wide styles -->
-  <link rel="stylesheet" href="../assets/styles.css" />
+  <link rel="stylesheet" href="/assets/styles.css" />
   <!-- Local overrides for favicon-generator -->
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/favicon-generator/styles.css" />
+  <!--
+    canvas-to-ico is used to generate the .ico file.
+    NOTE: This package is not currently available on jsDelivr or unpkg.
+    If you know a working CDN URL with a valid SRI hash, update the src and
+    integrity attributes below. Otherwise, consider bundling the file locally
+    under /favicon-generator/canvas-to-ico.min.js and loading it from there.
+
+    <script
+      src="https://..."
+      integrity="sha384-REPLACE_WITH_REAL_HASH"
+      crossorigin="anonymous"
+      defer
+    ></script>
+  -->
+  <script src="/favicon-generator/script.js" defer></script>
 </head>
 <body>
-
-    <nav>
-    <a href="/" aria-label="SecureTools Home" class="active">Home</a>
+  <nav>
+    <a href="/" aria-label="SecureTools Home">Home</a>
     <a href="/about.html" aria-label="About SecureTools">About</a>
   </nav>
-  
-  <main class="tool-tile">
+
+  <main>
 
     <header>
       <h1 class="tool-name">Favicon Generator</h1>
@@ -39,8 +55,5 @@
     <section id="downloads" aria-live="polite" aria-label="Download links"></section>
 
   </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/canvas-to-ico@1.1.0/dist/canvas-to-ico.min.js"></script>
-  <script src="script.js"></script>
 </body>
 </html>

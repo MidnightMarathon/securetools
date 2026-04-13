@@ -1,3 +1,5 @@
+'use strict';
+
 const MAX_INPUT_LENGTH = 16000;
 
 function updateCounts() {
@@ -63,3 +65,12 @@ async function copyToClipboard(targetId) {
 }
 
 
+
+// -- Event listeners ----------------------------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("input").addEventListener("input", updateCounts);
+  document.getElementById("encode-btn").addEventListener("click", handleURLEncode);
+  document.getElementById("decode-btn").addEventListener("click", handleURLDecode);
+  document.getElementById("copy-btn").addEventListener("click", () => copyToClipboard("output"));
+});

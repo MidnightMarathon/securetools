@@ -7,6 +7,7 @@
   <meta name="description" content="Encode or decode Base64 text securely in your browser with SecureTools. No tracking. No data sent to a server." />
   <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" />
   <link rel="stylesheet" href="/assets/styles.css" />
+  <script src="/base64-tool/script.js" defer></script>
 </head>
 <body>
 
@@ -20,7 +21,7 @@
     <p>Convert text to and from Base64 securely in your browser. Max 16,000 characters.</p>
 
     <label for="input">Input:</label>
-    <textarea id="input" maxlength="16000" oninput="updateCounts()" placeholder="Enter text or Base64 here..."></textarea>
+    <textarea id="input" maxlength="16000" placeholder="Enter text or Base64 here..."></textarea>
     <div class="input-meta">Input length: <span id="inputCount" aria-live="polite">0</span></div>
 
     <fieldset>
@@ -46,22 +47,22 @@
     </fieldset>
 
     <div class="btn-row">
-      <button type="button" onclick="handleEncode()">Encode</button>
-      <button type="button" onclick="handleDecode()">Decode</button>
+      <button type="button" id="encode-btn">Encode</button>
+      <button type="button" id="decode-btn">Decode</button>
     </div>
 
     <section class="output-section">
       <label for="encoded">Encoded Output:</label>
       <textarea id="encoded" readonly></textarea>
       <div class="output-meta">Length: <span id="encodedCount" aria-live="polite">0</span></div>
-      <button type="button" onclick="copyToClipboard('encoded')">Copy Encoded</button>
+      <button type="button" id="copy-encoded-btn">Copy Encoded</button>
     </section>
 
     <section class="output-section">
       <label for="decoded">Decoded Output:</label>
       <textarea id="decoded" readonly></textarea>
       <div class="output-meta">Length: <span id="decodedCount" aria-live="polite">0</span></div>
-      <button type="button" onclick="copyToClipboard('decoded')">Copy Decoded</button>
+      <button type="button" id="copy-decoded-btn">Copy Decoded</button>
     </section>
 
     <div id="error" class="error" role="alert"></div>
@@ -72,7 +73,7 @@
     <h2>Convert File to Base64</h2>
     <p>Select a file to instantly convert it to Base64 in your browser.</p>
 
-    <input type="file" id="fileInput" onchange="handleFileUpload()" autocomplete="off" />
+    <input type="file" id="fileInput" autocomplete="off" />
     <label for="stripDataPrefix">
       <input type="checkbox" id="stripDataPrefix" checked />
       Strip <code>data:</code> prefix
@@ -80,7 +81,7 @@
 
     <textarea id="fileOutput" readonly placeholder="Encoded Base64 will appear here..." class="tall-textarea"></textarea>
     <div class="output-meta">Length: <span id="fileOutputCount" aria-live="polite">0</span></div>
-    <button type="button" onclick="copyToClipboard('fileOutput')">Copy File Base64</button>
+    <button type="button" id="copy-file-btn">Copy File Base64</button>
 
     <hr />
 
@@ -91,14 +92,12 @@
     <input type="text" id="downloadFilename" placeholder="example.txt" autocomplete="off" />
 
     <label for="downloadBase64Input">Base64 Input:</label>
-    <textarea id="downloadBase64Input" placeholder="Paste Base64 here..." class="tall-textarea" oninput="updateDownloadCount()"></textarea>
+    <textarea id="downloadBase64Input" placeholder="Paste Base64 here..." class="tall-textarea"></textarea>
     <div class="output-meta">Length: <span id="downloadBase64Count" aria-live="polite">0</span></div>
 
-    <button type="button" onclick="handleBase64Download()">Download File</button>
+    <button type="button" id="download-btn">Download File</button>
     <div id="downloadError" class="error" role="alert"></div>
 
   </main>
-
-  <script src="script.js"></script>
 </body>
 </html>

@@ -10,32 +10,33 @@
 </head>
 <body>
   <nav>
-    <a href="/" class="pill-button home-pill" aria-label="Go to SecureTools Home">Home</a>
+    <a href="/" aria-label="SecureTools Home">Home</a>
+    <a href="/about.html" aria-label="About SecureTools">About</a>
   </nav>
 
-  <main class="container">
+  <main>
     <h1>URL Encoder & Decoder</h1>
     <p>Convert text to or from percent-encoded format (UTF-8 safe). All processing happens securely in your browser.</p>
 
     <label for="input">Input:</label>
-    <textarea id="input" placeholder="Enter URL or text to encode/decode..." class="styled-textarea"></textarea>
+    <textarea id="input" placeholder="Enter URL or text to encode/decode..."></textarea>
     <div class="char-count">Characters: <span id="inputCount">0</span></div>
 
     <div class="btn-row">
-      <button onclick="handleURLEncode()">Encode</button>
-      <button onclick="handleURLDecode()">Decode</button>
+      <button id="encode-btn" type="button">Encode</button>
+      <button id="decode-btn" type="button">Decode</button>
     </div>
 
     <label for="output">Output:</label>
-    <textarea id="output" readonly placeholder="Result will appear here..." class="styled-textarea"></textarea>
+    <textarea id="output" readonly placeholder="Result will appear here..."></textarea>
     <div class="char-count">Characters: <span id="outputCount">0</span></div>
 
-    <button onclick="copyToClipboard('output')">Copy Output</button>
+    <button id="copy-btn" type="button">Copy Output</button>
 
     <div id="error" class="error"></div>
-    <div id="copied" class="copy-note" style="display:none;">Copied to clipboard!</div>
+    <div id="copied" class="copy-note" aria-live="assertive" style="display:none;">Copied to clipboard!</div>
   </main>
 
-  <script src="script.js"></script>
+  <script src="/url-encoder-decoder/script.js" defer></script>
 </body>
 </html>

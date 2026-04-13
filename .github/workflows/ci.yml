@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate HTML & enforce project rules
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # ── HTML validation ────────────────────────────────────────────────
+      - name: Install html-validate
+        run: npm install --global html-validate
+
+      - name: Validate HTML files
+        run: |
+          find . -name "*.html" \
+            -not -path "./.git/*" \
+            -not -path "./tool-template/*" \
+            | xargs html-validate
+
+      # ── No framework / no build-tool check ────────────────────────────
+      - name: Ensure no package.json was added
+        run: |
+          if find . -name "package.json" -not -path "./.git/*" | grep -q .; then
+            echo "ERROR: A package.json was found. This project intentionally has no build step or node_modules."
+            echo "If you need a dev dependency only for CI, add it to the root package.json under devDependencies with a comment."
+            exit 1
+          fi
+
+      # ── No CDN scripts without SRI ─────────────────────────────────────
+      - name: Check CDN scripts have integrity attributes
+        run: |
+          FAIL=0
+          # Find <script src="https://..."> tags that lack an integrity attribute
+          while IFS= read -r file; do
+            if grep -Pzo '(?s)<script[^>]+src="https://[^"]*"[^>]*>' "$file" \
+               | grep -qv 'integrity='; then
+              echo "WARN: $file has a CDN script tag without an integrity (SRI) attribute."
+              FAIL=1
+            fi
+          done < <(find . -name "*.html" -not -path "./.git/*" -not -path "./tool-template/*")
+          if [ "$FAIL" -eq 1 ]; then
+            echo ""
+            echo "Add integrity= and crossorigin= to every external <script> tag."
+            echo "Generate hashes at https://www.srihash.org/"
+            exit 1
+          fi
+
+  link-check:
+    name: Check for broken internal links
+    runs-on: ubuntu-latest
+    # Only run on PRs to keep push feedback fast
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Serve site locally and check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: |
+            --offline
+            --include-fragments
+            --base .
+            "**/*.html"
+          fail: true
