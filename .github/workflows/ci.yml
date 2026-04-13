@@ -45,8 +45,8 @@ jobs:
           FAIL=0
           # Find <script src="https://..."> tags that lack an integrity attribute
           while IFS= read -r file; do
-            if grep -Pzo '(?s)<script[^>]+src="https://[^"]*"[^>]*>' "$file" \
-               | grep -qv 'integrity='; then
+            missing=$(perl -0777 -ne 'while(/<script[^>]+src="https:\/\/[^"]*"[^>]*>/g){ print "$&\n" if $& !~ /integrity=/ }' "$file")
+            if [ -n "$missing" ]; then
               echo "WARN: $file has a CDN script tag without an integrity (SRI) attribute."
               FAIL=1
             fi
