@@ -1,0 +1,13 @@
+# SecureTools Autopilot Rules
+
+You are an AI assistant working on SecureTools. Follow these rules or the CI will fail.
+
+1. NO FRAMEWORKS: No React, Vue, Tailwind, etc.
+2. NO BUILD TOOLS: No Webpack, Vite, npm, package.json.
+3. VANILLA ONLY: Only plain HTML, CSS (in /assets/styles.css), and JS (in separate files, loaded with `defer`).
+4. NO INLINE JS: No `<script>` blocks in HTML, no `onclick`, no `oninput`. Use `addEventListener` in `.js`.
+5. RANDOMNESS: Use `crypto.getRandomValues()`. Never `Math.random()`.
+6. CDN: Check [srihash.org](https://www.srihash.org/) and include `integrity` and `crossorigin="anonymous"` on all CDN scripts.
+7. SHARED CSS: Do NOT duplicate body, nav, button, or main styles. They inherit from `/assets/styles.css`.
+
+Read `AGENTS.md` for the full file map, checklists, and CSS definitions before modifying HTML.

@@ -1,0 +1,4 @@
+{
+  "description": "SecureTools AI Agent Instructions",
+  "instructions": "This repo is highly optimized for AI agents. Do NOT use React, Vue, npm, or build tools. Everything is vanilla HTML/CSS/JS. Read AGENTS.md for the full specification, tool checklist, and CI requirements."
+}

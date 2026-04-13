@@ -110,11 +110,15 @@ Follow these steps exactly:
 - `aria-label` on buttons without visible text.
 - No `<div>` soup — only use `<div>` when no semantic element fits.
 
-### CSS
+### CSS Dictionary (Do Not Hallucinate Classes)
 - Shared base styles are in `/assets/styles.css` — **do not duplicate them**.
 - Brand blue: `#2d9cdb`. Hover: `#1b6ea8`.
+- `main`: Centers the card, max-width 440px (or 960px on desktop), puts it on a white background with a shadow.
+- `.input-group`: A flex column `display: flex; flex-direction: column; gap: 0.75rem;` ideal for label/input pairs.
+- `button`: Shared blue button. Hover and focus states are built-in.
+- `.btn-row`: `display: flex; gap: 0.75rem; margin: 1rem 0;` Side-by-side buttons.
 - Tool-specific styles: put in a `<style>` block in the tool's `index.html` or a separate `.css` file.
-- All tools inherit the shared button styles, gradient background, nav, and card layout from the shared stylesheet.
+- All tools automatically inherit the gradient background, nav, and input styling from the shared stylesheet.
 
 ### JavaScript
 - `'use strict';` on line 1 of every `.js` file.

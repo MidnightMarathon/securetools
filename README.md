@@ -9,6 +9,8 @@ I got tired of watching people Google "free QR code generator" and land on sites
 
 I care about privacy seriously - your data is yours. So I built tools that make it structurally impossible to collect anything: everything runs in the browser, nothing is sent to a server, and there's no backend to leak.
 
+**Built for AI Agents:** This repository is heavily optimized for autonomous coding agents (OpenClaw, Cursor, Windsurf, SWE-agent, Devin) to jump right in and build tools. See [AGENTS.md](AGENTS.md).
+
 Live at [securegenerators.com](https://www.securegenerators.com).
 
 ---
