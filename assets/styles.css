@@ -289,6 +289,10 @@ nav a.active {
   font-size: 0.95rem;
 }
 
+.tool-switcher-shell [hidden] {
+  display: none !important;
+}
+
 body.tool-switcher-open {
   overflow: hidden;
 }
