@@ -32,7 +32,7 @@ Live at [securegenerators.com](https://www.securegenerators.com).
 | [Favicon Generator](/favicon-generator/) | Create favicons without uploading anything |
 | [Base64 Encoder / Decoder](/base64-tool/) | Encode and decode Base64 text locally |
 | [URL Encoder / Decoder](/url-encoder-decoder/) | Percent-encode and decode URLs |
-| [US States Map Quiz](/geogames/) | Click-based US geography quiz |
+| [GeoGames](/geogames/) | Geography and history map quizzes, including U.S. states, the original 13 colonies, and 1861 states and territories |
 | [Gaussian Elimination](/gaussian-elimination/) | Interactive linear algebra game with drag-and-drop row operations |
 
 More tools are in the works.

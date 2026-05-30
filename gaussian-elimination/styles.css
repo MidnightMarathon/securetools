@@ -9,7 +9,8 @@
 
 body {
     margin: 0;
-    padding: 0;
+    padding: 5rem 1rem 2rem;
+    box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background: linear-gradient(-45deg, #b388eb, #8fd3f4, #f093fb, #4facfe);
     background-size: 400% 400%;

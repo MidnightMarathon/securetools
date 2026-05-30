@@ -1,9 +1,12 @@
+'use strict';
+
 let states = [];
 let currentTarget = null;
 let score = 0;
 let total = 0;
 const attempts = {};
 const failedStates = new Set();
+const randomBuffer = new Uint32Array(1);
 
 const stateNames = new Set([
   "Alabama", "Arkansas", "California", "Colorado Territory", "Connecticut",
@@ -18,6 +21,21 @@ const stateNames = new Set([
 
 function getFullStateName(name) {
   return name; // IDs in the SVG are full names
+}
+
+function randomInt(max) {
+  if (!Number.isInteger(max) || max <= 0) {
+    throw new Error('max must be a positive integer');
+  }
+
+  const maxUint32 = 0x100000000;
+  const limit = Math.floor(maxUint32 / max) * max;
+
+  do {
+    window.crypto.getRandomValues(randomBuffer);
+  } while (randomBuffer[0] >= limit);
+
+  return randomBuffer[0] % max;
 }
 
 function pickNewTarget() {
@@ -42,7 +60,7 @@ function pickNewTarget() {
     return;
   }
 
-  currentTarget = remaining[Math.floor(Math.random() * remaining.length)];
+  currentTarget = remaining[randomInt(remaining.length)];
   attempts[currentTarget] = 0;
   document.getElementById("target-state").textContent = getFullStateName(currentTarget);
 }

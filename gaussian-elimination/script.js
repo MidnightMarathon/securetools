@@ -1,3 +1,5 @@
+'use strict';
+
 // Gaussian Elimination Game
 // Game state
 let currentSize = 3;
@@ -14,6 +16,30 @@ let draggedRow = null;
 // Global state for drag operation
 let isDraggingPreview = false;
 let currentDifficulty = 'medium'; // Default difficulty
+const randomBuffer = new Uint32Array(1);
+
+function randomInt(max) {
+    if (!Number.isInteger(max) || max <= 0) {
+        throw new Error('max must be a positive integer');
+    }
+
+    const maxUint32 = 0x100000000;
+    const limit = Math.floor(maxUint32 / max) * max;
+
+    do {
+        window.crypto.getRandomValues(randomBuffer);
+    } while (randomBuffer[0] >= limit);
+
+    return randomBuffer[0] % max;
+}
+
+function randomChance(probability) {
+    if (probability <= 0) return false;
+    if (probability >= 1) return true;
+
+    window.crypto.getRandomValues(randomBuffer);
+    return randomBuffer[0] / 0x100000000 < probability;
+}
 
 // Fraction class for precise arithmetic
 class Fraction {
@@ -385,7 +411,7 @@ function generateMatrix() {
     solution = [];
     for (let i = 0; i < currentSize; i++) {
         // Solution components usually small integers for playability
-        solution.push(new Fraction(Math.floor(Math.random() * 7) - 3)); 
+        solution.push(new Fraction(randomInt(7) - 3));
     }
     
     // Generate coefficient matrix
@@ -399,10 +425,10 @@ function generateMatrix() {
             row = [];
             let allZeros = true;
             for (let j = 0; j < currentSize; j++) {
-                if (Math.random() < sparsity) {
+                if (randomChance(sparsity)) {
                     row.push(new Fraction(0));
                 } else {
-                    const val = Math.floor(Math.random() * range) - Math.floor(range/2);
+                    const val = randomInt(range) - Math.floor(range / 2);
                     if (val !== 0) allZeros = false;
                     row.push(new Fraction(val));
                 }

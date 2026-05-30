@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Original 13 Colonies Quiz | SecureTools GeoGames</title>
+  <meta name="description" content="Practice the original 13 colonies on a simplified 1775 map with a private browser-based quiz. No tracking, no signup.">
+  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="canonical" href="https://www.securegenerators.com/geogames/games/13-colonies/">
+
+  <meta property="og:title" content="Original 13 Colonies Quiz | SecureTools GeoGames">
+  <meta property="og:description" content="Practice the original 13 colonies on a simplified 1775 map with a private browser-based quiz.">
+  <meta property="og:image" content="https://www.securegenerators.com/assets/social-preview.png">
+  <meta property="og:url" content="https://www.securegenerators.com/geogames/games/13-colonies/">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Original 13 Colonies Quiz | SecureTools GeoGames">
+  <meta name="twitter:description" content="Practice the original 13 colonies on a simplified 1775 map with a private browser-based quiz.">
+  <meta name="twitter:image" content="https://www.securegenerators.com/assets/social-preview.png">
+
+  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/geogames/games/us-states/styles.css">
+  <style>
+    .context-note {
+      margin: 0 0 1rem;
+      color: #444;
+      text-align: center;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    #top-info-bar {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem 1.25rem;
+      white-space: normal;
+    }
+
+    #title-instructions {
+      flex: 1 1 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+
+    #target-container,
+    #score-container {
+      text-align: center;
+    }
+
+    #map-container {
+      max-width: 560px;
+      padding: 0.75rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #d9f1f2;
+    }
+
+    #map-container svg {
+      width: 100%;
+      height: auto;
+      shape-rendering: geometricPrecision;
+    }
+
+    #map-container image.base-map {
+      pointer-events: none;
+    }
+
+    #map-container image.context-map {
+      pointer-events: none;
+      opacity: 0.98;
+    }
+
+    #map-container path.landmass {
+      fill: #cfd8dc;
+      stroke: #cfd8dc;
+      stroke-width: 5px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      pointer-events: none;
+    }
+
+    #map-container path.landmass,
+    #map-container .boundary-lines {
+      display: none;
+    }
+
+    #map-container path[id] {
+      fill: transparent;
+      stroke: none;
+      pointer-events: all;
+      cursor: pointer;
+      transition: filter 0.3s ease, transform 0.3s ease, fill 0.3s ease;
+    }
+
+    #map-container .boundary-lines path {
+      fill: none;
+      stroke: #4f6672;
+      stroke-width: 1.7px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      pointer-events: none;
+    }
+
+    #map-container path[id].hover-state {
+      fill: rgba(160, 196, 255, 0.45) !important;
+      stroke: none !important;
+    }
+
+    #map-container path[id].correct {
+      fill: rgba(168, 223, 142, 0.62) !important;
+      pointer-events: none;
+    }
+
+    #map-container path[id].partial {
+      fill: rgba(253, 253, 150, 0.62) !important;
+      pointer-events: none;
+    }
+
+    #map-container path[id].fail {
+      fill: rgba(255, 102, 102, 0.62) !important;
+    }
+
+    #map-container path[id].given-up {
+      fill: rgba(139, 0, 0, 0.72) !important;
+      pointer-events: none;
+    }
+
+    #map-container path[id].incorrect-temp {
+      fill: rgba(255, 102, 102, 0.58) !important;
+      stroke: none !important;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" aria-label="SecureTools Home">Home</a>
+    <a href="/about.html" aria-label="About SecureTools">About</a>
+  </nav>
+
+  <main id="game-container">
+    <div id="top-info-bar">
+      <div id="title-instructions">
+        <h1>Original 13 Colonies Quiz</h1>
+        <span class="instruction">Click the colony on the simplified 1775 map for the name shown.</span>
+      </div>
+      <div id="target-container">
+        <span>Find:</span> <strong id="target-state">Loading...</strong>
+      </div>
+      <div id="score-container">
+        Score: <span id="score">0</span> / <span id="total-states">0</span> (<span id="percentage">0%</span>)
+      </div>
+    </div>
+
+    <p class="context-note">
+      Uses a classroom-style 1775 map. Maine counts as Massachusetts, and Long Island counts as New York.
+    </p>
+
+    <div id="map-container" class="map-container">
+      <!-- SVG map will be loaded here -->
+    </div>
+  </main>
+
+  <script src="/geogames/games/13-colonies/script.js?v=20260530b" defer></script>
+</body>
+</html>
