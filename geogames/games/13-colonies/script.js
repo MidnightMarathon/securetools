@@ -151,7 +151,7 @@ function handleStateClick(clickedId) {
   pickNewTarget();
 }
 
-fetch('/geogames/games/13-colonies/colonies-1775.svg?v=20260530b')
+fetch('/geogames/games/13-colonies/colonies-1775.svg?v=20260530i')
   .then(res => {
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);

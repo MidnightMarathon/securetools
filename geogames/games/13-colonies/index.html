@@ -106,32 +106,89 @@
       pointer-events: none;
     }
 
+    #map-container .boundary-lines-delmarva {
+      pointer-events: none;
+    }
+
+    #map-container .boundary-lines-delmarva use,
+    #map-container .boundary-lines-delmarva path {
+      fill: none;
+      stroke: #4f6672;
+      stroke-width: 1.7px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+    }
+
     #map-container path[id].hover-state {
       fill: rgba(160, 196, 255, 0.45) !important;
-      stroke: none !important;
+      stroke: rgba(160, 196, 255, 0.82) !important;
+      stroke-width: 1.6px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      paint-order: stroke fill;
     }
 
     #map-container path[id].correct {
-      fill: rgba(168, 223, 142, 0.62) !important;
+      fill: rgba(168, 223, 142, 0.82) !important;
+      stroke: rgba(168, 223, 142, 0.96) !important;
+      stroke-width: 1.6px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      paint-order: stroke fill;
       pointer-events: none;
     }
 
     #map-container path[id].partial {
-      fill: rgba(253, 253, 150, 0.62) !important;
+      fill: rgba(253, 253, 150, 0.84) !important;
+      stroke: rgba(253, 253, 150, 0.98) !important;
+      stroke-width: 1.6px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      paint-order: stroke fill;
       pointer-events: none;
     }
 
     #map-container path[id].fail {
-      fill: rgba(255, 102, 102, 0.62) !important;
+      fill: rgba(255, 102, 102, 0.82) !important;
+      stroke: rgba(255, 102, 102, 0.94) !important;
+      stroke-width: 1.6px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      paint-order: stroke fill;
     }
 
     #map-container path[id].given-up {
-      fill: rgba(139, 0, 0, 0.72) !important;
+      fill: rgba(139, 0, 0, 0.82) !important;
+      stroke: rgba(139, 0, 0, 0.96) !important;
+      stroke-width: 1.6px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      paint-order: stroke fill;
       pointer-events: none;
     }
 
     #map-container path[id].incorrect-temp {
-      fill: rgba(255, 102, 102, 0.58) !important;
+      fill: rgba(255, 102, 102, 0.78) !important;
+      stroke: rgba(255, 102, 102, 0.92) !important;
+      stroke-width: 1.6px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      paint-order: stroke fill;
+    }
+
+    #map-container path:is(#DE, #MD).hover-state,
+    #map-container path:is(#DE, #MD).correct,
+    #map-container path:is(#DE, #MD).partial,
+    #map-container path:is(#DE, #MD).fail,
+    #map-container path:is(#DE, #MD).given-up,
+    #map-container path:is(#DE, #MD).incorrect-temp {
       stroke: none !important;
     }
   </style>
@@ -165,6 +222,6 @@
     </div>
   </main>
 
-  <script src="/geogames/games/13-colonies/script.js?v=20260530b" defer></script>
+  <script src="/geogames/games/13-colonies/script.js?v=20260530i" defer></script>
 </body>
 </html>
